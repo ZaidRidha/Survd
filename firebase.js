@@ -1,5 +1,9 @@
 import * as firebase from "firebase";
 
+import "firebase/firestore";
+import "firebase/auth";
+
+
 const firebaseConfig = {
     apiKey: "AIzaSyAksnKFJwQdQsoCaEdTHgEpYYysjSwNlWw",
     authDomain: "barberapp-5415c.firebaseapp.com",
@@ -18,6 +22,7 @@ if (firebase.apps.length === 0){
     app = firebase.app()
 }
 
+const db = app.firestore();
 const auth = firebase.auth()
 
-export {auth};
+export {auth,db};

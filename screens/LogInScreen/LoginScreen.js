@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const LoginScreen = () => {
-  const fontsloaded = useFont();
+
  
 
   const [username, setUsername] = useState('');
@@ -19,7 +19,7 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const [isChecked, setChecked] = useState(false);
 
-
+  const fontsloaded = useFont();
 
   const onLoginPressed = () => {
     console.warn("Login");
@@ -48,9 +48,9 @@ const LoginScreen = () => {
   return (
     <KeyboardAvoidingView behavior="height" enabled style={styles.root}>
     <Image source = {logo} style = {[styles.logo, {height: height * 0.3}]} resizeMode="contain"/>
-    <Text style = {styles.text}>Email/Username</Text>
+    <Text style = {styles.text}>Email</Text>
     <CustomInput
-    placeholder = "Email/Username"
+    placeholder = "Email"
     value = {username}
     setValue = {setUsername}
     />
@@ -99,14 +99,15 @@ const LoginScreen = () => {
 
 
 
-<View style = {styles.footer}>
+    <View style = {styles.footer}>
     <TouchableOpacity onPress={onSignupPressed}>
     <Text style = {{alignItems:'center'}}>Don't have an account? Signup</Text>
     </TouchableOpacity>
     </View>
-    </KeyboardAvoidingView>
 
+    <View style = {{height:30}} />
     
+    </KeyboardAvoidingView>
   )
 }
 

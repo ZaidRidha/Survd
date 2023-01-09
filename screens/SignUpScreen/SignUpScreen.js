@@ -26,17 +26,24 @@ const SignUpScreen = () => {
   const [passwordRepeat, setPasswordRepeat] = useState('');
   const {height} = useWindowDimensions();
   const [isChecked, setChecked] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleRegister = () =>{
+    if (password !== passwordRepeat) {
+      alert("Passwords do not match, Please try again.");
+      setErrorMessage("Passwords do not match, Please try again.");
+      return;
+    };
+
     auth
     .createUserWithEmailAndPassword(email,password)
     .then(userCredentials => {
       const user = userCredentials.user;
       console.log(user.email);
-      alert("User Created.",user.email)
+      alert("User Created.",user.email);
+      setErrorMessage("");
     })
-    .catch(error => alert(error.message))
+    .catch(error => setErrorMessage(error.message))
   }
   
 
@@ -76,6 +83,7 @@ const SignUpScreen = () => {
     />
     <Text style = {styles.inputtext}>By registering, you confirm that you accept our <Text style = {styles.linktext} >Terms of Use</Text> and <Text style = {styles.linktext} >Privacy Policy.*</Text></Text>
     <Text style = {styles.backtext} onPress = {onAlreadyHavePressed}>Already Have an account? Sign In</Text>
+    {errorMessage && <Text style = {styles.errorText}>{errorMessage}</Text>}
     </KeyboardAvoidingView>
     
     
@@ -124,6 +132,13 @@ const styles = StyleSheet.create({
 
   },
 
+  errorText:{
+    marginTop:25,
+    fontFamily: "GilroyLight",
+    color: '#db0000'
+
+  },
+
   font1: {
     fontFamily: "GilroyLight"
   },
@@ -133,10 +148,10 @@ const styles = StyleSheet.create({
   },
 
   backtext:{
-
+    alignSelf: 'flex-start',
     fontFamily: "GilroyLight",
     color: '#67718f',
-    paddingTop: 45,
+    marginTop: 15,
 
   },
 
