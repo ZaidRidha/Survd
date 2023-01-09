@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const LoginScreen = () => {
-
+  const fontsloaded = useFont();
  
 
   const [username, setUsername] = useState('');
@@ -19,7 +19,7 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const [isChecked, setChecked] = useState(false);
 
-  useFont();
+
 
   const onLoginPressed = () => {
     console.warn("Login");
