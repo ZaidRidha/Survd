@@ -47,7 +47,7 @@ const LoginScreen = () => {
 
   return (
     <KeyboardAvoidingView behavior="height" enabled style={styles.root}>
-    <Image source = {logo} style = {[styles.logo, {height: height * 0.3}]} resizeMode="contain"/>
+    <Image source = {logo} style = {[styles.logo, {height: height * 0.27}]} resizeMode="contain"/>
     <Text style = {styles.text}>Email</Text>
     <CustomInput
     placeholder = "Email"
@@ -105,7 +105,6 @@ const LoginScreen = () => {
     </TouchableOpacity>
     </View>
 
-    <View style = {{height:30}} />
     
     </KeyboardAvoidingView>
   )
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     width:'70%',
     maxwidth: 300,
     maxheight: 300,
-    marginBottom: 40,
+    marginBottom: 30,
   },
 
   text:{
