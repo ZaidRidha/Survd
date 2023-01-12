@@ -6,7 +6,7 @@ import Checkbox from 'expo-checkbox';
 import Colors from '../../assets/colors/colors'
 import useFont from '../../useFont'
 import { useNavigation } from '@react-navigation/native';
-import { auth } from '../../firebase'
+import { auth, db } from '../../firebase'
 
 
 
@@ -28,23 +28,23 @@ const SignUpScreen = () => {
   const [isChecked, setChecked] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const handleRegister = () =>{
+  const handleRegister = async () => {
     if (password !== passwordRepeat) {
       alert("Passwords do not match, Please try again.");
       setErrorMessage("Passwords do not match, Please try again.");
       return;
-    };
+    }
 
-    auth
-    .createUserWithEmailAndPassword(email,password)
-    .then(userCredentials => {
-      const user = userCredentials.user;
-      console.log(user.email);
-      alert("User Created.",user.email);
-      setErrorMessage("");
-    })
-    .catch(error => setErrorMessage(error.message))
-  }
+    try {
+      const { user } = await auth.createUserWithEmailAndPassword(email, password);
+      const userRef = db.collection('users').doc(user.uid);
+      await userRef.set({username: username});
+      alert(`User ${username} with email ${user.email} created.`);
+      navigation.navigate('Login')
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+}
   
 
   const onAlreadyHavePressed = () => {

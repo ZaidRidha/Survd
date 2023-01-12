@@ -1,5 +1,5 @@
 import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,KeyboardAvoidingView} from 'react-native'
-import React, { useState,startTransition } from 'react'
+import React, { useState,startTransition,useEffect } from 'react'
 import logo from '../../assets/images/boxlogo.png'
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -7,13 +7,22 @@ import Checkbox from 'expo-checkbox';
 import Colors from '../../assets/colors/colors'
 import useFont from '../../useFont'
 import { useNavigation } from '@react-navigation/native';
+import { auth, db } from '../../firebase'
+import HomeScreen from '../HomeScreen/HomeScreen';
 
 
 const LoginScreen = () => {
 
- 
 
-  const [username, setUsername] = useState('');
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        navigation.replace("Home");
+      }
+    });
+  }, []);
+
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
@@ -21,9 +30,17 @@ const LoginScreen = () => {
 
   const fontsloaded = useFont();
 
-  const onLoginPressed = () => {
-    console.warn("Login");
-  }
+
+  const handleLogin = async () => {
+    try {
+        const user = await auth.signInWithEmailAndPassword(email, password);
+        if (user) {
+            navigation.replace("Home")
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 
   const onForgotPasswordPressed = () => {
     console.warn("Forgot Password");
@@ -51,8 +68,8 @@ const LoginScreen = () => {
     <Text style = {styles.text}>Email</Text>
     <CustomInput
     placeholder = "Email"
-    value = {username}
-    setValue = {setUsername}
+    value = {email}
+    setValue = {setEmail}
     />
     <Text style = {styles.text}>Password</Text>
     <CustomInput
@@ -83,7 +100,7 @@ const LoginScreen = () => {
     </View>
     <CustomButton 
     text = "Login"
-    onPress = {onLoginPressed}
+    onPress = {handleLogin}
     />
 
     <CustomButton 
