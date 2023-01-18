@@ -4,7 +4,7 @@ import Colors from '../../assets/colors/colors'
 import useFont from '../../useFont'
 
 const CustomInput = ({value,setValue,placeholder,secureTextEntry}) => {
-  useFont();
+  const fonstloaded = useFont();
 
   const styles = StyleSheet.create({
     container: {

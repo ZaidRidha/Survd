@@ -4,7 +4,7 @@ import Colors from '../../assets/colors/colors'
 import useFont from '../../useFont'
 
 const CustomButton = ({text,onPress,type}) => {
-  useFont();
+  const fonstloaded = useFont();
   return (
     <Pressable onPress={onPress} style={[styles.container, styles[`container_${type}`]]}>
       <Text style={styles.text}>{text}</Text>
