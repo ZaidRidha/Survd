@@ -9,14 +9,9 @@ import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../../firebase'
 
 
-
-
-
-
 const SignUpScreen = () => {
 
   const navigation = useNavigation();
-
 
   useFont();
 
@@ -26,6 +21,7 @@ const SignUpScreen = () => {
   const [passwordRepeat, setPasswordRepeat] = useState('');
   const {height} = useWindowDimensions();
   const [isChecked, setChecked] = useState(false);
+  const [isError, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleRegister = async () => {
@@ -41,8 +37,10 @@ const SignUpScreen = () => {
       await userRef.set({username: username});
       alert(`User ${username} with email ${user.email} created.`);
       navigation.navigate('Login')
+      
     } catch (error) {
       setErrorMessage(error.message);
+      setIserror(true);
     }
 }
   
@@ -53,12 +51,6 @@ const SignUpScreen = () => {
 
   return (
     <KeyboardAvoidingView behavior="height" enabled style={styles.root}>
-    <Text style = {styles.title}>Register</Text>
-    <Text style = {styles.inputtext}>Username*</Text>
-    <CustomInput
-    value = {username}
-    setValue = {setUsername}
-    />
     <Text style = {styles.inputtext}>Email*</Text>
     <CustomInput
     value = {email}
@@ -69,20 +61,21 @@ const SignUpScreen = () => {
     value = {password}
     setValue = {setPassword}
     secureTextEntry = {true}
+    error = {isError}
     />
     <Text style = {styles.inputtext}>Confirm Password*</Text>
     <CustomInput
     value = {passwordRepeat}
     setValue = {setPasswordRepeat}
     secureTextEntry = {true}
+    error = {isError}
     />
     <CustomButton 
     text = "Continue"
     type = "signup"
     onPress={handleRegister}
     />
-    <Text style = {styles.inputtext}>By registering, you confirm that you accept our <Text style = {styles.linktext} >Terms of Use</Text> and <Text style = {styles.linktext} >Privacy Policy.*</Text></Text>
-    <Text style = {styles.backtext} onPress = {onAlreadyHavePressed}>Already Have an account? Sign In</Text>
+    <Text style = {styles.text}>By registering, you confirm that you accept our <Text style = {styles.linktext} >Terms of Use</Text> and <Text style = {styles.linktext} >Privacy Policy.*</Text></Text>
     {errorMessage && <Text style = {styles.errorText}>{errorMessage}</Text>}
     </KeyboardAvoidingView>
     
@@ -103,15 +96,8 @@ const styles = StyleSheet.create({
     padding:20,
   },
 
-  title:{
-    fontFamily: "GilroyBold",
-    fontSize: 32,
-    margin:10,
-    marginBottom:30,
-  },
-
   inputtext:{
-    fontFamily: "GilroyLight",
+    fontFamily: "FigtreeBold",
     alignSelf: 'flex-start',
     marginTop:10,
   },
@@ -124,7 +110,9 @@ const styles = StyleSheet.create({
 
   text:{
     // marginRight: 500
-    fontFamily: "GilroyLight"
+    fontFamily: "FigtreeLight",
+    marginTop:10,
+    
   },
 
   linktext:{

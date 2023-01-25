@@ -3,7 +3,7 @@ import React from 'react'
 import Colors from '../../assets/colors/colors'
 import useFont from '../../useFont'
 
-const CustomInput = ({value,setValue,placeholder,secureTextEntry}) => {
+const CustomInput = ({value,setValue,placeholder,secureTextEntry,error}) => {
   const fonstloaded = useFont();
 
   const styles = StyleSheet.create({
@@ -12,11 +12,9 @@ const CustomInput = ({value,setValue,placeholder,secureTextEntry}) => {
         width: '100%',
         height: '6%',
 
-        borderColor: Colors.secondary,
+        borderColor: error ? 'red' : Colors.secondary,
         borderWidth: 1,
         borderRadius:4,
-
-
 
         paddingHorizontal: 7,
         marginVertical: 10,
@@ -40,8 +38,6 @@ const CustomInput = ({value,setValue,placeholder,secureTextEntry}) => {
       />
     </View>
   )
-
-
 }
 
 export default CustomInput

@@ -1,19 +1,20 @@
 import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,KeyboardAvoidingView} from 'react-native'
 import React, { useState,startTransition,useEffect } from 'react'
+import { Button } from '@rneui/themed';
 import logo from '../../assets/images/boxlogo.png'
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
-import Checkbox from 'expo-checkbox';
-import Colors from '../../assets/colors/colors'
 import useFont from '../../useFont'
 import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../../firebase'
-import HomeScreen from '../HomeScreen/HomeScreen';
+import { Icon, Divider} from '@rneui/themed';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 
 const LoginScreen = () => {
 
-
+  useFont();
   useEffect(() => {
     auth.onAuthStateChanged(user => {
       if (user) {
@@ -26,9 +27,8 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
-  const [isChecked, setChecked] = useState(false);
+  const [isError, setIserror] = useState(false);
 
-  const fontsloaded = useFont();
 
 
   const handleLogin = async () => {
@@ -39,6 +39,10 @@ const LoginScreen = () => {
         }
     } catch (error) {
         console.log(error);
+        setIserror(true);
+        setTimeout(() => {
+          setIserror(false);
+      }, 1500);
     }
 }
 
@@ -70,6 +74,7 @@ const LoginScreen = () => {
     placeholder = "Email"
     value = {email}
     setValue = {setEmail}
+    error = {isError}
     />
     <Text style = {styles.text}>Password</Text>
     <CustomInput
@@ -78,47 +83,37 @@ const LoginScreen = () => {
     value = {password}
     setValue = {setPassword}
     secureTextEntry = {true}
+    error = {isError}
     />
-    <View style={{flex: 0.3, flexDirection: 'row', justifyContent: 'center',
-    alignItems: 'center',marginBottom:20}}>
-    <View style={{flex: 1,flexDirection: 'row',alignItems:'center'}}>
-    <Checkbox
-          style={styles.checkbox}
-          value={isChecked}
-          onValueChange={setChecked}
-          color={isChecked ? Colors.text1 : undefined}
-        />
-        <TouchableOpacity onPress={() => setChecked(!isChecked)}>
-        <Text style={{textAlign: 'left', marginLeft:5,fontFamily:"GilroyLight"}}>Remember Me</Text>
-        </TouchableOpacity>
-    </View>
-    <View style={{flex: 1}}>
-    <TouchableOpacity onPress={onForgotPasswordPressed}>
-    <Text style={{textAlign: 'right',fontFamily:"GilroyLight"}}>Forgot Password?</Text>
-    </TouchableOpacity>
-    </View>
-    </View>
+
+
+    <Text style = {styles.forgottext}>Forgot Password?</Text>
+    {isError ? <Text style = {styles.errortext}>Invalid email/password combination!</Text> : null}
+  
+    
     <CustomButton 
     text = "Login"
     onPress = {handleLogin}
     />
 
-    <CustomButton 
-    text = "Continue With Instagram"
-    onPress = {onLogininstagramPressed}
-    type = "tertiary"/>
-
-    <CustomButton 
-    text = "Continue As Guest"
-    onPress = {onLoginGuestPressed}
-    type = "secondary"/>
-
-
+  <Button
+  ViewComponent={LinearGradient}
+  linearGradientProps={{
+    colors: ['#feda75', '#fa7e1e', '#d62976', '#962fbf', '#4f5bd5'],
+    start: { x: 0, y: 0.5 },
+    end: { x: 0.8, y: 1 },
+  }}
+  icon={<Icon style = {styles.icon} type="antdesign" name="instagram" color="white" size={25} />}
+  title="Continue With Instagram"
+  containerStyle={{ width: '100%',borderRadius: 8, marginBottom:15 }}
+  titleStyle={{ fontFamily: 'FigtreeBold', fontSize: 14,}}
+  onPress={onLogininstagramPressed}
+  />
 
 
     <View style = {styles.footer}>
     <TouchableOpacity onPress={onSignupPressed}>
-    <Text style = {{alignItems:'center'}}>Don't have an account? Signup</Text>
+    <Text style = {{alignItems:'center',fontFamily:'FigtreeLight'}}>Don't have an account? Signup</Text>
     </TouchableOpacity>
     </View>
 
@@ -141,24 +136,48 @@ const styles = StyleSheet.create({
     width:'70%',
     maxwidth: 300,
     maxheight: 300,
-    marginBottom: 30,
+    marginBottom: 20,
   },
 
   text:{
     // marginRight: 500
     alignSelf: 'flex-start',
-    fontFamily: "GilroyLight"
+    fontFamily: "FigtreeBold"
   },
 
   font1: {
-    fontFamily: "GilroyLight"
+    fontFamily: "FigtreeReg"
   },
 
   font2: {
-    fontFamily: "GilroyBold"
+    fontFamily: "FigtreeReg"
   },
 
   footer: {
+  },
+
+  errortext: {
+    fontFamily: "FigtreeBold",
+    color: "red",
+    alignItems:'center',
+    marginBottom: 10,
+
+  },
+
+  forgottext:{
+    fontFamily:"FigtreeLight",
+    alignSelf: 'flex-start',
+    marginTop: 5,
+    marginBottom: 25,
+  },
+
+  icon: {
+    marginRight: 5
+  },
+
+  btn: {
+    width:'100%',
+    borderRadius: 40,
   }
 
  

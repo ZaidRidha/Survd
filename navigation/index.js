@@ -44,7 +44,11 @@ const Navigation = () => {
         component = {LoginScreen}/>
         <Stack.Screen 
         name = "Register" 
-        component = {SignUpScreen} />
+        component = {SignUpScreen}
+        options={{ 
+        headerShown: true,
+        headerBackTitleVisible: false,
+        headerTintColor: '#000000'}} />
         <Stack.Screen 
           name = "home"
           component = {BottomTabNavigator}
