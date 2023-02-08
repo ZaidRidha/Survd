@@ -1,4 +1,4 @@
-import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,KeyboardAvoidingView} from 'react-native'
+import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,KeyboardAvoidingView,TextInput,ActivityIndicator} from 'react-native'
 import React, { useState,startTransition,useEffect } from 'react'
 import { Button } from '@rneui/themed';
 import logo from '../../assets/images/boxlogo.png'
@@ -6,44 +6,51 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import useFont from '../../useFont'
 import { useNavigation } from '@react-navigation/native';
-import { auth, db } from '../../firebase'
-import { Icon, Divider} from '@rneui/themed';
+import { Icon, } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
+import { authentication } from '../../firebaseConfig';
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+
 
 
 
 const LoginScreen = () => {
-
+  
   useFont();
-  useEffect(() => {
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        navigation.replace("home");
-      }
-    });
-  }, []);
+
+/*    useEffect(() => {
+     auth.onAuthStateChanged(user => {
+       if (user) {
+         navigation.replace("home");
+       }
+       });
+     }, []); */
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
   const [isError, setIserror] = useState(false);
-
+  const [isFocused, setIsFocused] = useState(false);
+  const [loading, setLoading] = useState(false);
 
 
   const handleLogin = async () => {
-    try {
-        const user = await auth.signInWithEmailAndPassword(email, password);
-        if (user) {
+     try {
+        setLoading(true);
+        const user = await signInWithEmailAndPassword(authentication, email, password)
+       if (user) {
             navigation.replace("Home")
-        }
-    } catch (error) {
-        console.log(error);
+         }
+     } catch (error) {
+         console.log(error);
         setIserror(true);
         setTimeout(() => {
           setIserror(false);
-      }, 1500);
-    }
+       }, 4000);
+     }
+     setLoading(false);
 }
 
   const onForgotPasswordPressed = () => {
@@ -67,25 +74,28 @@ const LoginScreen = () => {
   
 
   return (
-    <KeyboardAvoidingView behavior="height" enabled style={styles.root}>
-    <Image source = {logo} style = {[styles.logo, {height: height * 0.27}]} resizeMode="contain"/>
+    <KeyboardAvoidingView behavior="padding" enabled style={styles.root}>
+    <Image source = {logo} style = {[styles.logo, {height: height * 0.22}]} resizeMode="contain"/>
+    {loading && <ActivityIndicator size="large" color="#999999" />}
     <Text style = {styles.text}>Email</Text>
-    <CustomInput
-    placeholder = "Email"
-    value = {email}
-    setValue = {setEmail}
-    error = {isError}
+    <TextInput
+    placeholder='Email'
+    style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
+    onFocus={() => setIsFocused(true)}
+    onBlur={() => setIsFocused(false)}
+    onChangeText={(text) => setEmail(text)}
     />
+      
     <Text style = {styles.text}>Password</Text>
-    <CustomInput
-    style = {styles.input}
-    placeholder = "Password"
-    value = {password}
-    setValue = {setPassword}
-    secureTextEntry = {true}
-    error = {isError}
-    />
+    <TextInput
 
+    placeholder='Password'
+    style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
+    secureTextEntry = {true}
+    onFocus={() => setIsFocused(true)}
+    onBlur={() => setIsFocused(false)}
+    onChangeText={(text) => setPassword(text)}
+    />
 
     <Text style = {styles.forgottext}>Forgot Password?</Text>
     {isError ? <Text style = {styles.errortext}>Invalid email/password combination!</Text> : null}
@@ -106,7 +116,7 @@ const LoginScreen = () => {
   icon={<Icon style = {styles.icon} type="antdesign" name="instagram" color="white" size={25} />}
   title="Continue With Instagram"
   containerStyle={{ width: '100%',borderRadius: 8, marginBottom:15 }}
-  titleStyle={{ fontFamily: 'FigtreeBold', fontSize: 14,}}
+  titleStyle={{ fontFamily: 'FigtreeReg', fontSize: 14,}}
   onPress={onLogininstagramPressed}
   />
 
@@ -142,7 +152,8 @@ const styles = StyleSheet.create({
   text:{
     // marginRight: 500
     alignSelf: 'flex-start',
-    fontFamily: "FigtreeBold"
+    fontFamily: "FigtreeReg",
+    fontSize: 14,
   },
 
   font1: {
@@ -157,7 +168,7 @@ const styles = StyleSheet.create({
   },
 
   errortext: {
-    fontFamily: "FigtreeBold",
+    fontFamily: "FigtreeLight",
     color: "red",
     alignItems:'center',
     marginBottom: 10,
@@ -168,7 +179,7 @@ const styles = StyleSheet.create({
     fontFamily:"FigtreeLight",
     alignSelf: 'flex-start',
     marginTop: 5,
-    marginBottom: 25,
+    marginBottom: 20,
   },
 
   icon: {
@@ -178,6 +189,40 @@ const styles = StyleSheet.create({
   btn: {
     width:'100%',
     borderRadius: 40,
+  },
+
+  input:{
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    marginVertical: 10,
+    fontSize:14,
+    borderRadius:5,
+    fontFamily: "FigtreeReg"
+  },
+
+  inputFocused: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    marginVertical: 10,
+    backgroundColor: '#F0F0F0',
+    fontSize:14,
+    borderRadius:5,
+    fontFamily: "FigtreeReg"
+  },
+
+  inputError: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'red',
+    marginVertical: 10,
+    fontSize:14,
+    borderRadius:5,
+    fontFamily: "FigtreeReg"
   }
 
  

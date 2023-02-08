@@ -5,9 +5,9 @@ import LoginScreen from '../screens/LogInScreen/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
+import PhoneScreen from '../screens/PhoneScreen/PhoneScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from '@rneui/base';
-import { Title } from 'react-native-paper';
 
 
 const Stack = createStackNavigator();
@@ -53,6 +53,15 @@ const Navigation = () => {
           name = "home"
           component = {BottomTabNavigator}
            />
+        <Stack.Screen 
+          name = "Phone"
+          component = {PhoneScreen}
+          options={{ 
+            headerShown: true,
+            headerBackTitleVisible: false,
+            headerTintColor: '#000000',
+            title: "Verification"}}
+          />
       </Stack.Navigator>
     </NavigationContainer>
   )

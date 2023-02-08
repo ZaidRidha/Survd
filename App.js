@@ -7,7 +7,10 @@ import colors from './assets/colors/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LoginScreen from './screens/LogInScreen/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
+import HomeScreen from './screens/HomeScreen/HomeScreen';
 import Navigation from './navigation/index';
+import { store } from './store.js';
+import { Provider } from 'react-redux';
 
 Icon.loadFont();
 
@@ -28,11 +31,13 @@ export default function App() {
   });
 
   return ( 
+  <Provider store={store}>
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
   <SafeAreaView style = {styles.root}>
     <Navigation/>
   </SafeAreaView>
   </TouchableWithoutFeedback>
+  </Provider>
   );
 
 

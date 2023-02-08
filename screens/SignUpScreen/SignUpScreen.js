@@ -1,4 +1,4 @@
-import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,ScrollView,KeyboardAvoidingView} from 'react-native'
+import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,ScrollView,KeyboardAvoidingView,TextInput} from 'react-native'
 import React, { useState,startTransition } from 'react'
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
@@ -6,7 +6,7 @@ import Checkbox from 'expo-checkbox';
 import Colors from '../../assets/colors/colors'
 import useFont from '../../useFont'
 import { useNavigation } from '@react-navigation/native';
-import { auth, db } from '../../firebase'
+import { auth } from '../../firebaseConfig'
 
 
 const SignUpScreen = () => {
@@ -14,61 +14,68 @@ const SignUpScreen = () => {
   const navigation = useNavigation();
 
   useFont();
-
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
-  const {height} = useWindowDimensions();
-  const [isChecked, setChecked] = useState(false);
-  const [isError, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isError, setIsError] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+
 
   const handleRegister = async () => {
-    if (password !== passwordRepeat) {
-      alert("Passwords do not match, Please try again.");
-      setErrorMessage("Passwords do not match, Please try again.");
-      return;
-    }
+    navigation.navigate("Phone");
+    // if (password !== passwordRepeat) {
+    //   setIsError(true);
+    //   setErrorMessage("Passwords do not match, Please try again.");
+    //   return;
+    // } else {
+    //   setIsError(false);
+    // }
 
-    try {
-      const { user } = await auth.createUserWithEmailAndPassword(email, password);
-      const userRef = db.collection('users').doc(user.uid);
-      await userRef.set({username: username});
-      alert(`User ${username} with email ${user.email} created.`);
-      navigation.navigate('Login')
+    // try {
+    //   const { user } = await auth.createUserWithEmailAndPassword(email, password);
+    //   const userRef = db.collection('users').doc(user.uid);
+    //   await userRef.set({username: username});
+    //   alert(`User ${username} with email ${user.email} created.`);
       
-    } catch (error) {
-      setErrorMessage(error.message);
-      setIserror(true);
-    }
+    // } catch (error) {
+    //   setIsError(true);
+    //   setErrorMessage(error.message);
+    // }
 }
+
+
+
   
 
-  const onAlreadyHavePressed = () => {
-    navigation.navigate('Login')
-  }
-
   return (
-    <KeyboardAvoidingView behavior="height" enabled style={styles.root}>
+    <KeyboardAvoidingView behavior="padding" enabled style={styles.root}>
     <Text style = {styles.inputtext}>Email*</Text>
-    <CustomInput
-    value = {email}
-    setValue = {setEmail}
+    <TextInput
+    placeholder='Email'
+    style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
+    onFocus={() => setIsFocused(true)}
+    onBlur={() => setIsFocused(false)}
+    onChangeText={(text) => setEmail(text)}
     />
     <Text style = {styles.inputtext}>Password*</Text>
-    <CustomInput
-    value = {password}
-    setValue = {setPassword}
+    <TextInput
+    placeholder='Password'
+    style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
+    onFocus={() => setIsFocused(true)}
+    onBlur={() => setIsFocused(false)}
+    onChangeText={(text) => setEmail(text)}
     secureTextEntry = {true}
-    error = {isError}
     />
     <Text style = {styles.inputtext}>Confirm Password*</Text>
-    <CustomInput
-    value = {passwordRepeat}
-    setValue = {setPasswordRepeat}
+    <TextInput
+    placeholder='Confirm Password'
+    style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
+    onFocus={() => setIsFocused(true)}
+    onBlur={() => setIsFocused(false)}
+    onChangeText={(text) => setPasswordRepeat(text)}
     secureTextEntry = {true}
-    error = {isError}
     />
     <CustomButton 
     text = "Continue"
@@ -76,7 +83,7 @@ const SignUpScreen = () => {
     onPress={handleRegister}
     />
     <Text style = {styles.text}>By registering, you confirm that you accept our <Text style = {styles.linktext} >Terms of Use</Text> and <Text style = {styles.linktext} >Privacy Policy.*</Text></Text>
-    {errorMessage && <Text style = {styles.errorText}>{errorMessage}</Text>}
+    {isError ? <Text style = {styles.errorText}>{errorMessage}</Text> : null}
     </KeyboardAvoidingView>
     
     
@@ -97,13 +104,13 @@ const styles = StyleSheet.create({
   },
 
   inputtext:{
-    fontFamily: "FigtreeBold",
+    fontFamily: "FigtreeReg",
     alignSelf: 'flex-start',
     marginTop:10,
   },
 
   confirmtext:{
-    fontFamily: "GilroyLight",
+    fontFamily: "FigtreeLight",
     alignSelf: 'flex-start',
   },
 
@@ -122,25 +129,58 @@ const styles = StyleSheet.create({
 
   errorText:{
     marginTop:25,
-    fontFamily: "GilroyLight",
+    fontFamily: "FigtreeLight",
     color: '#db0000'
 
   },
 
   font1: {
-    fontFamily: "GilroyLight"
+    fontFamily: "FigtreeLight"
   },
 
   font2: {
-    fontFamily: "GilroyBold"
+    fontFamily: "FigtreeBold"
   },
 
   backtext:{
     alignSelf: 'flex-start',
-    fontFamily: "GilroyLight",
+    fontFamily: "FigtreeLight",
     color: '#67718f',
     marginTop: 15,
 
+  },
+  input:{
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    marginVertical: 10,
+    fontSize:14,
+    borderRadius:5,
+    fontFamily: "FigtreeReg"
+  },
+
+  inputFocused: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    marginVertical: 10,
+    backgroundColor: '#F0F0F0',
+    fontSize:14,
+    borderRadius:5,
+    fontFamily: "FigtreeReg"
+  },
+
+  inputError: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'red',
+    marginVertical: 10,
+    fontSize:14,
+    borderRadius:5,
+    fontFamily: "FigtreeReg"
   },
 
 
