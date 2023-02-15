@@ -5,12 +5,17 @@ import { Icon } from '@rneui/themed';
 import { Header } from '@rneui/themed';
 import useFont from '../../useFont';
 import * as Location from 'expo-location';
+import { Button } from '@rneui/themed';
+import { authentication } from '../../firebaseConfig';
+import { signOut } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen = () => {
   useFont();
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [address, setAddress] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -26,12 +31,20 @@ const HomeScreen = () => {
       setLocation(currentLocation);
       
       let currentAddress = await Location.reverseGeocodeAsync(currentLocation.coords);
-      console.log(currentAddress);
 
       setAddress(currentAddress);
       
     })();
   }, []);
+
+  const signuserOut = () => {
+    signOut(authentication).then(() => {
+      // Sign-out successful.
+      navigation.replace('Login');
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
 
   return (
     <View style = {styles.root}>
@@ -48,6 +61,7 @@ const HomeScreen = () => {
     />
     <View style = {styles.inner}>
     <Text style = {styles.loctext}>Location · {address ? address[0].name : 'Loading...'}</Text>
+    <Button onPress={signuserOut}>Sign out</Button>
     </View>
 
     </View>

@@ -58,8 +58,8 @@ const Navigation = () => {
           component = {PhoneScreen}
           options={{ 
             headerShown: true,
-            headerBackTitleVisible: false,
             headerTintColor: '#000000',
+            headerLeft:null,
             title: "Verification"}}
           />
       </Stack.Navigator>

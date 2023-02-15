@@ -2,30 +2,55 @@ import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,Keyb
 import React, { useState,startTransition,useEffect } from 'react'
 import { Button } from '@rneui/themed';
 import logo from '../../assets/images/boxlogo.png'
-import CustomInput from '../../components/CustomInput';
+
 import CustomButton from '../../components/CustomButton';
 import useFont from '../../useFont'
 import { useNavigation } from '@react-navigation/native';
 import { Icon, } from '@rneui/themed';
 import { LinearGradient } from 'expo-linear-gradient';
 import { authentication } from '../../firebaseConfig';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword,onAuthStateChanged} from "firebase/auth";
+import { database } from '../../firebaseConfig';
+import { doc,getDoc } from "firebase/firestore"; 
+
 
 
 
 
 
 const LoginScreen = () => {
+  const [currUid, setCurrUid] = useState(null);
+  useEffect(() => { 
+    onAuthStateChanged(authentication, (user) => {
+      if (user) {
+        setCurrUid(user.uid);
+      } 
+    }); 
+  }, []);
+
+  useEffect(() => {
+
+    const checkAndNavigate = async () =>{
+      console.log(currUid);
+      const docRef = doc(database,"users",currUid);
+      const docSnap = await getDoc(docRef);
+      const val = docSnap.get('registrationComplete');
+
+      if(val==true){
+        navigation.replace("home");
+      }
+
+    };
+
+    checkAndNavigate();
+
+    
+  }, [currUid]);
+
   
   useFont();
 
-/*    useEffect(() => {
-     auth.onAuthStateChanged(user => {
-       if (user) {
-         navigation.replace("home");
-       }
-       });
-     }, []); */
+
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,7 +66,7 @@ const LoginScreen = () => {
         setLoading(true);
         const user = await signInWithEmailAndPassword(authentication, email, password)
        if (user) {
-            navigation.replace("Home")
+            navigation.replace("home")
          }
      } catch (error) {
          console.log(error);

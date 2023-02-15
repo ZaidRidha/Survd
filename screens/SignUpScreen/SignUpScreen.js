@@ -1,12 +1,14 @@
 import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,ScrollView,KeyboardAvoidingView,TextInput} from 'react-native'
 import React, { useState,startTransition } from 'react'
-import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
-import Checkbox from 'expo-checkbox';
-import Colors from '../../assets/colors/colors'
+
 import useFont from '../../useFont'
 import { useNavigation } from '@react-navigation/native';
-import { auth } from '../../firebaseConfig'
+import { authentication } from '../../firebaseConfig';
+import { createUserWithEmailAndPassword} from "firebase/auth";
+import { database } from '../../firebaseConfig';
+import { doc, setDoc } from "firebase/firestore"; 
+
 
 
 const SignUpScreen = () => {
@@ -20,29 +22,31 @@ const SignUpScreen = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [isError, setIsError] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  
 
 
 
   const handleRegister = async () => {
-    navigation.navigate("Phone");
-    // if (password !== passwordRepeat) {
-    //   setIsError(true);
-    //   setErrorMessage("Passwords do not match, Please try again.");
-    //   return;
-    // } else {
-    //   setIsError(false);
-    // }
+    if (password !== passwordRepeat) {
+       setIsError(true);
+       setErrorMessage("Passwords do not match, Please try again.");
+       return;
+      } else {
+       setIsError(false);
+     }
 
-    // try {
-    //   const { user } = await auth.createUserWithEmailAndPassword(email, password);
-    //   const userRef = db.collection('users').doc(user.uid);
-    //   await userRef.set({username: username});
-    //   alert(`User ${username} with email ${user.email} created.`);
+    try {
+       const { user } = await createUserWithEmailAndPassword(authentication,email,password);
+       await setDoc(doc(database,"users",user.uid), {
+        email: email
+       });
+       alert(`email ${user.email} created.`);
+       navigation.replace("Phone");
       
-    // } catch (error) {
-    //   setIsError(true);
-    //   setErrorMessage(error.message);
-    // }
+     } catch (error) {
+       setIsError(true);
+       setErrorMessage(error.message);
+     }
 }
 
 
@@ -65,7 +69,7 @@ const SignUpScreen = () => {
     style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
     onFocus={() => setIsFocused(true)}
     onBlur={() => setIsFocused(false)}
-    onChangeText={(text) => setEmail(text)}
+    onChangeText={(text) => setPassword(text)}
     secureTextEntry = {true}
     />
     <Text style = {styles.inputtext}>Confirm Password*</Text>
