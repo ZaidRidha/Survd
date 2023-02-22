@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet} from 'react-native'
+import { View, Text,StyleSheet,FlatList} from 'react-native'
 import React from 'react'
 import { useState,useEffect} from 'react'
 import { Icon } from '@rneui/themed';
@@ -9,6 +9,8 @@ import { Button } from '@rneui/themed';
 import { authentication } from '../../firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
+import BarberCard from '../../components/BarberCard/BarberCard';
+
 
 const HomeScreen = () => {
   useFont();
@@ -37,14 +39,7 @@ const HomeScreen = () => {
     })();
   }, []);
 
-  const signuserOut = () => {
-    signOut(authentication).then(() => {
-      // Sign-out successful.
-      navigation.replace('Login');
-    }).catch((error) => {
-      // An error happened.
-    });
-  }
+
 
   return (
     <View style = {styles.root}>
@@ -59,12 +54,18 @@ const HomeScreen = () => {
         <Icon type="material-community" name="bell" color="black" size={25} />
       }
     />
+
     <View style = {styles.inner}>
     <Text style = {styles.loctext}>Location · {address ? address[0].name : 'Loading...'}</Text>
-    <Button onPress={signuserOut}>Sign out</Button>
+
+    <Text style = {styles.fgtreg} className = "text-2xl mb-10 ">Active Barbers Near You:</Text>
+    <BarberCard></BarberCard>
+
     </View>
 
     </View>
+
+
   )
 }
 
@@ -81,9 +82,15 @@ const styles = StyleSheet.create({
   },
 
   loctext: {
-    fontFamily : 'GilroyLight',
+    fontFamily : 'FigtreeBold',
     fontSize: 17,
     margin:20,
+    marginBottom:30,
+
+  },
+
+  fgtreg: {
+    fontFamily : 'FigtreeReg',
 
   }
 

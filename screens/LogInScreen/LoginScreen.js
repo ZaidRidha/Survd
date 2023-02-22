@@ -1,5 +1,5 @@
-import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,KeyboardAvoidingView,TextInput,ActivityIndicator} from 'react-native'
-import React, { useState,startTransition,useEffect } from 'react'
+import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,KeyboardAvoidingView,TextInput,ActivityIndicator,TouchableWithoutFeedback,Keyboard} from 'react-native'
+import React, { useState,useEffect } from 'react'
 import { Button } from '@rneui/themed';
 import logo from '../../assets/images/boxlogo.png'
 
@@ -65,9 +65,6 @@ const LoginScreen = () => {
      try {
         setLoading(true);
         const user = await signInWithEmailAndPassword(authentication, email, password)
-       if (user) {
-            navigation.replace("home")
-         }
      } catch (error) {
          console.log(error);
         setIserror(true);
@@ -141,7 +138,7 @@ const LoginScreen = () => {
   icon={<Icon style = {styles.icon} type="antdesign" name="instagram" color="white" size={25} />}
   title="Continue With Instagram"
   containerStyle={{ width: '100%',borderRadius: 8, marginBottom:15 }}
-  titleStyle={{ fontFamily: 'FigtreeReg', fontSize: 14,}}
+  titleStyle={{ fontFamily: 'FigtreeBold', fontSize: 14,}}
   onPress={onLogininstagramPressed}
   />
 
@@ -154,6 +151,7 @@ const LoginScreen = () => {
 
     
     </KeyboardAvoidingView>
+
   )
 }
 

@@ -1,4 +1,4 @@
-import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,ScrollView,KeyboardAvoidingView,TextInput} from 'react-native'
+import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,ScrollView,KeyboardAvoidingView,TextInput,} from 'react-native'
 import React, { useState,startTransition } from 'react'
 import CustomButton from '../../components/CustomButton';
 

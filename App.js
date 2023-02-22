@@ -32,11 +32,12 @@ export default function App() {
 
   return ( 
   <Provider store={store}>
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
   <SafeAreaView style = {styles.root}>
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <Navigation/>
+    </TouchableWithoutFeedback>
   </SafeAreaView>
-  </TouchableWithoutFeedback>
+
   </Provider>
   );
 

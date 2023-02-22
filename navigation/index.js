@@ -8,6 +8,8 @@ import ExploreScreen from '../screens/ExploreScreen';
 import PhoneScreen from '../screens/PhoneScreen/PhoneScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from '@rneui/base';
+import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const Stack = createStackNavigator();
@@ -31,7 +33,14 @@ const BottomTabNavigator = () => {
         name = "Explore"
         component = {ExploreScreen} 
       />
+
+      <Tab.Screen 
+        name = "Profile"
+        component = {ProfileScreen} 
+      />
     </Tab.Navigator>
+
+
   )
 }
 

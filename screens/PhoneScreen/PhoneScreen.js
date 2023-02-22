@@ -157,7 +157,6 @@ const PhoneScreen = () => {
             setCountryCode(item.dial_code);
             setLoading(false);
             setShowCountryPicker(false);
-            setCurrentFlag(item.flag);
             console.log(item.flag);
             
           }}
