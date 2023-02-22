@@ -96,6 +96,7 @@ const LoginScreen = () => {
   
 
   return (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <KeyboardAvoidingView behavior="padding" enabled style={styles.root}>
     <Image source = {logo} style = {[styles.logo, {height: height * 0.22}]} resizeMode="contain"/>
     {loading && <ActivityIndicator size="large" color="#999999" />}
@@ -148,9 +149,8 @@ const LoginScreen = () => {
     <Text style = {{alignItems:'center',fontFamily:'FigtreeLight'}}>Don't have an account? Signup</Text>
     </TouchableOpacity>
     </View>
-
-    
     </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
 
   )
 }

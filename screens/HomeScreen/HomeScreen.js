@@ -4,12 +4,10 @@ import { useState,useEffect} from 'react'
 import { Icon } from '@rneui/themed';
 import { Header } from '@rneui/themed';
 import useFont from '../../useFont';
-import * as Location from 'expo-location';
-import { Button } from '@rneui/themed';
-import { authentication } from '../../firebaseConfig';
-import { signOut } from 'firebase/auth';
+import * as Location from 'expo-location';;
 import { useNavigation } from '@react-navigation/native';
 import BarberCard from '../../components/BarberCard/BarberCard';
+
 
 
 const HomeScreen = () => {
@@ -18,6 +16,15 @@ const HomeScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [address, setAddress] = useState(null);
   const navigation = useNavigation();
+  const renderBarberCard = ({ item }) => <BarberCard name={item.name} />;
+
+
+  const barbers = [
+    { id: 1, name: 'John' },
+    { id: 2, name: 'Mike' },
+    { id: 3, name: 'Samuel' },
+  ];
+
 
   useEffect(() => {
     (async () => {
@@ -43,26 +50,29 @@ const HomeScreen = () => {
 
   return (
     <View style = {styles.root}>
+
     <Header
     backgroundColor='white'
-      centerComponent={{
-        text: "Home",
-        style: { color: "#000000", fontSize:25,fontFamily:"GilroyBold"},
+      centerComponent={
+        <Text style = {styles.loctext}>Location · {address ? address[0].name : 'Loading...'}</Text>
 
-      }}
+      }
       rightComponent={
         <Icon type="material-community" name="bell" color="black" size={25} />
       }
     />
 
-    <View style = {styles.inner}>
-    <Text style = {styles.loctext}>Location · {address ? address[0].name : 'Loading...'}</Text>
+    <View style = {styles.heads}>
 
-    <Text style = {styles.fgtreg} className = "text-2xl mb-10 ">Active Barbers Near You:</Text>
-    <BarberCard></BarberCard>
-
-    </View>
-
+    </View>  
+    <Text style = {styles.fgreg} className = "text-xl mb-2 ">Barbers near you:</Text>
+    <FlatList
+        data={barbers}
+        keyExtractor={item => item.id.toString()}
+        renderItem={renderBarberCard}
+        showsHorizontalScrollIndicator={false} // remove horizontal scroll indicator
+        showsVerticalScrollIndicator={false} 
+      />
     </View>
 
 
@@ -74,22 +84,22 @@ const styles = StyleSheet.create({
   root:{
     flex:1,
     backgroundColor: '#FFFFFF',
+    padding:22,
   },
 
-  inner:{
+  heads:{
     alignItems: 'center',
     flexDirection: 'column', 
   },
 
   loctext: {
-    fontFamily : 'FigtreeBold',
+    fontFamily : 'FigtreeReg',
     fontSize: 17,
-    margin:20,
-    marginBottom:30,
+
 
   },
 
-  fgtreg: {
+  fgreg: {
     fontFamily : 'FigtreeReg',
 
   }

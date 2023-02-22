@@ -7,6 +7,8 @@ export default function useCustomFonts() {
     'FigtreeReg': require('./assets/fonts/Figtree-Regular.ttf'),
     'FigtreeLight': require('./assets/fonts/Figtree-Light.ttf'),
     'FigtreeBold': require('./assets/fonts/Figtree-Bold.ttf'),
+    'FigtreeSemiBold': require('./assets/fonts/Figtree-SemiBold.ttf'),
+    'FigtreeMedium': require('./assets/fonts/Figtree-Medium.ttf'),
   });
 
   return fontsLoaded;

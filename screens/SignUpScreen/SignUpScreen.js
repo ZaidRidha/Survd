@@ -1,4 +1,4 @@
-import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,ScrollView,KeyboardAvoidingView,TextInput,} from 'react-native'
+import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableWithoutFeedback,ScrollView,KeyboardAvoidingView,TextInput,Keyboard} from 'react-native'
 import React, { useState,startTransition } from 'react'
 import CustomButton from '../../components/CustomButton';
 
@@ -54,6 +54,7 @@ const SignUpScreen = () => {
   
 
   return (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <KeyboardAvoidingView behavior="padding" enabled style={styles.root}>
     <Text style = {styles.inputtext}>Email*</Text>
     <TextInput
@@ -89,6 +90,7 @@ const SignUpScreen = () => {
     <Text style = {styles.text}>By registering, you confirm that you accept our <Text style = {styles.linktext} >Terms of Use</Text> and <Text style = {styles.linktext} >Privacy Policy.*</Text></Text>
     {isError ? <Text style = {styles.errorText}>{errorMessage}</Text> : null}
     </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
     
     
   )

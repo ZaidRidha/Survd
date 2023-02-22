@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView, TextInput, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, TextInput, ActivityIndicator,TouchableWithoutFeedback,Keyboard } from 'react-native'
 import React, { useState,useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import {CountryPicker} from "react-native-country-codes-picker";
@@ -74,6 +74,7 @@ const PhoneScreen = () => {
     }
   };
   return (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <KeyboardAvoidingView behavior="padding" enabled style={styles.root}>
         <Text style={styles.headertext}>Enter Your Phone Number</Text>
         <View style={styles.inputContainer}>
@@ -162,6 +163,7 @@ const PhoneScreen = () => {
           }}
         />
     </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   )
 }
 
