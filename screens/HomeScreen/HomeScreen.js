@@ -20,7 +20,7 @@ const HomeScreen = () => {
 
 
   const barbers = [
-    { id: 1, name: 'John' },
+    { id: 1, name: 'John', },
     { id: 2, name: 'Mike' },
     { id: 3, name: 'Samuel' },
   ];
@@ -65,7 +65,7 @@ const HomeScreen = () => {
     <View style = {styles.heads}>
 
     </View>  
-    <Text style = {styles.fgreg} className = "text-xl mb-2 ">Barbers near you:</Text>
+    <Text style = {styles.fgreg} className = "text-xl mb-2 ">Active barbers near you:</Text>
     <FlatList
         data={barbers}
         keyExtractor={item => item.id.toString()}
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   root:{
     flex:1,
     backgroundColor: '#FFFFFF',
-    padding:22,
+    padding:25,
   },
 
   heads:{
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
 
   fgreg: {
-    fontFamily : 'FigtreeReg',
+    fontFamily : 'FigtreeSemiBold',
 
   }
 
