@@ -53,12 +53,15 @@ const HomeScreen = () => {
 
     <Header
     backgroundColor='white'
-      centerComponent={
-        <Text style = {styles.loctext}>Location · {address ? address[0].name : 'Loading...'}</Text>
-
+    placement="left"
+      leftComponent={
+         <View className = "flex flex-row items-center "> 
+         <Text style = {styles.loctext}>Location · {address ? address[0].name : 'Loading...'} </Text>
+         <Icon type="entypo" name="chevron-down" color="black" size={18} />
+         </View>
       }
       rightComponent={
-        <Icon type="material-community" name="bell" color="black" size={25} />
+        <Icon type="material-community" name="bell" color="black" size={22} />
       }
     />
 
@@ -93,8 +96,8 @@ const styles = StyleSheet.create({
   },
 
   loctext: {
-    fontFamily : 'FigtreeReg',
-    fontSize: 17,
+    fontFamily : 'FigtreeSemiBold',
+    fontSize: 14,
 
 
   },
