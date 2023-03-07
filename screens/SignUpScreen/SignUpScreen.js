@@ -110,20 +110,20 @@ const styles = StyleSheet.create({
   },
 
   inputtext:{
-    fontFamily: "FigtreeReg",
+    fontFamily: "PoppinsReg",
     alignSelf: 'flex-start',
     marginTop:10,
   },
 
   confirmtext:{
-    fontFamily: "FigtreeLight",
+    fontFamily: "PoppinsLight",
     alignSelf: 'flex-start',
   },
 
 
   text:{
     // marginRight: 500
-    fontFamily: "FigtreeLight",
+    fontFamily: "PoppinsLight",
     marginTop:10,
     
   },
@@ -135,13 +135,13 @@ const styles = StyleSheet.create({
 
   errorText:{
     marginTop:25,
-    fontFamily: "FigtreeLight",
+    fontFamily: "PoppinsLight",
     color: '#db0000'
 
   },
 
   font1: {
-    fontFamily: "FigtreeLight"
+    fontFamily: "PoppinsLight"
   },
 
   font2: {
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
 
   backtext:{
     alignSelf: 'flex-start',
-    fontFamily: "FigtreeLight",
+    fontFamily: "PoppinsLight",
     color: '#67718f',
     marginTop: 15,
 
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize:14,
     borderRadius:5,
-    fontFamily: "FigtreeReg"
+    fontFamily: "PoppinsReg"
   },
 
   inputFocused: {
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
     fontSize:14,
     borderRadius:5,
-    fontFamily: "FigtreeReg"
+    fontFamily: "PoppinsReg"
   },
 
   inputError: {
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize:14,
     borderRadius:5,
-    fontFamily: "FigtreeReg"
+    fontFamily: "PoppinsReg"
   },
 
 

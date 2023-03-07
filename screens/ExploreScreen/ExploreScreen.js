@@ -7,7 +7,7 @@ const ExploreScreen = () => {
 
     <ScrollView >
 
-      <Text>ExploreScreen</Text>
+      <Text className = "text-red-500">ExploreScreen</Text>
       <Text>ExploreScreen</Text>
       <Text>ExploreScreen</Text>
       <Text>ExploreScreen</Text>

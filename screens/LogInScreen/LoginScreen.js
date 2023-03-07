@@ -19,21 +19,24 @@ import { doc,getDoc } from "firebase/firestore";
 
 
 const LoginScreen = () => {
+    
+  useFont();
   const [currUid, setCurrUid] = useState(null);
+
   useEffect(() => { 
-    onAuthStateChanged(authentication, (user) => {
+    onAuthStateChanged(authentication, (user) => {  //firebase checking if user is changed first. 
       if (user) {
-        setCurrUid(user.uid);
+        setCurrUid(user.uid); //gets the user id and sets it
       } 
     }); 
   }, []);
 
   useEffect(() => {
 
-    const checkAndNavigate = async () =>{
+    const checkAndNavigate = async () =>{  //once user is checked, then check if they have completed registration, if they have sign them in. 
       console.log(currUid);
       const docRef = doc(database,"users",currUid);
-      const docSnap = await getDoc(docRef);
+      const docSnap = await getDoc(docRef); 
       const val = docSnap.get('registrationComplete');
 
       if(val==true){
@@ -47,8 +50,7 @@ const LoginScreen = () => {
     
   }, [currUid]);
 
-  
-  useFont();
+
 
 
 
@@ -61,7 +63,7 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
 
 
-  const handleLogin = async () => {
+  const handleLogin = async () => { //firebase login. 
      try {
         setLoading(true);
         const user = await signInWithEmailAndPassword(authentication, email, password)
@@ -98,8 +100,9 @@ const LoginScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <KeyboardAvoidingView behavior="padding" enabled style={styles.root}>
-    <Image source = {logo} style = {[styles.logo, {height: height * 0.22}]} resizeMode="contain"/>
+    <Image source={logo} style = {styles.logo}></Image>
     {loading && <ActivityIndicator size="large" color="#999999" />}
+
     <Text style = {styles.text}>Email</Text>
     <TextInput
     placeholder='Email'
@@ -111,7 +114,6 @@ const LoginScreen = () => {
       
     <Text style = {styles.text}>Password</Text>
     <TextInput
-
     placeholder='Password'
     style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
     secureTextEntry = {true}
@@ -122,12 +124,21 @@ const LoginScreen = () => {
 
     <Text style = {styles.forgottext}>Forgot Password?</Text>
     {isError ? <Text style = {styles.errortext}>Invalid email/password combination!</Text> : null}
-  
-    
+
+
     <CustomButton 
     text = "Login"
     onPress = {handleLogin}
     />
+
+<View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
+  <View style={{flex: 0.35, height: 1, backgroundColor: 'lightgray'}} />
+    <View>
+    <Text style={{width: 40, textAlign: 'center', color: 'gray'}}>Or</Text>
+  </View>
+  <View style={{flex: 0.35, height: 1, backgroundColor: 'lightgray'}} />
+  </View>
+
 
   <Button
   ViewComponent={LinearGradient}
@@ -147,6 +158,8 @@ const LoginScreen = () => {
     <View style = {styles.footer}>
     <TouchableOpacity onPress={onSignupPressed}>
     <Text style = {{alignItems:'center',fontFamily:'FigtreeLight'}}>Don't have an account? Signup</Text>
+
+
     </TouchableOpacity>
     </View>
     </KeyboardAvoidingView>
@@ -160,7 +173,6 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     padding :25,
     flexDirection: 'column', 
-    justifyContent: 'center',
     alignItems: 'center',
     flex:1,
     backgroundColor: '#FFFFFF',
@@ -175,23 +187,23 @@ const styles = StyleSheet.create({
   text:{
     // marginRight: 500
     alignSelf: 'flex-start',
-    fontFamily: "FigtreeReg",
+    fontFamily: "PoppinsReg",
     fontSize: 14,
   },
 
   font1: {
-    fontFamily: "FigtreeReg"
+    fontFamily: "PoppinsReg"
   },
 
   font2: {
-    fontFamily: "FigtreeReg"
+    fontFamily: "PoppinsReg"
   },
 
   footer: {
   },
 
   errortext: {
-    fontFamily: "FigtreeLight",
+    fontFamily: "PoppinsLight",
     color: "red",
     alignItems:'center',
     marginBottom: 10,
@@ -199,7 +211,7 @@ const styles = StyleSheet.create({
   },
 
   forgottext:{
-    fontFamily:"FigtreeLight",
+    fontFamily:"PoppinsLight",
     alignSelf: 'flex-start',
     marginTop: 5,
     marginBottom: 20,
@@ -222,7 +234,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize:14,
     borderRadius:5,
-    fontFamily: "FigtreeReg"
+    fontFamily: "PoppinsReg"
   },
 
   inputFocused: {
@@ -234,7 +246,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
     fontSize:14,
     borderRadius:5,
-    fontFamily: "FigtreeReg"
+    fontFamily: "PoppinsReg"
   },
 
   inputError: {
@@ -245,7 +257,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize:14,
     borderRadius:5,
-    fontFamily: "FigtreeReg"
+    fontFamily: "PoppinsReg"
+  },
+
+  logo: {
+    width:250,
+    height:250
   }
 
  

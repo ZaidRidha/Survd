@@ -1,19 +1,11 @@
 import { View, Text,StyleSheet,Image,FlatList,ImageBackground } from 'react-native'
 import React, {useState,useRef} from 'react'
-import hairpic from '../../assets/images/hdfade.jpg'
-import bizlogo from '../../assets/images/bizlogo.jpg'
-import fade2 from '../../assets/images/fade2.jpg'
-import fade3 from '../../assets/images/fade3.jpg'
 import useFont from '../../useFont';
 import { Icon } from '@rneui/themed';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { Dimensions } from 'react-native';
-import Paginator from '../Paginator/Paginator'
 
 
 
-const bwidth = Dimensions.get('window').width;
-const bheight= Dimensions.get('window').height;
 
 
 
@@ -21,11 +13,10 @@ const bheight= Dimensions.get('window').height;
 
 
 const BarberCard = ({name}) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const flatListRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0); //current index of the carousel
 
 
-  const carouselData = [
+  const carouselData = [ //images that go into the carousel
     {
       id: 1,
       image: require('../../assets/images/bizlogo.jpg'),
@@ -52,22 +43,25 @@ const BarberCard = ({name}) => {
   useFont();
   return (
     <View style={styles.container} className = "mb-5">
+
       <View >
       <Text className = "text-2xl" style = {styles.figsemibold}>{name} </Text>
       <Text className = "text-sm text-gray-700 " style = {styles.figlight}>@{name}thedon3 </Text>
-  
       </View>
  
       <View className = "flex flex-row items-center justify-between">
+
       <View className = "flex flex-row items-center">
       <View style={styles.circle}></View>
       <Text className = "text-lg" style = {styles.figreg}>Active Now </Text>
       </View>
+
       <View className = "flex flex-row items-center">
       <Icon type="entypo" name="shop" color="black" size={22} />
       <Text className = "text-2xl" style = {styles.figsemibold}>/</Text>
       <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
       </View>
+      
       </View>
 
       <FlatList
@@ -110,8 +104,8 @@ const BarberCard = ({name}) => {
       <Text className = "text-base" style = {styles.figreg}>££ · Fades · Afro · Caucasian</Text>
       <Text className = "text-base" style = {styles.figlight}>★5.0 (135)</Text>
       </View>
-      <Text className = "text-sm" style = {styles.figlight}>Est. Waiting time: 32 Mins</Text>
-      <Text className = "text-sm" style = {styles.figlight}>3.1mi</Text>
+      <Text className = "text-sm " style = {styles.figlight}>Est. Waiting time: <Text className = "text-sm text-blue-600">32 Mins</Text></Text>
+      <Text className = "text-sm text-gray-500" style = {styles.figlight}>3.1mi</Text>
  
     </View>
   );
@@ -151,18 +145,17 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
-    fontWeight: 'bold',
     marginTop: 10,
   },
 
   figsemibold:{
-    fontFamily:"FigtreeBold"
+    fontFamily:"PoppinsBold"
   },
   figlight:{
-    fontFamily:"FigtreeLight"
+    fontFamily:"PoppinsLight"
   },
   figreg:{
-    fontFamily:"FigtreeLight"
+    fontFamily:"PoppinsLight"
   },
 
   circle: {

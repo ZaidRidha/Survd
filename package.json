@@ -38,6 +38,7 @@
     "react-native-country-codes-picker": "^2.2.2",
     "react-native-country-flag": "^1.1.9",
     "react-native-country-picker-modal-fix": "^0.3.2",
+    "react-native-divider": "^1.0.3",
     "react-native-gesture-handler": "~2.8.0",
     "react-native-pagination": "^1.5.5",
     "react-native-paper": "^5.1.3",

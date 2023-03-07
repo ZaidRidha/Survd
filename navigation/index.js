@@ -21,11 +21,23 @@ const BottomTabNavigator = () => {
       <Tab.Screen 
         name = "Home"
         component = {HomeScreen} 
+        
         options={{
-          tabBarIcon: ({ focused }) => <Icon
+          tabBarActiveTintColor: 'black',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({ focused }) => 
+          focused ?
+          <Icon
           name='home'
-          size = {30} />  
+          size = {30}
+          color = "black" />:
+          <Icon
+          name='home'
+          size = {30}
+          color = "gray" />
+          
         }
+
       }
 
       />

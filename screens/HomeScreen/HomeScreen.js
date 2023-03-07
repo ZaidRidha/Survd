@@ -69,6 +69,7 @@ const HomeScreen = () => {
 
     </View>  
     <Text style = {styles.fgreg} className = "text-xl mb-2 ">Active barbers near you:</Text>
+    
     <FlatList
         data={barbers}
         keyExtractor={item => item.id.toString()}
@@ -96,14 +97,14 @@ const styles = StyleSheet.create({
   },
 
   loctext: {
-    fontFamily : 'FigtreeSemiBold',
-    fontSize: 14,
+    fontFamily : 'PoppinsMed',
+    fontSize: 16,
 
 
   },
 
   fgreg: {
-    fontFamily : 'FigtreeSemiBold',
+    fontFamily : 'PoppinsMed',
 
   }
 

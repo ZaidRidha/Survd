@@ -9,6 +9,12 @@ export default function useCustomFonts() {
     'FigtreeBold': require('./assets/fonts/Figtree-Bold.ttf'),
     'FigtreeSemiBold': require('./assets/fonts/Figtree-SemiBold.ttf'),
     'FigtreeMedium': require('./assets/fonts/Figtree-Medium.ttf'),
+    'PoppinsReg': require('./assets/fonts/Poppins/Poppins-Regular.ttf'),
+    'PoppinsLight': require('./assets/fonts/Poppins/Poppins-Light.ttf'),
+    'PoppinsMed': require('./assets/fonts/Poppins/Poppins-Medium.ttf'),
+    'PoppinsSemiBold': require('./assets/fonts/Poppins/Poppins-SemiBold.ttf'),
+    'PoppinsBold': require('./assets/fonts/Poppins/Poppins-Bold.ttf'),
+    'PoppinsLightItalic': require('./assets/fonts/Poppins/Poppins-LightItalic.ttf'),
   });
 
   return fontsLoaded;
