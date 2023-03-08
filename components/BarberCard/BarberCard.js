@@ -61,7 +61,7 @@ const BarberCard = ({name}) => {
       <Text className = "text-2xl" style = {styles.figsemibold}>/</Text>
       <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
       </View>
-      
+
       </View>
 
       <FlatList
@@ -82,6 +82,10 @@ const BarberCard = ({name}) => {
       source={item.image}
       style={styles.image}
       />
+
+      <View style = {styles.iconContainer}>
+      <Icon type="feather" name="heart" color="gray" size={24} />
+      </View>
       <View style={styles.paginatorContainer}>
       <Pagination
       dotsLength={carouselData.length}
@@ -134,6 +138,14 @@ const styles = StyleSheet.create({
     bottom: 5,
     width: '100%',
     alignItems:'center'
+  },
+
+  iconContainer:{
+    position:'absolute',
+    right:10,
+    top:10,
+
+    
   },
 
 

@@ -7,6 +7,7 @@ import useFont from '../../useFont';
 import * as Location from 'expo-location';;
 import { useNavigation } from '@react-navigation/native';
 import BarberCard from '../../components/BarberCard/BarberCard';
+import { SearchBar } from '@rneui/themed';
 
 
 
@@ -17,6 +18,7 @@ const HomeScreen = () => {
   const [address, setAddress] = useState(null);
   const navigation = useNavigation();
   const renderBarberCard = ({ item }) => <BarberCard name={item.name} />;
+  const [searchQuery, setSearchQuery] = useState('');
 
 
   const barbers = [
@@ -65,9 +67,22 @@ const HomeScreen = () => {
       }
     />
 
-    <View style = {styles.heads}>
-
-    </View>  
+      <SearchBar
+        placeholder = "Search name, username, speciality, etc. "
+        onChangeText={(query) => setSearchQuery(query)}
+        value={searchQuery}
+        lightTheme = {false}
+        round = {true}
+        containerStyle={{  backgroundColor: 'white',
+        borderWidth: 0, //no effect
+        shadowColor: 'white', //no effect
+        borderBottomColor: 'transparent',
+        borderTopColor: 'transparent'}}
+        inputContainerStyle = {{backgroundColor: '#EEEEEE'}}
+        inputStyle = {{fontSize:14, color: 'black'}}
+        clearIcon={{ size: 25 }}
+      
+      />
     <Text style = {styles.fgreg} className = "text-xl mb-2 ">Active barbers near you:</Text>
     
     <FlatList
