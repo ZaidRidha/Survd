@@ -7,7 +7,7 @@ import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { database } from '../../firebaseConfig';
 import CountryFlag from "react-native-country-flag";
 import { PhoneAuthProvider, signInWithCredential,updatePhoneNumber } from 'firebase/auth';
-import { doc,updateDoc } from "firebase/firestore"; 
+import { doc,updateDoc,getDocs,query,collection,where} from "firebase/firestore"; 
 
 
 import { Button } from '@rneui/themed';
@@ -46,9 +46,14 @@ const PhoneScreen = () => {
 
     const sendConfirmation = async () => {
       try{
+        const q = query(collection(database, "users"), where("phoneNumber", "==", phoneNumber));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          alert("Phone number already exists!!");
+          return;
+        }
         const phoneProvider = new PhoneAuthProvider(authentication);
         phoneProvider.verifyPhoneNumber({phoneNumber},recaptchaVerifier.current).then(setVerificationId);
-        setPhoneNumber('');
 
       }catch (error){
         console.log(error);
@@ -63,7 +68,8 @@ const PhoneScreen = () => {
       updatePhoneNumber(currUser, credential);
 
       await updateDoc(doc(database,"users",currUser.uid), {
-        registrationComplete: true
+        registrationComplete: true,
+        phoneNumber: phoneNumber
        });
   
       alert("Login successful");

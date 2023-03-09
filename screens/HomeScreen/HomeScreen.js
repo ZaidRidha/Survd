@@ -8,29 +8,30 @@ import * as Location from 'expo-location';;
 import { useNavigation } from '@react-navigation/native';
 import BarberCard from '../../components/BarberCard/BarberCard';
 import { SearchBar } from '@rneui/themed';
-
+import { getDistance } from 'geolib';
+import { doc,getDocs,query,collection,where} from "firebase/firestore"; 
+import { database } from '../../firebaseConfig';
 
 
 const HomeScreen = () => {
   useFont();
+  const [currentLat, setcurrentLat,] = useState(null);
+  const [currentLong, setcurrentLong,] = useState(null);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [address, setAddress] = useState(null);
+  const [barberId,setbarberId] = useState(0);
   const navigation = useNavigation();
-  const renderBarberCard = ({ item }) => <BarberCard name={item.name} />;
   const [searchQuery, setSearchQuery] = useState('');
+  const [nearbyBarbers, setNearbyBarbers] = useState([]);
 
 
-  const barbers = [
-    { id: 1, name: 'John', },
-    { id: 2, name: 'Mike' },
-    { id: 3, name: 'Samuel' },
-  ];
 
 
   useEffect(() => {
+    console.log("hello");
     (async () => {
-      
+
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
@@ -40,14 +41,40 @@ const HomeScreen = () => {
 
       let currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation);
+      setcurrentLat(currentLocation.coords.latitude);
+      setcurrentLong(currentLocation.coords.longitude);
+
+      console.log("lat"+currentLocation.coords.latitude+"long"+ currentLocation.coords.longitude);
       
+      console.log(getDistance({latitude:currentLocation.coords.latitude,longitude:currentLocation.coords.longitude},{latitude:51.509865,longitude:-0.118092}))
       let currentAddress = await Location.reverseGeocodeAsync(currentLocation.coords);
 
       setAddress(currentAddress);
       
     })();
-  }, []);
+  }, [setLocation, setcurrentLat, setcurrentLong, setAddress]);
 
+  useEffect(() => { //useffect for finding nearby
+    (async () => {
+      const querySnapshot = await getDocs(collection(database, "barbers"));
+      const nearBarbers = [];
+      querySnapshot.forEach((doc) => {
+        const latitude = doc.get("latitude");
+        const longitude = doc.get("longitude");
+        const barberName = doc.get("name");
+        const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
+        if (distance<6000){
+          nearBarbers.push({id: barberId+1, name: barberName});
+        };
+        setNearbyBarbers(nearBarbers);
+        console.log(nearBarbers);
+      });
+    })()
+
+
+  }, [currentLat, currentLong, setNearbyBarbers]);
+
+  const renderBarberCard = ({ item }) => <BarberCard name={item.name} />;
 
 
   return (
@@ -86,7 +113,7 @@ const HomeScreen = () => {
     <Text style = {styles.fgreg} className = "text-xl mb-2 ">Active barbers near you:</Text>
     
     <FlatList
-        data={barbers}
+        data={nearbyBarbers}
         keyExtractor={item => item.id.toString()}
         renderItem={renderBarberCard}
         showsHorizontalScrollIndicator={false} // remove horizontal scroll indicator

@@ -1,4 +1,4 @@
-import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,KeyboardAvoidingView,TextInput,ActivityIndicator,TouchableWithoutFeedback,Keyboard} from 'react-native'
+import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,TextInput,ActivityIndicator,TouchableWithoutFeedback,Keyboard} from 'react-native'
 import React, { useState,useEffect } from 'react'
 import { Button } from '@rneui/themed';
 import logo from '../../assets/images/boxlogo.png'
@@ -12,6 +12,7 @@ import { authentication } from '../../firebaseConfig';
 import { signInWithEmailAndPassword,onAuthStateChanged} from "firebase/auth";
 import { database } from '../../firebaseConfig';
 import { doc,getDoc } from "firebase/firestore"; 
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 
@@ -99,7 +100,7 @@ const LoginScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    <KeyboardAvoidingView behavior="padding" enabled style={styles.root}>
+    <KeyboardAwareScrollView contentContainerStyle = {styles.root}>
     <Image source={logo} style = {styles.logo}></Image>
     {loading && <ActivityIndicator size="large" color="#999999" />}
 
@@ -121,6 +122,7 @@ const LoginScreen = () => {
     onBlur={() => setIsFocused(false)}
     onChangeText={(text) => setPassword(text)}
     />
+    
 
     <Text style = {styles.forgottext}>Forgot Password?</Text>
     {isError ? <Text style = {styles.errortext}>Invalid email/password combination!</Text> : null}
@@ -162,7 +164,7 @@ const LoginScreen = () => {
 
     </TouchableOpacity>
     </View>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
 
   )

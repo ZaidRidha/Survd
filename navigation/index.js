@@ -25,6 +25,7 @@ const BottomTabNavigator = () => {
         options={{
           tabBarActiveTintColor: 'black',
           tabBarInactiveTintColor: 'gray',
+          unmountOnBlur: true,
           tabBarIcon: ({ focused }) => 
           focused ?
           <Icon
@@ -44,11 +45,48 @@ const BottomTabNavigator = () => {
       <Tab.Screen 
         name = "Explore"
         component = {ExploreScreen} 
+
+        options={{
+          tabBarActiveTintColor: 'black',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({ focused }) => 
+          focused ?
+          <Icon
+          name='search'
+          size = {30}
+          color = "black" />:
+          <Icon
+          name='search'
+          size = {30}
+          color = "gray" />
+          
+        }
+      }
+
+        
       />
 
       <Tab.Screen 
         name = "Profile"
         component = {ProfileScreen} 
+        options={{
+          tabBarActiveTintColor: 'black',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({ focused }) => 
+          focused ?
+          <Icon
+          name='person'
+          size = {30}
+          color = "black" />:
+          <Icon
+          name='person'
+          size = {30}
+          color = "gray" />
+          
+        }
+      }
+
+        
       />
     </Tab.Navigator>
 

@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,Image,FlatList,ImageBackground } from 'react-native'
+import { View, Text,StyleSheet,Image,FlatList,ImageBackground, Pressable } from 'react-native'
 import React, {useState,useRef} from 'react'
 import useFont from '../../useFont';
 import { Icon } from '@rneui/themed';
@@ -14,6 +14,10 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const BarberCard = ({name}) => {
   const [activeIndex, setActiveIndex] = useState(0); //current index of the carousel
+  const [iconColor, setIconColor] = useState("darkgray");
+  const [iconType, setIconType] = useState("hearto"); 
+
+  
 
 
   const carouselData = [ //images that go into the carousel
@@ -31,6 +35,13 @@ const BarberCard = ({name}) => {
       image: require('../../assets/images/fade3.jpg'),
     },
   ];
+
+  const toggleColor = () => {
+    const newColor = iconColor === 'darkgray' ? '#DB0000' : 'darkgray';
+    const newType = iconType === 'hearto' ? 'heart' : 'hearto';
+    setIconColor(newColor);
+    setIconType(newType);
+  };
 
   const handleSnapToItem = (index) => {
     setActiveIndex(index);
@@ -53,7 +64,7 @@ const BarberCard = ({name}) => {
 
       <View className = "flex flex-row items-center">
       <View style={styles.circle}></View>
-      <Text className = "text-lg" style = {styles.figreg}>Active Now </Text>
+      <Text className = "text-base " style = {styles.figreg}>Active Now </Text>
       </View>
 
       <View className = "flex flex-row items-center">
@@ -84,7 +95,9 @@ const BarberCard = ({name}) => {
       />
 
       <View style = {styles.iconContainer}>
-      <Icon type="feather" name="heart" color="gray" size={24} />
+      <Pressable onPress={toggleColor}>
+      <Icon type="ionicon" name= "md-heart-circle-outline" color={iconColor} size={24} />
+      </Pressable>
       </View>
       <View style={styles.paginatorContainer}>
       <Pagination
@@ -108,8 +121,8 @@ const BarberCard = ({name}) => {
       <Text className = "text-base" style = {styles.figreg}>££ · Fades · Afro · Caucasian</Text>
       <Text className = "text-base" style = {styles.figlight}>★5.0 (135)</Text>
       </View>
-      <Text className = "text-sm " style = {styles.figlight}>Est. Waiting time: <Text className = "text-sm text-blue-600">32 Mins</Text></Text>
-      <Text className = "text-sm text-gray-500" style = {styles.figlight}>3.1mi</Text>
+      <Text className = "text-sm " style = {styles.figreg}>Est. Waiting time : <Text className = "text-sm text-blue-600">32 Mins</Text></Text>
+      <Text className = "text-sm " style = {styles.figlight}>3.1mi</Text>
  
     </View>
   );
@@ -167,7 +180,7 @@ const styles = StyleSheet.create({
     fontFamily:"PoppinsLight"
   },
   figreg:{
-    fontFamily:"PoppinsLight"
+    fontFamily:"PoppinsReg"
   },
 
   circle: {

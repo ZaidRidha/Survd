@@ -2,6 +2,8 @@ import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableWithoutFeedb
 import React, { useState,startTransition } from 'react'
 import CustomButton from '../../components/CustomButton';
 
+import { Icon, } from '@rneui/themed';
+
 import useFont from '../../useFont'
 import { useNavigation } from '@react-navigation/native';
 import { authentication } from '../../firebaseConfig';
@@ -44,9 +46,32 @@ const SignUpScreen = () => {
        navigation.replace("Phone");
       
      } catch (error) {
-       setIsError(true);
-       setErrorMessage(error.message);
-     }
+      let errorMessage = "An unknown error occurred";
+      switch (error.code) {
+        case "auth/internal-error":
+          errorMessage = "The email address is already in use by another account.";
+          break;
+        case "auth/invalid-email":
+          errorMessage = "The email address is invalid.";
+          break;
+        case "auth/weak-password":
+          errorMessage = "The password is too weak.";
+          break;
+        case "auth/user-not-found":
+          errorMessage = "The user with that email address was not found.";
+          break;
+        case "auth/wrong-password":
+          errorMessage = "The password is incorrect.";
+          break;
+        default:
+          errorMessage = error.message;
+      }
+      setIsError(true);
+      setErrorMessage(errorMessage);
+      setTimeout(() => {
+        setIsError(false);
+      }, 3000);
+    }
 }
 
 
@@ -88,7 +113,7 @@ const SignUpScreen = () => {
     onPress={handleRegister}
     />
     <Text style = {styles.text}>By registering, you confirm that you accept our <Text style = {styles.linktext} >Terms of Use</Text> and <Text style = {styles.linktext} >Privacy Policy.*</Text></Text>
-    {isError ? <Text style = {styles.errorText}>{errorMessage}</Text> : null}
+    {isError ? <Text style = {styles.errorText}><Icon type="ionicon" name="information-circle" color="red" size={17} /> {errorMessage}</Text> : null}
     </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
     
@@ -136,7 +161,8 @@ const styles = StyleSheet.create({
   errorText:{
     marginTop:25,
     fontFamily: "PoppinsLight",
-    color: '#db0000'
+    color: '#db0000',
+    alignItems: 'center'
 
   },
 
