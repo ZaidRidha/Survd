@@ -62,9 +62,10 @@ const HomeScreen = () => {
         const latitude = doc.get("latitude");
         const longitude = doc.get("longitude");
         const barberName = doc.get("name");
+        const barberUsername = doc.get("username");
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
         if (distance<6000){
-          nearBarbers.push({id: barberId+1, name: barberName});
+          nearBarbers.push({id: barberId+1, name: barberName,username:barberUsername});
         };
         setNearbyBarbers(nearBarbers);
         console.log(nearBarbers);
@@ -74,7 +75,9 @@ const HomeScreen = () => {
 
   }, [currentLat, currentLong, setNearbyBarbers]);
 
-  const renderBarberCard = ({ item }) => <BarberCard name={item.name} />;
+  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username}/>
+
+
 
 
   return (

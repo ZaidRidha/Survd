@@ -12,12 +12,11 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 
 
-const BarberCard = ({name}) => {
+const BarberCard = ({name, username}) => {
+
   const [activeIndex, setActiveIndex] = useState(0); //current index of the carousel
   const [iconColor, setIconColor] = useState("darkgray");
   const [iconType, setIconType] = useState("hearto"); 
-
-  
 
 
   const carouselData = [ //images that go into the carousel
@@ -35,7 +34,9 @@ const BarberCard = ({name}) => {
       image: require('../../assets/images/fade3.jpg'),
     },
   ];
+  
 
+  //toggle color of favourite
   const toggleColor = () => {
     const newColor = iconColor === 'darkgray' ? '#DB0000' : 'darkgray';
     const newType = iconType === 'hearto' ? 'heart' : 'hearto';
@@ -43,13 +44,11 @@ const BarberCard = ({name}) => {
     setIconType(newType);
   };
 
+
+  //when it goes to an item. 
   const handleSnapToItem = (index) => {
     setActiveIndex(index);
   };
-
-
-
-
 
   useFont();
   return (
@@ -57,7 +56,7 @@ const BarberCard = ({name}) => {
 
       <View >
       <Text className = "text-2xl" style = {styles.figsemibold}>{name} </Text>
-      <Text className = "text-sm text-gray-700 " style = {styles.figlight}>@{name}thedon3 </Text>
+      <Text className = "text-sm text-gray-700 " style = {styles.figlight}>{username}</Text>
       </View>
  
       <View className = "flex flex-row items-center justify-between">
@@ -107,7 +106,6 @@ const BarberCard = ({name}) => {
       inactiveDotOpacity={0.4}
       inactiveDotScale={0.6}
       activeDotIndex={activeIndex}
-
       />
       </View>
       </View>
