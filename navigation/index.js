@@ -10,6 +10,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Icon } from '@rneui/base';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import { ScrollView } from 'react-native-gesture-handler';
+import LocationScreen from '../screens/LocationScreen/LocationScreen';
 
 
 const Stack = createStackNavigator();
@@ -120,6 +121,14 @@ const Navigation = () => {
             headerTintColor: '#000000',
             headerLeft:null,
             title: "Verification"}}
+          />
+          <Stack.Screen
+          options={{
+            presentation: "modal",
+            gestureEnabled: true,
+          }}
+          name = "Location"
+          component={LocationScreen}
           />
       </Stack.Navigator>
     </NavigationContainer>

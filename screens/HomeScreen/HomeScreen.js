@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,FlatList} from 'react-native'
+import { View, Text,StyleSheet,FlatList,TouchableOpacity} from 'react-native'
 import React from 'react'
 import { useState,useEffect} from 'react'
 import { Icon } from '@rneui/themed';
@@ -15,13 +15,14 @@ import { database } from '../../firebaseConfig';
 
 const HomeScreen = () => {
   useFont();
+  const navigation = useNavigation();
+
   const [currentLat, setcurrentLat,] = useState(null);
   const [currentLong, setcurrentLong,] = useState(null);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [address, setAddress] = useState(null);
   const [barberId,setbarberId] = useState(0);
-  const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState('');
   const [nearbyBarbers, setNearbyBarbers] = useState([]);
 
@@ -64,8 +65,9 @@ const HomeScreen = () => {
         const barberName = doc.get("name");
         const barberUsername = doc.get("username");
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
+        const distanceInMiles = (distance / 1609).toFixed(1);
         if (distance<6000){
-          nearBarbers.push({id: barberId+1, name: barberName,username:barberUsername});
+          nearBarbers.push({id: barberId+1, name: barberName,username:barberUsername, distance: distanceInMiles});
         };
         setNearbyBarbers(nearBarbers);
         console.log(nearBarbers);
@@ -75,22 +77,27 @@ const HomeScreen = () => {
 
   }, [currentLat, currentLong, setNearbyBarbers]);
 
-  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username}/>
+  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance}/>
 
+
+  const openLocation = () => {
+    navigation.navigate("Location");
+  }
 
 
 
   return (
     <View style = {styles.root}>
-
     <Header
     backgroundColor='white'
     placement="left"
       leftComponent={
-         <View className = "flex flex-row items-center "> 
+        <TouchableOpacity onPress={openLocation} >
+         <View className = "flex flex-row items-center ">
          <Text style = {styles.loctext}>Location · {address ? address[0].name : 'Loading...'} </Text>
          <Icon type="entypo" name="chevron-down" color="black" size={18} />
          </View>
+         </TouchableOpacity>
       }
       rightComponent={
         <Icon type="material-community" name="bell" color="black" size={22} />

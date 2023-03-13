@@ -12,11 +12,11 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 
 
-const BarberCard = ({name, username}) => {
+const BarberCard = ({name, username, distance}) => {
 
   const [activeIndex, setActiveIndex] = useState(0); //current index of the carousel
   const [iconColor, setIconColor] = useState("darkgray");
-  const [iconType, setIconType] = useState("hearto"); 
+  const [iconType, setIconType] = useState("heart-outline"); 
 
 
   const carouselData = [ //images that go into the carousel
@@ -38,8 +38,8 @@ const BarberCard = ({name, username}) => {
 
   //toggle color of favourite
   const toggleColor = () => {
-    const newColor = iconColor === 'darkgray' ? '#DB0000' : 'darkgray';
-    const newType = iconType === 'hearto' ? 'heart' : 'hearto';
+    const newColor = iconColor === 'darkgray' ? '#C92727' : 'darkgray';
+    const newType = iconType === 'heart-outline' ? 'heart' : 'heart-outline';
     setIconColor(newColor);
     setIconType(newType);
   };
@@ -95,7 +95,7 @@ const BarberCard = ({name, username}) => {
 
       <View style = {styles.iconContainer}>
       <Pressable onPress={toggleColor}>
-      <Icon type="ionicon" name= "md-heart-circle-outline" color={iconColor} size={24} />
+      <Icon type="ionicon" name= {iconType} color={iconColor} size={24} />
       </Pressable>
       </View>
       <View style={styles.paginatorContainer}>
@@ -120,7 +120,7 @@ const BarberCard = ({name, username}) => {
       <Text className = "text-base" style = {styles.figlight}>★5.0 (135)</Text>
       </View>
       <Text className = "text-sm " style = {styles.figreg}>Est. Waiting time : <Text className = "text-sm text-blue-600">32 Mins</Text></Text>
-      <Text className = "text-sm " style = {styles.figlight}>3.1mi</Text>
+      <Text className = "text-sm " style = {styles.figlight}>{distance} mi</Text>
  
     </View>
   );
