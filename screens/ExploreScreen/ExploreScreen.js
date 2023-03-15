@@ -1,4 +1,4 @@
-import { View, Text,ScrollView,TouchableWithoutFeedback,Keyboard} from 'react-native'
+import { View, Text,ScrollView,TouchableWithoutFeedback,Keyboard,Image} from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -8,10 +8,7 @@ const ExploreScreen = () => {
     <ScrollView >
 
       <Text className = "text-red-500">ExploreScreen</Text>
-      <Text>ExploreScreen</Text>
-      <Text>ExploreScreen</Text>
-      <Text>ExploreScreen</Text>
-      <Text>ExploreScreen</Text>
+      <Image source = {require('../../assets/images/bizlogo.jpg')}/>
 
     </ScrollView>
 

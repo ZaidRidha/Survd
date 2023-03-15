@@ -11,6 +11,8 @@ import { SearchBar } from '@rneui/themed';
 import { getDistance } from 'geolib';
 import { doc,getDocs,query,collection,where} from "firebase/firestore"; 
 import { database } from '../../firebaseConfig';
+import { useDispatch } from 'react-redux';
+import { setLoc } from '../../slices/locSlice';
 
 
 const HomeScreen = () => {
@@ -22,15 +24,14 @@ const HomeScreen = () => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [address, setAddress] = useState(null);
-  const [barberId,setbarberId] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [nearbyBarbers, setNearbyBarbers] = useState([]);
 
-
+  const dispatch = useDispatch();
 
 
   useEffect(() => {
-    console.log("hello");
+
     (async () => {
 
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -45,9 +46,11 @@ const HomeScreen = () => {
       setcurrentLat(currentLocation.coords.latitude);
       setcurrentLong(currentLocation.coords.longitude);
 
-      console.log("lat"+currentLocation.coords.latitude+"long"+ currentLocation.coords.longitude);
-      
-      console.log(getDistance({latitude:currentLocation.coords.latitude,longitude:currentLocation.coords.longitude},{latitude:51.509865,longitude:-0.118092}))
+      //redux
+
+      dispatch(setLoc({ lat: 37.7749, lng: -122.4194 }));
+
+
       let currentAddress = await Location.reverseGeocodeAsync(currentLocation.coords);
 
       setAddress(currentAddress);
@@ -64,13 +67,14 @@ const HomeScreen = () => {
         const longitude = doc.get("longitude");
         const barberName = doc.get("name");
         const barberUsername = doc.get("username");
+        const barberId = doc.get("barberID");
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
         const distanceInMiles = (distance / 1609).toFixed(1);
         if (distance<6000){
-          nearBarbers.push({id: barberId+1, name: barberName,username:barberUsername, distance: distanceInMiles});
+          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles});
+
         };
         setNearbyBarbers(nearBarbers);
-        console.log(nearBarbers);
       });
     })()
 
@@ -83,6 +87,7 @@ const HomeScreen = () => {
   const openLocation = () => {
     navigation.navigate("Location");
   }
+
 
 
 
@@ -118,10 +123,10 @@ const HomeScreen = () => {
         inputContainerStyle = {{backgroundColor: '#EEEEEE'}}
         inputStyle = {{fontSize:14, color: 'black'}}
         clearIcon={{ size: 25 }}
-      
       />
+
+
     <Text style = {styles.fgreg} className = "text-xl mb-2 ">Active barbers near you:</Text>
-    
     <FlatList
         data={nearbyBarbers}
         keyExtractor={item => item.id.toString()}
@@ -151,13 +156,10 @@ const styles = StyleSheet.create({
   loctext: {
     fontFamily : 'PoppinsMed',
     fontSize: 16,
-
-
   },
 
   fgreg: {
     fontFamily : 'PoppinsMed',
-
   }
 
 })

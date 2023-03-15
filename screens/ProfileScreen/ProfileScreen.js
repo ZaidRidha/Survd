@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet} from 'react-native'
+import { View, Text,StyleSheet,SafeAreaView} from 'react-native'
 import React from 'react'
 import { Button } from '@rneui/themed';
 import { authentication } from '../../firebaseConfig';
@@ -16,10 +16,10 @@ const ProfileScreen = () => {
         });
       }
   return (
-    <View>
+    <SafeAreaView>
       <Text>ProfileScreen</Text>
       <Button onPress={signuserOut}>Sign out</Button>
-    </View>
+    </SafeAreaView>
   )
 }
 

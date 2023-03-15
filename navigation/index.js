@@ -11,6 +11,7 @@ import { Icon } from '@rneui/base';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import { ScrollView } from 'react-native-gesture-handler';
 import LocationScreen from '../screens/LocationScreen/LocationScreen';
+import PressProfile from '../screens/PressProfile/PressProfile';
 
 
 const Stack = createStackNavigator();
@@ -130,6 +131,19 @@ const Navigation = () => {
           name = "Location"
           component={LocationScreen}
           />
+
+          <Stack.Screen 
+          name = "PressProfile"
+          component = {PressProfile}
+          options={{ 
+            headerShown: true,
+            headerBackTitleVisible: true,
+            headerBackTitle: ' ',
+            headerTitle: '',
+            headerTintColor: '#000000',
+          }}
+          />
+
       </Stack.Navigator>
     </NavigationContainer>
   )

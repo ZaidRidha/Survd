@@ -1,8 +1,9 @@
-import { View, Text,StyleSheet,Image,FlatList,ImageBackground, Pressable } from 'react-native'
+import { View, Text,StyleSheet,Image,FlatList,ImageBackground, Pressable,PanResponder,TouchableOpacity} from 'react-native'
 import React, {useState,useRef} from 'react'
 import useFont from '../../useFont';
 import { Icon } from '@rneui/themed';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { useNavigation } from '@react-navigation/native';
 
 
 
@@ -13,11 +14,33 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 
 const BarberCard = ({name, username, distance}) => {
-
+  const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0); //current index of the carousel
   const [iconColor, setIconColor] = useState("darkgray");
   const [iconType, setIconType] = useState("heart-outline"); 
+  const [isSwiping, setIsSwiping] = useState(false);
 
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        setIsSwiping(false);
+      },
+      onPanResponderMove: (_, gestureState) => {
+        if (Math.abs(gestureState.dx) > 10 || Math.abs(gestureState.dy) > 10) {
+          setIsSwiping(true);
+        }
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        if (!isSwiping) {
+          openProfile();
+        } else {
+          setIsSwiping(false);
+        }
+      },
+    })
+  ).current;
 
   const carouselData = [ //images that go into the carousel
     {
@@ -44,6 +67,11 @@ const BarberCard = ({name, username, distance}) => {
     setIconType(newType);
   };
 
+  const openProfile = () => {
+    navigation.navigate("PressProfile");
+  }
+
+
 
   //when it goes to an item. 
   const handleSnapToItem = (index) => {
@@ -52,8 +80,8 @@ const BarberCard = ({name, username, distance}) => {
 
   useFont();
   return (
-    <View style={styles.container} className = "mb-5">
 
+    <View style={styles.container} className = "mb-5">
       <View >
       <Text className = "text-2xl" style = {styles.figsemibold}>{name} </Text>
       <Text className = "text-sm text-gray-700 " style = {styles.figlight}>{username}</Text>
@@ -87,6 +115,7 @@ const BarberCard = ({name, username, distance}) => {
         handleSnapToItem(index);
       }}
       renderItem={({ item }) => (
+      <Pressable onPress={openProfile}>
       <View style = {styles.imgcontainer}> 
       <Image
       source={item.image}
@@ -108,7 +137,9 @@ const BarberCard = ({name, username, distance}) => {
       activeDotIndex={activeIndex}
       />
       </View>
+      
       </View>
+      </Pressable>
       )}
 
       />
@@ -120,8 +151,7 @@ const BarberCard = ({name, username, distance}) => {
       <Text className = "text-base" style = {styles.figlight}>★5.0 (135)</Text>
       </View>
       <Text className = "text-sm " style = {styles.figreg}>Est. Waiting time : <Text className = "text-sm text-blue-600">32 Mins</Text></Text>
-      <Text className = "text-sm " style = {styles.figlight}>{distance} mi</Text>
- 
+      <Text className = "text-sm mb-3 " style = {styles.figlight}>{distance} mi</Text>
     </View>
   );
 };
@@ -196,7 +226,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#BEBEBE',
 
-  }
+  },
+
+  line: {
+    borderBottomColor: '#D3D3D3',
+    borderBottomWidth: 1,
+    width: '100%',
+  },
 });
 
 export default BarberCard;

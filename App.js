@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { requireNativeComponent, StyleSheet, Text, SafeAreaView,TouchableWithoutFeedback, Keyboard,KeyboardAvoidingView} from 'react-native';
+import { requireNativeComponent, StyleSheet, Text, SafeAreaView,TouchableWithoutFeedback, Keyboard,KeyboardAvoidingView,View} from 'react-native';
 import { useFonts } from 'expo-font';
 
 

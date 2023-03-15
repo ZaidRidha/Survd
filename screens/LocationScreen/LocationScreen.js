@@ -4,9 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 import { Header } from '@rneui/themed';
 import { Icon } from '@rneui/themed';
 import useFont from '../../useFont';
+import { selectCurrentLoc } from '../../slices/locSlice';
+import { useSelector } from 'react-redux';
 const LocationScreen = () => {
     useFont();
+
     const navigation = useNavigation();
+
+    const currentLoc = useSelector(selectCurrentLoc);
+    console.log(currentLoc);
   return (
     <View style = {styles.root}>
     <Header
@@ -20,6 +26,8 @@ const LocationScreen = () => {
         </Pressable>
       }
     />
+
+    <Text></Text>
     </View>
   )
 }
