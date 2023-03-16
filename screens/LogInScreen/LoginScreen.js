@@ -101,7 +101,7 @@ const LoginScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <KeyboardAwareScrollView contentContainerStyle = {styles.root}>
-    <Image source={logo} style = {styles.logo}></Image>
+    <Image className = "mt-5" source={logo} style = {styles.logo}></Image>
     {loading && <ActivityIndicator size="large" color="#999999" />}
 
     <Text style = {styles.text}>Email</Text>

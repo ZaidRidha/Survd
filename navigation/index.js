@@ -7,17 +7,19 @@ import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import PhoneScreen from '../screens/PhoneScreen/PhoneScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Icon } from '@rneui/base';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import { ScrollView } from 'react-native-gesture-handler';
 import LocationScreen from '../screens/LocationScreen/LocationScreen';
 import PressProfile from '../screens/PressProfile/PressProfile';
+import { Icon } from '@rneui/themed';
+import { StyleSheet } from 'react-native';
 
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const BottomTabNavigator = () => {
+  
   return (
     <Tab.Navigator screenOptions={{headerShown:false}}>
       <Tab.Screen 
@@ -124,13 +126,18 @@ const Navigation = () => {
             title: "Verification"}}
           />
           <Stack.Screen
-          options={{
-            presentation: "modal",
-            gestureEnabled: true,
-          }}
-          name = "Location"
-          component={LocationScreen}
-          />
+            name="Location"
+            component={LocationScreen}
+            options={{
+              headerShown:true,
+              headerBackTitleVisible:true,
+              headerBackTitle: " ",
+              presentation: "modal",
+              gestureEnabled: true,
+              headerTitle: "Location",
+              headerTintColor: "#000000",
+            }}
+/>
 
           <Stack.Screen 
           name = "PressProfile"
@@ -139,8 +146,17 @@ const Navigation = () => {
             headerShown: true,
             headerBackTitleVisible: true,
             headerBackTitle: ' ',
-            headerTitle: '',
+            headerTitle: 'Doctor Moussy',
             headerTintColor: '#000000',
+            headerRight: () => (
+              <Icon
+                style={styles.msgIcon}
+                type = 'feather'
+                name='message-square'
+                size = {28}
+                color = "black" 
+              />
+            )
           }}
           />
 
@@ -148,6 +164,12 @@ const Navigation = () => {
     </NavigationContainer>
   )
 }
+
+const styles = StyleSheet.create({
+  msgIcon:{
+    marginRight:5,
+  }
+})
 
 
 

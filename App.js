@@ -32,9 +32,9 @@ export default function App() {
 
   return ( 
   <Provider store={store}>
-  <SafeAreaView style = {styles.root}>
+  <View style = {styles.root}>
     <Navigation/>
-  </SafeAreaView>
+  </View>
   </Provider>
   );
 

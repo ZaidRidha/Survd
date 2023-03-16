@@ -1,4 +1,4 @@
-import { View, Text,Button,TouchableOpacity,StyleSheet, Pressable} from 'react-native'
+import { View, Text,Button,TouchableOpacity,StyleSheet, Pressable,SafeAreaView} from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { Header } from '@rneui/themed';
@@ -14,21 +14,10 @@ const LocationScreen = () => {
     const currentLoc = useSelector(selectCurrentLoc);
     console.log(currentLoc);
   return (
-    <View style = {styles.root}>
-    <Header
-    backgroundColor='white'
-    centerComponent={
-        <Text className = "text-base" style = {styles.poppingReg}>Location</Text>
-    }
-      rightComponent={
-        <Pressable onPress={() => navigation.goBack()}>
-        <Icon type="octicon" name="x" color="black" size={26} />
-        </Pressable>
-      }
-    />
+    <SafeAreaView style = {styles.root}>
 
     <Text></Text>
-    </View>
+    </SafeAreaView>
   )
 }
 
