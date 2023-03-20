@@ -21,26 +21,6 @@ const BarberCard = ({name, username, distance}) => {
   const [isSwiping, setIsSwiping] = useState(false);
 
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        setIsSwiping(false);
-      },
-      onPanResponderMove: (_, gestureState) => {
-        if (Math.abs(gestureState.dx) > 10 || Math.abs(gestureState.dy) > 10) {
-          setIsSwiping(true);
-        }
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        if (!isSwiping) {
-          openProfile();
-        } else {
-          setIsSwiping(false);
-        }
-      },
-    })
-  ).current;
 
   const carouselData = [ //images that go into the carousel
     {
@@ -83,7 +63,7 @@ const BarberCard = ({name, username, distance}) => {
 
     <View style={styles.container} className = "mb-5">
       <View >
-      <Text className = "text-2xl" style = {styles.figsemibold}>{name} </Text>
+      <Text className = "text-2xl" style = {styles.poppinsMed}>{name} </Text>
       <Text className = "text-sm text-gray-700 " style = {styles.figlight}>{username}</Text>
       </View>
  
@@ -96,7 +76,7 @@ const BarberCard = ({name, username, distance}) => {
 
       <View className = "flex flex-row items-center">
       <Icon type="entypo" name="shop" color="black" size={22} />
-      <Text className = "text-2xl" style = {styles.figsemibold}>/</Text>
+      <Text className = "text-2xl" style = {styles.poppinsMed}>/</Text>
       <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
       </View>
 
@@ -201,8 +181,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  figsemibold:{
-    fontFamily:"PoppinsBold"
+  poppinsMed:{
+    fontFamily:"PoppinsMed"
   },
   figlight:{
     fontFamily:"PoppinsLight"

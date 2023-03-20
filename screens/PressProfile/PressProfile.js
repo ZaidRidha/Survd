@@ -23,15 +23,46 @@ const PressProfile = () => {
     setInfoPressed(false);
   };
 
+  const carouselData = [ //images that go into the carousel
+  {
+    id: 1,
+    image: require('../../assets/images/bizlogo.jpg'),
+  },
+  {
+    id: 2,
+    image: require('../../assets/images/fade2.jpg'),
+  },
+  {
+    id: 3,
+
+    image: require('../../assets/images/fade3.jpg'),
+  },
+];
+
 
 
   return (
     <View style={styles.root}>
+      <View className = "flex flex-row items-center justify-center mb-3  mt-3">
       <Image source={require('../../assets/images/bizlogo.jpg')} style={styles.image} />
-      <View className = "flex flex-row items-center justify-center mb-3">
+      <View className = "flex flex-col ml-3 items-center justify-center">
+      <Text style = {styles.PoppinsReg} className = "text-xl ">Doctor Moussy </Text>
+      <Text style = {styles.PoppinsLight} className ="text-sm text-gray-500">@doctormoussy </Text>
+      <View className = "flex flex-row items-center justify-center">
+      <Icon type="font-awesome" name="star" color="black" size={16} />
+      <Icon type="font-awesome" name="star" color="black" size={16} />
+      <Icon type="font-awesome" name="star" color="black" size={16} />
+      <Icon type="font-awesome" name="star" color="black" size={16} />
+      <Icon type="font-awesome" name="star" color="black" size={16} />
+      <Text className = "text-sm text-gray-700" style = {styles.PoppinsReg}> 5.0 (140)</Text>
+      </View>
+      <View className = "flex flex-row items-center justify-center mb-1">
       <View style={styles.circle}></View>
       <Text className = "text-base " style = {styles.PoppinsLight}>Active Now </Text>
       </View>
+      </View>
+
+        </View>
 
       <View style={styles.clickers}>
         <TouchableOpacity onPress={handleInfoPress}>
@@ -61,25 +92,30 @@ const PressProfile = () => {
       </View>
 
       {infoPressed ? (
-      <ScrollView className = "ml-10">
-        <Text style = {styles.PoppinsMed} className = "text-2xl mt-3">About</Text>
-        <Text style = {styles.PoppinsReg} className = "text-xl ">Doctor Moussy <Text className ="text-sm text-gray-400">@doctormoussy </Text></Text>
-        <View className = "flex flex-row">
-        <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={28} />
-        <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={28} />
+      <ScrollView className = "ml-5">
+        <View className = "flex flex-row items-center justify-center mb-2 self-start mt-5">
+        <Icon style = {styles.instagramIcon} type="ionicon" name="information-circle-outline" color="black" size={27} />
+        <Text style = {styles.PoppinsMed} className = "text-2xl ">About</Text>
         </View>
-        <Icon style = {styles.pinIcon} type="entypo" name="pin" color="black" size={25} />
+        <View className = "flex flex-row items-center justify-center self-start mb-1">
+        <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={32} />
+        <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={32} />
+        </View>
+        <Text style = {styles.PoppinsReg} className = "text-base ">Specialises in: </Text>
+        <Text className = "text-sm text-gray-600 " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
+
+        <Icon style = {styles.pinIcon} type="entypo" name="pin" color="black" size={22} />
         <View >
           <Text style = {styles.Pinnedtext}>Hello Guys, today i am kind of busy but i might be doing after hours. I don't know yet.</Text>
         </View>
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
-        <View style={{flex: 0.9, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:7 }} />   
+        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
         <Icon type="entypo" name="location" color="black" size={25} style ={styles.locationIcon} />
         <Text style = {styles.PoppinsMed} className = "text-2xl mt-3">Location & Hours</Text>
         </View>
-        <Text style = {styles.PoppinsReg} className = "text-xl ">31 Samuel Drive, SW14 3QP</Text>
+        <Text style = {styles.PoppinsMed} className = "text-xl ">31 Samuel Drive, SW14 3QP</Text>
         <Text style = {styles.PoppinsLight} className = "text-xl ">Updated Hours:</Text>
         <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
         <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
@@ -88,9 +124,12 @@ const PressProfile = () => {
         <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
 
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
-        <View style={{flex: 0.9, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:7 }} />   
+        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
+        <View className = "flex flex-row items-center justify-center self-start">
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Health and safety verified</Text>
+        <Icon style = {styles.verifiedIcon} type="material" name="verified" color="green" size={22} />
+        </View>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully compliant with hygiene standards.</Text>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">5 years experience barbering</Text>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully Insured</Text>
@@ -121,7 +160,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderWidth: 1,
     borderColor: 'black',
-    borderRadius: 5,
+    borderRadius: 100,
     marginTop:5
   },
 
@@ -143,6 +182,10 @@ const styles = StyleSheet.create({
     fontFamily: 'PoppinsLight',
   },
 
+  PoppinsBold:{
+    fontFamily: 'PoppinsBold',
+  },
+
   PoppinsMed: {
     fontFamily: 'PoppinsMed',
   },
@@ -158,6 +201,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     marginLeft: 4,
     marginRight:4
+  },
+
+  verifiedIcon:{
+    marginLeft:3,
   },
 
   phoneIcon:{
@@ -177,7 +224,7 @@ const styles = StyleSheet.create({
 
   Pinnedtext:{
     fontFamily: "PoppinsReg",
-    maxWidth: "90%",
+    maxWidth: "95%",
     borderWidth: 1,
     borderRadius: 4,
     borderColor: '#CFCFCF',
