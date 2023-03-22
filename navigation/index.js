@@ -12,6 +12,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import LocationScreen from '../screens/LocationScreen/LocationScreen';
 import PressProfile from '../screens/PressProfile/PressProfile';
 import { Icon } from '@rneui/themed';
+import PressService from '../screens/PressService/PressService';
 import { StyleSheet } from 'react-native';
 
 
@@ -159,6 +160,20 @@ const Navigation = () => {
             )
           }}
           />
+
+          <Stack.Screen
+            name="PressService"
+            component={PressService}
+            options={{
+              headerShown:true,
+              headerBackTitleVisible:true,
+              headerBackTitle: " ",
+              presentation: "modal",
+              gestureEnabled: true,
+              headerTitle: "Service",
+              headerTintColor: "#000000",
+            }}
+/>
 
       </Stack.Navigator>
     </NavigationContainer>

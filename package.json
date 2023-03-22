@@ -49,6 +49,7 @@
     "react-native-shapes": "^0.1.0",
     "react-native-snap-carousel": "4.0.0-beta.6",
     "react-native-svg": "13.4.0",
+    "react-native-swipe-gestures": "^1.0.5",
     "react-native-vector-icons": "^9.2.0",
     "react-native-webview": "11.23.1",
     "react-redux": "^8.0.5",
