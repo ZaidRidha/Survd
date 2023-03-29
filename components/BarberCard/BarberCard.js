@@ -1,24 +1,20 @@
 import { View, Text,StyleSheet,Image,FlatList,ImageBackground, Pressable,PanResponder,TouchableOpacity} from 'react-native'
-import React, {useState,useRef} from 'react'
+import React, {useState,useRef,useEffect} from 'react'
 import useFont from '../../useFont';
 import { Icon } from '@rneui/themed';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useRoute } from '@react-navigation/native';
+import * as Location from 'expo-location';
 
 
 
-
-
-
-
-
-
-const BarberCard = ({name, username, distance}) => {
+const BarberCard = ({name, username, distance,lat,long}) => {
   const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0); //current index of the carousel
   const [iconColor, setIconColor] = useState("darkgray");
   const [iconType, setIconType] = useState("heart-outline"); 
-  const [isSwiping, setIsSwiping] = useState(false);
+
+ 
 
 
 
@@ -48,7 +44,13 @@ const BarberCard = ({name, username, distance}) => {
   };
 
   const openProfile = () => {
-    navigation.navigate("PressProfile");
+    navigation.navigate("PressProfile", {
+      name: name,
+      username: username,
+      lat: lat,
+      long: long,
+      distance: distance,
+    });
   }
 
 

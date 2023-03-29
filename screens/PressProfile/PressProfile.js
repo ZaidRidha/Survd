@@ -1,14 +1,49 @@
 import { View, Text, ScrollView, TouchableOpacity, Keyboard, Image, StyleSheet,PanResponder } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useFont from '../../useFont';
 import { Icon } from '@rneui/themed';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useRoute  } from '@react-navigation/native';
+import * as Location from 'expo-location';
 
-const PressProfile = () => {
+const PressProfile = ({}) => {
 
   const navigation = useNavigation();
   useFont();
+  const route = useRoute();
+  const { name, username, distance, lat, long} = route.params;
+  
+
+
+
+
+  const[Address,setAddress] = useState("");
+
+
+
+  useEffect(() => {
+
+    (async () => {
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        
+        return;
+      }
+
+
+      let currentAddress = await Location.reverseGeocodeAsync({ latitude: lat, longitude: long })
+      setAddress(currentAddress[0].name);
+
+
+
+      
+    })();
+  }, [setAddress]);
+
+
+
 
   const [infoPressed, setInfoPressed] = useState(true);
   const [servicesPressed, setServicesPressed] = useState(false);
@@ -47,12 +82,12 @@ const PressProfile = () => {
 
   return (
     <View style={styles.root}>
-      <View className = "flex flex-row items-center justify-center mb-3  mt-3">
+      <View className = "flex flex-row ml-5 mb-3">
       <Image source={require('../../assets/images/bizlogo.jpg')} style={styles.image} />
-      <View className = "flex flex-col ml-3 items-center justify-center">
-      <Text style = {styles.PoppinsReg} className = "text-xl ">Doctor Moussy </Text>
-      <Text style = {styles.PoppinsLight} className ="text-sm text-gray-500">@doctormoussy </Text>
-      <View className = "flex flex-row items-center justify-center">
+      <View className = "flex flex-col ml-5">
+      <Text style={[styles.PoppinsMed,{ width: 200}]}  className = "text-lg mt-5">{name}</Text>
+      <Text style = {styles.PoppinsLight} className ="text-sm text-gray-500">{username}</Text>
+      <View className = "flex flex-row ">
       <Icon type="font-awesome" name="star" color="black" size={16} />
       <Icon type="font-awesome" name="star" color="black" size={16} />
       <Icon type="font-awesome" name="star" color="black" size={16} />
@@ -60,7 +95,7 @@ const PressProfile = () => {
       <Icon type="font-awesome" name="star" color="black" size={16} />
       <Text className = "text-sm text-gray-700" style = {styles.PoppinsReg}> 5.0 (140)</Text>
       </View>
-      <View className = "flex flex-row items-center justify-center mb-1">
+      <View className = "flex flex-row items-center">
       <View style={styles.circle}></View>
       <Text className = "text-base " style = {styles.PoppinsLight}>Active Now </Text>
       </View>
@@ -99,7 +134,7 @@ const PressProfile = () => {
       <ScrollView className = "ml-5">
         <View className = "flex flex-row items-center justify-center self-start mb-1 mt-2">
         <Icon style = {styles.pinIcon} type="entypo" name="pin" color="black" size={20} />
-        <Text style = {styles.PoppinsReg} className = "text-base "> Pinned Message:</Text>
+        <Text style = {styles.PoppinsMed} className = "text-lg "> Pinned Message:</Text>
         </View>
         <View >
           <Text style = {styles.Pinnedtext}>Hello Guys, today i am kind of busy but i might be doing after hours. I don't know yet.</Text>
@@ -129,7 +164,8 @@ const PressProfile = () => {
         <Icon type="entypo" name="location" color="black" size={25} style ={styles.locationIcon} />
         <Text style = {styles.PoppinsMed} className = "text-xl mt-3">Location & Hours</Text>
         </View>
-        <Text style = {styles.PoppinsMed} className = "text-lg ">31 Samuel Drive, SW14 3QP</Text>
+        <Text style = {styles.PoppinsMed} className = "text-lg ">{Address}</Text>
+        <Text style = {styles.PoppinsLight} className = "text-base ">{distance} Miles away</Text>
         <Text style = {styles.PoppinsLight} className = "text-lg ">Updated Hours:</Text>
         <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
         <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
@@ -197,7 +233,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 100,
-    marginTop:5
+    marginTop:5,
   },
 
   locationIcon:{

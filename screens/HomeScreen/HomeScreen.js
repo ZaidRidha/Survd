@@ -12,7 +12,7 @@ import { getDistance } from 'geolib';
 import { doc,getDocs,query,collection,where} from "firebase/firestore"; 
 import { database } from '../../firebaseConfig';
 import { useDispatch } from 'react-redux';
-import { setLoc } from '../../slices/locSlice';
+import { setLoc,setAddress as setReduxAddress } from '../../slices/locSlice';
 
 
 const HomeScreen = () => {
@@ -48,12 +48,16 @@ const HomeScreen = () => {
 
       //redux
 
-      dispatch(setLoc({ lat: 37.7749, lng: -122.4194 }));
+      
 
 
-      let currentAddress = await Location.reverseGeocodeAsync(currentLocation.coords);
+      let currentAddress = await Location.reverseGeocodeAsync(currentLocation.coords)
 
       setAddress(currentAddress);
+      dispatch(setReduxAddress(currentAddress[0].name));
+
+      dispatch(setLoc({ lat: currentLocation.coords.latitude, lng: currentLocation.coords.longitude }));
+
       
     })();
   }, [setLocation, setcurrentLat, setcurrentLong, setAddress]);
@@ -71,7 +75,7 @@ const HomeScreen = () => {
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
         const distanceInMiles = (distance / 1609).toFixed(1);
         if (distance<6000){
-          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles});
+          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude});
 
         };
         setNearbyBarbers(nearBarbers);
@@ -81,7 +85,7 @@ const HomeScreen = () => {
 
   }, [currentLat, currentLong, setNearbyBarbers]);
 
-  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance}/>
+  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long}/>
 
 
   const openLocation = () => {
@@ -155,7 +159,7 @@ const styles = StyleSheet.create({
 
   loctext: {
     fontFamily : 'PoppinsMed',
-    fontSize: 16,
+    fontSize: 18,
   },
 
   fgreg: {

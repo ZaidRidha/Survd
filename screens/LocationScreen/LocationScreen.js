@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Header } from '@rneui/themed';
 import { Icon } from '@rneui/themed';
 import useFont from '../../useFont';
-import { selectCurrentLoc } from '../../slices/locSlice';
+import { selectCurrentLoc, selectCurrentAddress } from '../../slices/locSlice';
 import { useSelector } from 'react-redux';
 const LocationScreen = () => {
     useFont();
@@ -12,6 +12,8 @@ const LocationScreen = () => {
     const navigation = useNavigation();
 
     const currentLoc = useSelector(selectCurrentLoc);
+    const currentAddress = useSelector(selectCurrentAddress);
+    console.log(currentAddress);
     console.log(currentLoc);
   return (
     <SafeAreaView style = {styles.root}>

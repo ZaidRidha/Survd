@@ -147,7 +147,7 @@ const Navigation = () => {
             headerShown: true,
             headerBackTitleVisible: true,
             headerBackTitle: ' ',
-            headerTitle: 'Doctor Moussy',
+            headerTitle: ' ',
             headerTintColor: '#000000',
             headerRight: () => (
               <Icon
@@ -165,12 +165,12 @@ const Navigation = () => {
             name="PressService"
             component={PressService}
             options={{
-              headerShown:true,
+              headerShown:false,
               headerBackTitleVisible:true,
               headerBackTitle: " ",
               presentation: "modal",
               gestureEnabled: true,
-              headerTitle: "Service",
+              headerTitle: "",
               headerTintColor: "#000000",
             }}
 />
