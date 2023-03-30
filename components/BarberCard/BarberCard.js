@@ -8,13 +8,11 @@ import * as Location from 'expo-location';
 
 
 
-const BarberCard = ({name, username, distance,lat,long}) => {
+const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,shop,home,pinmsg}) => {
   const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0); //current index of the carousel
   const [iconColor, setIconColor] = useState("darkgray");
-  const [iconType, setIconType] = useState("heart-outline"); 
-
- 
+  const [iconType, setIconType] = useState("heart-outline");
 
 
 
@@ -50,6 +48,13 @@ const BarberCard = ({name, username, distance,lat,long}) => {
       lat: lat,
       long: long,
       distance: distance,
+      instagram: instagram,
+      phone: phone,
+      mobile: mobile,
+      home: home,
+      shop: shop,
+      pinmsg: pinmsg,
+
     });
   }
 
@@ -77,9 +82,25 @@ const BarberCard = ({name, username, distance,lat,long}) => {
       </View>
 
       <View className = "flex flex-row items-center">
-      <Icon type="entypo" name="shop" color="black" size={22} />
-      <Text className = "text-2xl" style = {styles.poppinsMed}>/</Text>
+
+      {mobile ? (
       <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
+      ) : null}
+      {shop ? (
+      <>
+        {mobile && <Text style = {styles.figreg} className = "text-lg"> / </Text>}
+        <Icon type="entypo" name="shop" color="black" size={22} />
+      </>
+       ) : null}
+      {home ? (
+      <>
+        {(mobile || shop) && <Text style={{ fontSize: 22 }}> / </Text>}
+        <Icon type="ionicon" name="home" color="black" size={22} />
+      </>
+      ) : null}
+
+     
+ 
       </View>
 
       </View>

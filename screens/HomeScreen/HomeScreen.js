@@ -72,10 +72,16 @@ const HomeScreen = () => {
         const barberName = doc.get("name");
         const barberUsername = doc.get("username");
         const barberId = doc.get("barberID");
+        const instagram = doc.get("instagram");
+        const phone = doc.get("phone");
+        const mobile = doc.get("mobile");
+        const shop = doc.get("shop");
+        const home = doc.get("home");
+        const pinmsg = doc.get("pinmsg");
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
         const distanceInMiles = (distance / 1609).toFixed(1);
         if (distance<6000){
-          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude});
+          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg});
 
         };
         setNearbyBarbers(nearBarbers);
@@ -85,7 +91,7 @@ const HomeScreen = () => {
 
   }, [currentLat, currentLong, setNearbyBarbers]);
 
-  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long}/>
+  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long} instagram = {item.instagram} phone = {item.phone} mobile = {item.mobile} shop = {item.shop} home = {item.home} pinmsg = {item.pinmsg}/>
 
 
   const openLocation = () => {

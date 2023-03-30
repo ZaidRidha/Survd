@@ -11,7 +11,7 @@ const PressProfile = ({}) => {
   const navigation = useNavigation();
   useFont();
   const route = useRoute();
-  const { name, username, distance, lat, long} = route.params;
+  const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg} = route.params;
   
 
 
@@ -137,24 +137,39 @@ const PressProfile = ({}) => {
         <Text style = {styles.PoppinsMed} className = "text-lg "> Pinned Message:</Text>
         </View>
         <View >
-          <Text style = {styles.Pinnedtext}>Hello Guys, today i am kind of busy but i might be doing after hours. I don't know yet.</Text>
+          <Text style = {styles.Pinnedtext}>{pinmsg}</Text>
         </View>
+
+        <Text style = {styles.PoppinsReg} className = "text-base mt-1 ">Specialises in: </Text>
+        <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
         <View className = "flex flex-row items-center justify-center self-start mb-1 mt-2">
-        <Icon type="entypo" name="shop" color="black" size={22} />
-        <Text style = {styles.PoppinsReg} className = "text-base text-green-800 "> (In Shop)</Text>
-        <Text className = "text-2xl" style = {styles.poppinsMed}>/</Text>
+        {mobile ? (
+          <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
         <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
         <Text style = {styles.PoppinsReg} className = "text-base text-blue-800 "> (Mobile)</Text>
-        </View>
-        <Text style = {styles.PoppinsReg} className = "text-base ">Specialises in: </Text>
-        <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
+          </View>
+      ) : null}
+        {shop ? (
+          <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1 ">
+          <Icon type="entypo" name="shop" color="black" size={22} />
+          <Text style = {styles.PoppinsReg} className = "text-base text-green-800 "> (In Shop)</Text> 
+          </View>
+      ) : null}
+
+        {home ? (
+          <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
+          <Icon type="ionicon" name="home" color="black" size={22} />
+          <Text style = {styles.PoppinsReg} className = "text-base text-purple-800 "> (At Home)</Text> 
+          </View>
+      ) : null}
+      </View>
         <View className = "flex flex-row items-center justify-center self-start mt-2">
         <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={30} />
-        <Text className = "ml-2 text-base" style = {styles.PoppinsReg}>@doctormoussy</Text>
+        <Text className = "ml-2 text-base" style = {styles.PoppinsReg}>{instagram}</Text>
         </View>
         <View className = "flex flex-row items-center justify-center self-start mt-2">
         <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={36} />
-        <Text className = "ml-2 text-base" style = {styles.PoppinsReg}>07883118432</Text>
+        <Text className = "ml-2 text-base" style = {styles.PoppinsReg}>{phone}</Text>
         </View>
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
