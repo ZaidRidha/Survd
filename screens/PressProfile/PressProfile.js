@@ -191,7 +191,7 @@ const PressProfile = ({}) => {
         {home ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
           <Icon type="ionicon" name="home" color="black" size={22} />
-          <Text style = {styles.PoppinsReg} className = "text-sm text-purple-800 "> (At Home)</Text> 
+          <Text style = {styles.PoppinsReg} className = "text-sm text-purple-800 "> (Vendor's Home)</Text> 
           </View>
       ) : null}
       </View>
