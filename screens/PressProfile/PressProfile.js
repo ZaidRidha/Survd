@@ -5,18 +5,20 @@ import useFont from '../../useFont';
 import { Icon } from '@rneui/themed';
 import { useNavigation,useRoute  } from '@react-navigation/native';
 import * as Location from 'expo-location';
+import { doc,getDocs,query,collection,where,onSnapshot} from "firebase/firestore"; 
+import { database } from '../../firebaseConfig'
 
 const PressProfile = ({}) => {
 
   const navigation = useNavigation();
   useFont();
   const route = useRoute();
-  const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg} = route.params;
+  const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId} = route.params;
   
 
 
 
-
+  const [services, setServices] = useState([]);
   const[Address,setAddress] = useState("");
 
 
@@ -41,6 +43,39 @@ const PressProfile = ({}) => {
       
     })();
   }, [setAddress]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const querySnapshot = await getDocs(collection(database, "barbers", docId, "services"));
+      const servicesArray = querySnapshot.docs.map((doc) => {
+        const name = doc.get("name");
+        const category = doc.get("category");
+        const description = doc.get("description");
+        const duration = doc.get("duration");
+        const price = doc.get("price");
+        return { name, category, description, duration, price };
+      });
+      setServices(servicesArray);
+    };
+  
+    const unsubscribe = onSnapshot(collection(database, "barbers", docId, "services"), (snapshot) => {
+      fetchData();
+    });
+  
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+
+  
+  const groupedServices = services.reduce((groups, service) => {
+    const category = service.category;
+    groups[category] = groups[category] || [];
+    groups[category].push(service);
+    return groups;
+  }, {});
 
 
 
@@ -139,38 +174,44 @@ const PressProfile = ({}) => {
         <View >
           <Text style = {styles.Pinnedtext}>{pinmsg}</Text>
         </View>
-
-        <Text style = {styles.PoppinsReg} className = "text-base mt-1 ">Specialises in: </Text>
-        <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
-        <View className = "flex flex-row items-center justify-center self-start mb-1 mt-2">
+        <View className = "flex flex-row items-center justify-center self-start mt-2">
         {mobile ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
         <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
-        <Text style = {styles.PoppinsReg} className = "text-base text-blue-800 "> (Mobile)</Text>
+        <Text style = {styles.PoppinsReg} className = "text-sm text-blue-800 "> (Mobile)</Text>
           </View>
       ) : null}
         {shop ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1 ">
           <Icon type="entypo" name="shop" color="black" size={22} />
-          <Text style = {styles.PoppinsReg} className = "text-base text-green-800 "> (In Shop)</Text> 
+          <Text style = {styles.PoppinsReg} className = "text-sm text-green-800 "> (In Shop)</Text> 
           </View>
       ) : null}
 
         {home ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
           <Icon type="ionicon" name="home" color="black" size={22} />
-          <Text style = {styles.PoppinsReg} className = "text-base text-purple-800 "> (At Home)</Text> 
+          <Text style = {styles.PoppinsReg} className = "text-sm text-purple-800 "> (At Home)</Text> 
           </View>
       ) : null}
       </View>
+        <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">Specialises in: </Text>
+        <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
+
+        {instagram? (
+                 <View className = "flex flex-row items-center justify-center self-start mt-2">
+                 <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={28} />
+                 <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{instagram}</Text>
+                 </View>
+        ): null}
+
+      {phone? (
         <View className = "flex flex-row items-center justify-center self-start mt-2">
-        <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={30} />
-        <Text className = "ml-2 text-base" style = {styles.PoppinsReg}>{instagram}</Text>
+        <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={28} />
+        <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{phone}</Text>
         </View>
-        <View className = "flex flex-row items-center justify-center self-start mt-2">
-        <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={36} />
-        <Text className = "ml-2 text-base" style = {styles.PoppinsReg}>{phone}</Text>
-        </View>
+        ): null}
+
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
@@ -217,19 +258,43 @@ const PressProfile = ({}) => {
       </ScrollView>
     ) : null}
 
-      {servicesPressed ? (
-      <ScrollView className = "ml-5">
-        <Text style = {styles.PoppinsMed} className = "text-xl mt-3 mb-3">Popular Services</Text>
-        <TouchableOpacity onPress={PressService}>
-        <Text style = {styles.PoppinsReg} className = "text-base ">Skin Fade</Text>
-        <Text style = {styles.PoppinsMed} className = "text-sm">£11.00</Text>
-        <Text style = {[styles.PoppinsLight, { maxWidth: '95%' }]} numberOfLines={2} ellipsizeMode="tail" className = "text-sm text-gray-600 ">An incredible Skin Fade that is guranteed to leave every person very very very happy asefsdfsf  sd fsd fds fds fds fds fds fds fds fds </Text>
-        <Text style = {styles.PoppinsLight} className = "text-sm text-gray-500 ">30min</Text>
-        </TouchableOpacity>
-
-        
-      </ScrollView>
-    ) : null}
+{servicesPressed ? (
+  <ScrollView className="ml-5">
+    {Object.entries(groupedServices).map(([categoryName, categoryServices], index) => (
+      <View key={categoryName}>
+        <Text style={styles.PoppinsMed} className="text-xl mt-1 mb-2">
+          {categoryName}
+        </Text>
+        {categoryServices.map((service) => (
+          <TouchableOpacity onPress={PressService} key={service.name}>
+            <Text style={styles.PoppinsReg} className="text-base">
+              {service.name}
+            </Text>
+            <Text style={styles.PoppinsMed} className="text-sm">
+              {service.price ? `£${service.price.toFixed(2)}` : "Price not available"}
+            </Text>
+            <Text
+              style={[styles.PoppinsLight, { maxWidth: "95%" }]}
+              numberOfLines={2}
+              ellipsizeMode="tail"
+              className="text-sm text-gray-600"
+            >
+              {service.description}
+            </Text>
+            <Text style={styles.PoppinsLight} className="text-sm text-gray-500 mb-2">
+              {service.duration ? `${service.duration}min` : "Duration not available"}
+            </Text>
+          </TouchableOpacity>
+        ))}
+        {index < Object.entries(groupedServices).length - 1 && (  
+        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:3,marginBottom:3}}>
+        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:3, marginBottom:3 }} />   
+        </View>
+        )}
+      </View>
+    ))}
+  </ScrollView>
+) : null}
     </View>
   );
 };

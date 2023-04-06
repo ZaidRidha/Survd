@@ -67,6 +67,7 @@ const HomeScreen = () => {
       const querySnapshot = await getDocs(collection(database, "barbers"));
       const nearBarbers = [];
       querySnapshot.forEach((doc) => {
+        const docId = doc.id;
         const latitude = doc.get("latitude");
         const longitude = doc.get("longitude");
         const barberName = doc.get("name");
@@ -81,7 +82,7 @@ const HomeScreen = () => {
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
         const distanceInMiles = (distance / 1609).toFixed(1);
         if (distance<6000){
-          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg});
+          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId});
 
         };
         setNearbyBarbers(nearBarbers);
@@ -91,7 +92,7 @@ const HomeScreen = () => {
 
   }, [currentLat, currentLong, setNearbyBarbers]);
 
-  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long} instagram = {item.instagram} phone = {item.phone} mobile = {item.mobile} shop = {item.shop} home = {item.home} pinmsg = {item.pinmsg}/>
+  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long} instagram = {item.instagram} phone = {item.phone} mobile = {item.mobile} shop = {item.shop} home = {item.home} pinmsg = {item.pinmsg} docId = {item.docId}/>
 
 
   const openLocation = () => {
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
 
   loctext: {
     fontFamily : 'PoppinsMed',
-    fontSize: 18,
+    fontSize: 16,
   },
 
   fgreg: {

@@ -8,11 +8,12 @@ import * as Location from 'expo-location';
 
 
 
-const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,shop,home,pinmsg}) => {
+const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,shop,home,pinmsg,docId}) => {
   const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0); //current index of the carousel
   const [iconColor, setIconColor] = useState("darkgray");
   const [iconType, setIconType] = useState("heart-outline");
+
 
 
 
@@ -54,6 +55,7 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
       home: home,
       shop: shop,
       pinmsg: pinmsg,
+      docId: docId,
 
     });
   }
@@ -69,39 +71,24 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
   return (
 
     <View style={styles.container} className = "mb-5">
-      <View >
-      <Text className = "text-2xl" style = {styles.poppinsMed}>{name} </Text>
-      <Text className = "text-sm text-gray-700 " style = {styles.figlight}>{username}</Text>
-      </View>
- 
+
+      
       <View className = "flex flex-row items-center justify-between">
+      <View>
+      <View className = "flex flex-row items-center ">
+      <Text className = "text-base" style = {[styles.poppinsMed,{ width: 200}]}>{name} </Text>
+      </View>
+      <Text className = "text-sm text-gray-700  " style = {styles.figlight}>{username}</Text>
+      </View>
+      <View>
+
 
       <View className = "flex flex-row items-center">
       <View style={styles.circle}></View>
-      <Text className = "text-base " style = {styles.figreg}>Active Now </Text>
+      <Text className = "text-sm " style = {styles.figreg}>Active Now </Text>
+      </View>
       </View>
 
-      <View className = "flex flex-row items-center">
-
-      {mobile ? (
-      <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
-      ) : null}
-      {shop ? (
-      <>
-        {mobile && <Text style = {styles.figreg} className = "text-lg"> / </Text>}
-        <Icon type="entypo" name="shop" color="black" size={22} />
-      </>
-       ) : null}
-      {home ? (
-      <>
-        {(mobile || shop) && <Text style={{ fontSize: 22 }}> / </Text>}
-        <Icon type="ionicon" name="home" color="black" size={22} />
-      </>
-      ) : null}
-
-     
- 
-      </View>
 
       </View>
 
@@ -150,10 +137,32 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
 
  
       <View className = "flex flex-row items-center justify-between">
-      <Text className = "text-base" style = {styles.figreg}>££ · Fades · Afro · Caucasian</Text>
-      <Text className = "text-base" style = {styles.figlight}>★5.0 (135)</Text>
+      <View className = "flex flex-row items-center">
+      {mobile ? (
+      <Icon type='font-awesome-5' name="car-alt" color="black" size={18} />
+      ) : null}
+      {shop ? (
+      <>
+        {mobile && <Text style = {styles.figreg} className = "text-lg"> / </Text>}
+        <Icon type="entypo" name="shop" color="black" size={18} />
+      </>
+       ) : null}
+      {home ? (
+      <>
+        {(mobile || shop) && <Text style={{ fontSize: 22 }}> / </Text>}
+        <Icon type="ionicon" name="home" color="black" size={18} />
+      </>
+      ) : null}
+ 
       </View>
-      <Text className = "text-sm " style = {styles.figreg}>Est. Waiting time : <Text className = "text-sm text-blue-600">32 Mins</Text></Text>
+
+      <Text className = "text-sm" style = {styles.figlight}>★5.0 (135)</Text>
+      </View>
+      <View className = "flex flex-row items-center justify-between">
+      <Text className = "text-sm" style = {styles.figlight}>££ · Fades · Afro · Caucasian</Text>
+      </View>
+
+      <Text className = "text-sm " style = {styles.figlight}>Est. Waiting time : <Text  style = {styles.figlight} className = "text-sm text-blue-600">32 Mins</Text></Text>
       <Text className = "text-sm mb-3 " style = {styles.figlight}>{distance} mi</Text>
     </View>
   );

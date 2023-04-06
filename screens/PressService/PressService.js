@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import useFont from '../../useFont';
 import { CheckBox } from '@rneui/themed';
 
-const PressService = () => {
+const PressService = ({barberId}) => {
   const navigation = useNavigation();
   useFont();
   const [check1, setCheck1] = useState(false);
@@ -99,11 +99,12 @@ const PressService = () => {
       onPress={() => setCheck2(!check2)}
         />
               </View>
-
+      
+        <Text style = {styles.PoppinsLight} className  = "text-base text-gray-600 mt-5">Estimated Duration: 35 Minutes</Text>
       </View>
 
       
-
+      
       <Button
         title="Add To Basket (£11.00)"
         buttonStyle={{ backgroundColor: 'rgba(39, 39, 39, 1)' }}
