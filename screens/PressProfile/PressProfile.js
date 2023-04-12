@@ -54,7 +54,9 @@ const PressProfile = ({}) => {
         const description = doc.get("description");
         const duration = doc.get("duration");
         const price = doc.get("price");
-        return { name, category, description, duration, price };
+        const notes = doc.get("notes");
+        const serviceId = doc.id;
+        return { name, category, description, duration, price,notes,serviceId };
       });
       setServices(servicesArray);
     };
@@ -80,11 +82,24 @@ const PressProfile = ({}) => {
 
 
 
+
+
+
+
+
   const [infoPressed, setInfoPressed] = useState(true);
   const [servicesPressed, setServicesPressed] = useState(false);
   
-  const PressService = () => {
-    navigation.navigate("PressService");
+  const PressService = ({name,price,duration,description,notes,serviceId}) => {
+    navigation.navigate("PressService", {
+      name: name,
+      price: price,
+      description: description,
+      duration: duration,
+      notes: notes,
+      docId: docId,
+      serviceId: serviceId
+    });
   };
 
   const handleInfoPress = () => {
@@ -266,7 +281,7 @@ const PressProfile = ({}) => {
           {categoryName}
         </Text>
         {categoryServices.map((service) => (
-          <TouchableOpacity onPress={PressService} key={service.name}>
+          <TouchableOpacity onPress={() => PressService({ name: service.name, price: service.price, duration: service.duration, description: service.description, notes: service.notes, serviceId: service.serviceId})} key={service.name}>
             <Text style={styles.PoppinsReg} className="text-base">
               {service.name}
             </Text>

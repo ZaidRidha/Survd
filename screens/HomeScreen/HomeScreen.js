@@ -139,21 +139,16 @@ const HomeScreen = () => {
 
   return (
     <View style = {styles.root}>
-    <Header
-    backgroundColor='white'
-    placement="left"
-      leftComponent={
         <TouchableOpacity onPress={openLocation} >
-         <View className = "flex flex-row items-center ">
+         <View className = "flex flex-row items-center justify-between mt-7 ">
+        <View className = "flex flex-row items-center ">
          <Text style = {styles.loctext}>Location · {address ? address[0].name : 'Loading...'} </Text>
          <Icon type="entypo" name="chevron-down" color="black" size={18} />
          </View>
+         <Icon type="material-community" name="bell" color="black" size={22} />
+         </View>
          </TouchableOpacity>
-      }
-      rightComponent={
-        <Icon type="material-community" name="bell" color="black" size={22} />
-      }
-    />
+
 
       <SearchBar
         placeholder = "Search name, username, speciality, etc. "
