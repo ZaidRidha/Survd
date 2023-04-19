@@ -1,11 +1,14 @@
-import { StyleSheet, Text, View,TouchableOpacity, } from 'react-native'
+import { StyleSheet, Text, View,TouchableOpacity, ScrollView} from 'react-native'
 import React, {useState,useEffect} from 'react'
-import { Button, Icon } from '@rneui/base'
+import { Button, Icon } from '@rneui/base';
 import { useNavigation,useRoute } from '@react-navigation/native';
-import { database } from '../../firebaseConfig'
+import { database } from '../../firebaseConfig';
 import { doc,getDocs,query,collection,where,onSnapshot} from "firebase/firestore"; 
 import useFont from '../../useFont';
 import { CheckBox } from '@rneui/themed';
+import { useDispatch } from 'react-redux';
+import { setcurrentBasket } from '../../slices/locSlice';
+
 
 const PressService = () => {
   const navigation = useNavigation();
@@ -13,8 +16,17 @@ const PressService = () => {
   const [check1, setCheck1] = useState(false);
   const [check2, setCheck2] = useState(false);
   const [extras, setExtras] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(0);
   const route = useRoute();
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [basket, setBasket] = useState([]);
+  const [extrasArray, setextrasArray] = useState([]);
+  const [durationColor, setDurationColor] = useState('gray');
   const { name,price,duration,description,docId,notes,serviceId} = route.params;
+  const dispatch = useDispatch();
+
+  
 
 
 
@@ -27,7 +39,8 @@ const PressService = () => {
         const description = doc.get("description");
         const duration = doc.get("duration");
         const price = doc.get("price");
-        return { name, category, description, duration, price };
+        const id = doc.id;
+        return { name, category, description, duration, price,id };
       });
       setExtras(extrasArray);
     };
@@ -49,14 +62,48 @@ const PressService = () => {
     return groups;
   }, {});
 
-  console.log(groupedExtras);
+
+
+
+  const addtoBasket = () => {
+
+
+    const basketWithExtras = {
+      ...basket,
+      extras: extrasArray
+    };
+    console.log(basketWithExtras);
+    dispatch(setcurrentBasket(basketWithExtras));
+  };
+
+
+  const handleDurationChange = (value) => {
+    setTotalDuration(value);
+    setDurationColor('red'); // change color to red when duration is updated
+    setTimeout(() => {
+      setDurationColor('gray'); // change color back to gray after 500ms
+    }, 700);
+  };
+
+
+  useEffect(() => {
+    setBasket(
+      { name: name, price: price, duration: duration }
+    );
+  }, [name, price, duration]);
+
+  
 
 
 
 
-  const formattedPrice = price ? price.toFixed(2) : "Price not available";
+  useEffect(() => {
+    const formattedPrice = price ? price.toFixed(2) : 0;
+    setTotalPrice(formattedPrice);
+    setTotalDuration(duration);
+  }, [price]);
 
-  const totalPrice = formattedPrice;
+  const addStr = "Add To basket " + "(£"+totalPrice + ")";
 
   const goBack = () => {
     navigation.goBack();
@@ -71,22 +118,24 @@ const PressService = () => {
       </View>
       <View className= "ml-5 mt-4">
       <Text style = {styles.PoppinsMed} className  = "text-3xl">{name}</Text>
-      <Text style = {styles.PoppinsReg} className = "text-lg">£{totalPrice}</Text>
+      <Text style = {styles.PoppinsReg} className = "text-lg">£{price.toFixed(2)}</Text>
       <Text style = {[styles.PoppinsLight, { maxWidth: '95%' }]} numberOfLines={2} ellipsizeMode="tail" className = "text-sm text-gray-600 ">{description} </Text>
-      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,}}>
-        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
-        </View>
+
       </View>
 
- 
-      {extras.map(extra => (
-        <View key={extra.name} className="ml-5 mt-1">
-          <Text style={styles.PoppinsMed} className="text-xl mt-1">{extra.category}</Text>
+      <ScrollView>
+      {Object.keys(groupedExtras).map(category => (
+        <View key={category} className="ml-5 mt-1">
+        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,}}>
+        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
+        </View>
+          <Text style={styles.PoppinsMed} className="text-xl mt-1">{category}</Text>
+          {groupedExtras[category].map(extra => (
           <View className="flex flex-row justify-between">
             <View>
-              <Text style={styles.PoppinsReg} className="text-lg mt-1">{extra.name}</Text>
-              <Text style={styles.PoppinsLight} className="text-base text-gray-500">{extra.description}</Text>
-              <Text style={styles.PoppinsLight} className="text-base text-gray-600">£{extra.price.toFixed(2)}</Text>
+            {extra.name ? <Text style={styles.PoppinsReg} className="text-lg">{extra.name}</Text> : null}
+            {extra.description ? <Text style={[styles.PoppinsLight,]} className="text-base text-gray-500">{extra.description}</Text> : null}
+            {extra.price ? <Text style={[styles.PoppinsLight,]} className="text-base text-gray-600 mb-2">£{extra.price.toFixed(2)}</Text> : null}
             </View>
             <CheckBox
               checkedIcon={
@@ -107,28 +156,68 @@ const PressService = () => {
                   iconStyle={{ marginRight: 10 }}
                 />
               }
-              checked={check1}
-              onPress={() => setCheck1(!check1)}
+              checked={checkedItems.includes(extra.id)}
+              onPress={() => {
+                if (checkedItems.includes(extra.id)) {
+                  setCheckedItems(
+                    checkedItems.filter((value) => {
+                      return value !== extra.id && value !== extra.price && value !== extra.duration && value !== extra.name;
+                    })
+                  );
+
+                  setextrasArray(extrasArray.filter(item => item.id !== extra.id));
+
+                  
+                  // Subtract the price when the checkbox is unchecked
+                  const pri = parseFloat(totalPrice) - parseFloat(extra.price);
+                  setTotalPrice(pri.toFixed(2));
+                  // Subtract the duration when the checkbox is unchecked
+                  if (extra.duration > 0) {
+                    setTotalDuration(parseInt(totalDuration) - parseInt(extra.duration));
+                  }
+                } else {
+                  setCheckedItems([...checkedItems,  extra.name, extra.id, extra.price, extra.duration]);
+                  setextrasArray([...extrasArray, {
+                    name: extra.name,
+                    id: extra.id,
+                    price: extra.price,
+                    duration: extra.duration
+                  }]);
+                  let dur = parseInt(totalDuration);
+                  if (extra.duration > 0) {
+                    dur = parseInt(totalDuration) + parseInt(extra.duration);
+                    handleDurationChange(dur);
+                  }
+
+                  // Add the price when the checkbox is checked
+                  const pri = parseFloat(totalPrice) + parseFloat(extra.price);
+                  setTotalPrice(pri.toFixed(2));
+                }
+              }}
             />
           </View>
-        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,}}>
-        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
-        </View>
+          ))}
+
         </View>
       ))}
+
 
       <View className= "ml-5 mt-1">
 
 
       
-        <Text style = {styles.PoppinsLight} className  = "text-base text-gray-600 mt-5">Estimated Duration: {duration} Minutes</Text> 
+      <Text style={styles.PoppinsLight} className="text-base text-gray-600 mt-2">
+      <Text>Estimated Duration: </Text>
+      <Text style={{ color: durationColor }}>{totalDuration} Minutes</Text>
+      </Text>
       </View>
 
-      
+      </ScrollView>
       
       <Button
-        title="Add To Basket (£11.00)"
-        buttonStyle={{ backgroundColor: 'rgba(39, 39, 39, 1)' }}
+        title={addStr}
+        onPress={addtoBasket}
+        buttonStyle={{ backgroundColor: 'rgba(39, 39, 39, 1)', borderRadius:10 }}
         containerStyle={{
         width: "80%",
         alignSelf:"center",

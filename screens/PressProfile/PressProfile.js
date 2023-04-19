@@ -7,6 +7,8 @@ import { useNavigation,useRoute  } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { doc,getDocs,query,collection,where,onSnapshot} from "firebase/firestore"; 
 import { database } from '../../firebaseConfig'
+import { useSelector } from 'react-redux';
+import { selectCurrentBasket } from '../../slices/locSlice';
 
 const PressProfile = ({}) => {
 
@@ -14,6 +16,8 @@ const PressProfile = ({}) => {
   useFont();
   const route = useRoute();
   const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId} = route.params;
+  const currentBasket = useSelector(selectCurrentBasket);
+  console.log(currentBasket);
   
 
 
@@ -98,7 +102,7 @@ const PressProfile = ({}) => {
       duration: duration,
       notes: notes,
       docId: docId,
-      serviceId: serviceId
+      serviceId: serviceId,
     });
   };
 
