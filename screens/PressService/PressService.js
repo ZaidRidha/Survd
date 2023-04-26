@@ -6,8 +6,8 @@ import { database } from '../../firebaseConfig';
 import { doc,getDocs,query,collection,where,onSnapshot} from "firebase/firestore"; 
 import useFont from '../../useFont';
 import { CheckBox } from '@rneui/themed';
-import { useDispatch } from 'react-redux';
-import { setcurrentBasket } from '../../slices/locSlice';
+import { useDispatch,useSelector } from 'react-redux';
+import { setcurrentBasket,addToBasket,addtoB, addtest,setcurrentVendor,selectCurrentVendor,clearBasket } from '../../slices/locSlice';
 
 
 const PressService = () => {
@@ -25,6 +25,7 @@ const PressService = () => {
   const [durationColor, setDurationColor] = useState('gray');
   const { name,price,duration,description,docId,notes,serviceId} = route.params;
   const dispatch = useDispatch();
+  const currentVendor = useSelector(selectCurrentVendor);
 
   
 
@@ -68,12 +69,18 @@ const PressService = () => {
   const addtoBasket = () => {
 
 
-    const basketWithExtras = {
+    const basketWithExtras = [{
       ...basket,
-      extras: extrasArray
-    };
-    console.log(basketWithExtras);
-    dispatch(setcurrentBasket(basketWithExtras));
+      extras: extrasArray,
+    }];
+
+    if (docId != currentVendor){
+      dispatch(clearBasket());
+    }
+    
+    dispatch(addtoB(basketWithExtras));
+    dispatch(setcurrentVendor(docId));
+    goBack();
   };
 
 

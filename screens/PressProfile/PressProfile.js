@@ -1,29 +1,38 @@
-import { View, Text, ScrollView, TouchableOpacity, Keyboard, Image, StyleSheet,PanResponder } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Keyboard, Image, StyleSheet,PanResponder,SafeAreaView } from 'react-native';
 import React, { useState,useEffect } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import useFont from '../../useFont';
-import { Icon } from '@rneui/themed';
+import { Icon,Button } from '@rneui/themed';
 import { useNavigation,useRoute  } from '@react-navigation/native';
 import * as Location from 'expo-location';
 import { doc,getDocs,query,collection,where,onSnapshot} from "firebase/firestore"; 
 import { database } from '../../firebaseConfig'
-import { useSelector } from 'react-redux';
-import { selectCurrentBasket } from '../../slices/locSlice';
+import { useSelector,useDispatch} from 'react-redux';
+import { selectCurrentBasket,selectCurrentVendor } from '../../slices/locSlice';
+import { setcurrentBasket,clearBasket } from '../../slices/locSlice';
 
 const PressProfile = ({}) => {
+  const [services, setServices] = useState([]);
+  const[Address,setAddress] = useState("");
+  const [basket, setBasket] = useState([]);
+  const [showCheckout, setshowCheckout] = useState(false);
+  const dispatch = useDispatch();
 
   const navigation = useNavigation();
   useFont();
   const route = useRoute();
   const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId} = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
-  console.log(currentBasket);
-  
+  const currentVendor = useSelector(selectCurrentVendor);
 
 
 
-  const [services, setServices] = useState([]);
-  const[Address,setAddress] = useState("");
+  useEffect(() => {
+    if (currentVendor === docId && currentBasket.length > 0) {
+      setshowCheckout(true);
+    } else {
+      setshowCheckout(false);
+    }
+  }, [currentVendor, docId]);
 
 
 
@@ -38,11 +47,8 @@ const PressProfile = ({}) => {
         return;
       }
 
-
       let currentAddress = await Location.reverseGeocodeAsync({ latitude: lat, longitude: long })
       setAddress(currentAddress[0].name);
-
-
 
       
     })();
@@ -82,13 +88,6 @@ const PressProfile = ({}) => {
     groups[category].push(service);
     return groups;
   }, {});
-
-
-
-
-
-
-
 
 
   const [infoPressed, setInfoPressed] = useState(true);
@@ -135,7 +134,7 @@ const PressProfile = ({}) => {
 
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <View className = "flex flex-row ml-5 mb-3">
       <Image source={require('../../assets/images/bizlogo.jpg')} style={styles.image} />
       <View className = "flex flex-col ml-5">
@@ -314,7 +313,20 @@ const PressProfile = ({}) => {
     ))}
   </ScrollView>
 ) : null}
-    </View>
+{showCheckout && (
+  <Button
+    titleStyle={styles.PoppinsReg}
+    title={'Continue to checkout'}
+    color={'black'}
+    containerStyle={{
+      width: '75%',
+      borderRadius:10,
+      alignSelf: 'center',
+      justifyContent: 'center',
+    }}
+  />
+)}
+    </SafeAreaView>
   );
 };
 

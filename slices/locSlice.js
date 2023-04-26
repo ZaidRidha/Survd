@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+    currentBasket: [ ],
     currentLoc: null,
     searchRadius:null,
     currentAddress: null,
-    currentBasket:null,
-
+    totalBasket: [],
+    currentVendor: null,
 }
 
 export const locSlice = createSlice({
@@ -24,10 +25,22 @@ export const locSlice = createSlice({
         setcurrentBasket: (state,action) =>{
             state.currentBasket= action.payload;
         },
+        addtoB: (state, action) => {
+            state.totalBasket.push(action.payload);
+         },  
+        removeFromBasket: (state, action) => {
+            state.totalBasket = state.currentBasket.filter(item => item !== action.payload);
+        },
+        clearBasket: (state) => {
+            state.totalBasket = [];
+        },
+        setcurrentVendor: (state,action) =>{
+            state.currentVendor= action.payload;
+        },
     }
 });
 
-export const {setLoc,setSearchRadius,setAddress,setcurrentBasket} = locSlice.actions;
+export const {setLoc,setSearchRadius,setAddress,setcurrentBasket,addToBasket,removeFromBasket,clearBasket,addtoB,setcurrentVendor} = locSlice.actions;
 
 
 //selectors
@@ -35,7 +48,8 @@ export const {setLoc,setSearchRadius,setAddress,setcurrentBasket} = locSlice.act
 export const selectCurrentLoc = (state) => state.loc.currentLoc;
 export const selectSearchRadius = (state) => state.loc.searchRadius;
 export const selectCurrentAddress = (state) => state.loc.currentAddress;
-export const selectCurrentBasket = (state) => state.loc.currentBasket;
+export const selectCurrentBasket = (state) => state.loc.totalBasket;
+export const selectCurrentVendor = (state) => state.loc.currentVendor;
 
 //primary export
 
