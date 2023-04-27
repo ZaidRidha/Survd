@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Keyboard, Image, StyleSheet,PanResponder,SafeAreaView } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Keyboard, Image, StyleSheet,PanResponder,SafeAreaView,Linking} from 'react-native';
 import React, { useState,useEffect } from 'react';
 import useFont from '../../useFont';
 import { Icon,Button } from '@rneui/themed';
@@ -9,13 +9,14 @@ import { database } from '../../firebaseConfig'
 import { useSelector,useDispatch} from 'react-redux';
 import { selectCurrentBasket,selectCurrentVendor } from '../../slices/locSlice';
 import { setcurrentBasket,clearBasket } from '../../slices/locSlice';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const PressProfile = ({}) => {
   const [services, setServices] = useState([]);
   const[Address,setAddress] = useState("");
-  const [basket, setBasket] = useState([]);
   const [showCheckout, setshowCheckout] = useState(false);
-  const dispatch = useDispatch();
+  const [showLoc, setShowLoc] = useState(false);
+  const [showPhotos, setShowPhotos] = useState(false);
 
   const navigation = useNavigation();
   useFont();
@@ -23,7 +24,23 @@ const PressProfile = ({}) => {
   const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId} = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
+  const ighandle = instagram.replace(/^@/, '');
+  let total = 0;
 
+
+// Loop through each service
+for (const service of currentBasket) {
+  // Loop through each sub-service
+  for (const subService of service) {
+    // Get the price of the sub-service
+    total += subService.price;
+
+    // Loop through any extras and add their price to the total
+    for (const extra of subService.extras) {
+      total += extra.price;
+    }
+  }
+}
 
 
   useEffect(() => {
@@ -110,10 +127,29 @@ const PressProfile = ({}) => {
     setServicesPressed(false);
   };
 
+  const callPhone = () => {
+    Linking.openURL(`tel:${phone}`)
+  };
+
+  const openInsta = () => {
+    Linking.openURL(`https://www.instagram.com/${ighandle}`)
+  };
+
+  
+
   const handleServicesPress = () => {
     setServicesPressed(true);
     setInfoPressed(false);
   };
+
+  const expandLocation = () => {
+    setShowLoc(!showLoc);
+  };
+
+  const expandPhotos = () => {
+    setShowPhotos(!showPhotos);
+  };
+
 
   const carouselData = [ //images that go into the carousel
   {
@@ -217,27 +253,40 @@ const PressProfile = ({}) => {
         <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
 
         {instagram? (
+                <TouchableOpacity onPress={openInsta}>
                  <View className = "flex flex-row items-center justify-center self-start mt-2">
                  <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={28} />
                  <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{instagram}</Text>
                  </View>
+                 </TouchableOpacity>
         ): null}
 
       {phone? (
+        <TouchableOpacity onPress={callPhone}>
         <View className = "flex flex-row items-center justify-center self-start mt-2">
         <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={28} />
         <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{phone}</Text>
         </View>
+        </TouchableOpacity>
         ): null}
 
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
-
+        
+        <View className = "flex flex-row items-center justify-between ">
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
         <Icon type="entypo" name="location" color="black" size={25} style ={styles.locationIcon} />
         <Text style = {styles.PoppinsMed} className = "text-xl mt-3">Location & Hours</Text>
         </View>
+        <TouchableOpacity onPress={expandLocation}>
+        <Icon type="ionicon" name="expand-sharp" color="black" size={28} style ={styles.expandIcon} />
+        </TouchableOpacity>
+        </View>
+        
+
+        {showLoc? (
+        <View>
         <Text style = {styles.PoppinsMed} className = "text-lg ">{Address}</Text>
         <Text style = {styles.PoppinsLight} className = "text-base ">{distance} Miles away</Text>
         <Text style = {styles.PoppinsLight} className = "text-lg ">Updated Hours:</Text>
@@ -246,20 +295,34 @@ const PressProfile = ({}) => {
         <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
         <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
         <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
+        </View>
+        ): null}
+
+
 
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
 
+        <View className = "flex flex-row items-center justify-between ">
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
         <Icon type="font-awesome" name="photo" color="black" size={25} style ={styles.locationIcon} />
         <Text style = {styles.PoppinsMed} className = "text-xl">Photos</Text>
         </View>
+        <TouchableOpacity onPress={expandPhotos}>
+        <Icon type="ionicon" name="expand-sharp" color="black" size={28} style ={styles.expandIcon} />
+        </TouchableOpacity>
+        </View>
+        
+        {showPhotos? (
         <View className = "flex flex-row">
         <Image source={require('../../assets/images/bizlogo.jpg')} style = {styles.displayImage}/>
         <Image source={require('../../assets/images/bizlogo.jpg')} style = {styles.displayImage}/>
-        <Image source={require('../../assets/images/bizlogo.jpg')} style = {styles.displayImage}/>
+
         </View>
+
+        ):null}
+
 
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
@@ -316,7 +379,7 @@ const PressProfile = ({}) => {
 {showCheckout && (
   <Button
     titleStyle={styles.PoppinsReg}
-    title={'Continue to checkout'}
+    title={`Continue (£${total.toFixed(2)})`}
     color={'black'}
     containerStyle={{
       width: '75%',
@@ -349,6 +412,10 @@ const styles = StyleSheet.create({
 
   locationIcon:{
     marginRight:5,
+  },
+
+  expandIcon:{
+    marginRight:20
   },
 
   clickers: {
@@ -407,8 +474,8 @@ const styles = StyleSheet.create({
 
   displayImage:{
     aspectRatio: 1,
-    width: '30%',
-    height: '30%',
+    width: '48%',
+    height: '48%',
     alignSelf: 'center',
     borderWidth: 1,
     borderColor: 'black',

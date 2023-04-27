@@ -139,15 +139,16 @@ const HomeScreen = () => {
 
   return (
     <View style = {styles.root}>
-        <TouchableOpacity onPress={openLocation} >
          <View className = "flex flex-row items-center justify-between mt-7 ">
+         <TouchableOpacity onPress={openLocation} > 
         <View className = "flex flex-row items-center ">
          <Text style = {styles.loctext}>Location · {address ? address[0].name : 'Loading...'} </Text>
          <Icon type="entypo" name="chevron-down" color="black" size={18} />
          </View>
+         </TouchableOpacity>
          <Icon type="material-community" name="bell" color="black" size={22} />
          </View>
-         </TouchableOpacity>
+
 
 
       <SearchBar
