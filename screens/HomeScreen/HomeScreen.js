@@ -1,8 +1,7 @@
-import { View, Text,StyleSheet,FlatList,TouchableOpacity,RefreshControl} from 'react-native'
+import { View, Text,StyleSheet,FlatList,TouchableOpacity,RefreshControl,Dimensions,SafeAreaView} from 'react-native'
 import React from 'react'
 import { useState,useEffect,useRef} from 'react'
 import { Icon } from '@rneui/themed';
-import { Header } from '@rneui/themed';
 import useFont from '../../useFont';
 import * as Location from 'expo-location';;
 import { useNavigation, useScrollToTop,} from '@react-navigation/native';
@@ -27,6 +26,7 @@ const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [nearbyBarbers, setNearbyBarbers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+
   
   const dispatch = useDispatch();
 
@@ -138,15 +138,15 @@ const HomeScreen = () => {
 
 
   return (
-    <View style = {styles.root}>
-         <View className = "flex flex-row items-center justify-between mt-7 ">
+    <SafeAreaView style = {styles.root}>
+         <View className = "flex flex-row items-center justify-between ">
          <TouchableOpacity onPress={openLocation} > 
-        <View className = "flex flex-row items-center ">
+        <View className = "flex flex-row items-center ml-5 ">
          <Text style = {styles.loctext}>Location · {address ? address[0].name : 'Loading...'} </Text>
          <Icon type="entypo" name="chevron-down" color="black" size={18} />
          </View>
          </TouchableOpacity>
-         <Icon type="material-community" name="bell" color="black" size={22} />
+         <Icon style = {styles.bellIcon} type="material-community" name="bell" color="black" size={22} />
          </View>
 
 
@@ -168,7 +168,7 @@ const HomeScreen = () => {
       />
 
 
-    <Text style = {styles.fgreg} className = "text-xl mb-2 ">Active barbers near you:</Text>
+    <Text style = {styles.fgreg} className = "text-xl mb-2 ml-5 ">Active barbers near you:</Text>
     <FlatList
         ref={scrollRef}
         data={nearbyBarbers}
@@ -180,7 +180,7 @@ const HomeScreen = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
       />
-    </View>
+    </SafeAreaView>
 
 
   )
@@ -191,7 +191,6 @@ const styles = StyleSheet.create({
   root:{
     flex:1,
     backgroundColor: '#FFFFFF',
-    padding:25,
   },
 
   heads:{
@@ -206,6 +205,10 @@ const styles = StyleSheet.create({
 
   fgreg: {
     fontFamily : 'PoppinsMed',
+  },
+
+  bellIcon:{
+    marginRight:5,
   }
 
 })

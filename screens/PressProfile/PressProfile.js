@@ -17,6 +17,7 @@ const PressProfile = ({}) => {
   const [showCheckout, setshowCheckout] = useState(false);
   const [showLoc, setShowLoc] = useState(false);
   const [showPhotos, setShowPhotos] = useState(false);
+  const [ighandle, setigHandle] = useState(" ");
 
   const navigation = useNavigation();
   useFont();
@@ -24,9 +25,22 @@ const PressProfile = ({}) => {
   const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId} = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
-  const ighandle = instagram.replace(/^@/, '');
   let total = 0;
 
+  const sethandle = () => {
+    if (instagram) {
+      const handle = instagram.replace(/^@/, '');
+      setigHandle(handle);
+      return ighandle;
+    } else {
+      return null;
+    }
+  };
+  
+
+  useEffect(() => {
+    sethandle();
+  }, [instagram]);
 
 // Loop through each service
 for (const service of currentBasket) {
@@ -273,16 +287,16 @@ for (const service of currentBasket) {
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
-        
+
+        <TouchableOpacity onPress={expandLocation}>
         <View className = "flex flex-row items-center justify-between ">
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
         <Icon type="entypo" name="location" color="black" size={25} style ={styles.locationIcon} />
         <Text style = {styles.PoppinsMed} className = "text-xl mt-3">Location & Hours</Text>
         </View>
-        <TouchableOpacity onPress={expandLocation}>
         <Icon type="ionicon" name="expand-sharp" color="black" size={28} style ={styles.expandIcon} />
-        </TouchableOpacity>
         </View>
+        </TouchableOpacity>
         
 
         {showLoc? (
@@ -303,16 +317,16 @@ for (const service of currentBasket) {
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
-
+        
+        <TouchableOpacity onPress={expandPhotos}>
         <View className = "flex flex-row items-center justify-between ">
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
         <Icon type="font-awesome" name="photo" color="black" size={25} style ={styles.locationIcon} />
         <Text style = {styles.PoppinsMed} className = "text-xl">Photos</Text>
         </View>
-        <TouchableOpacity onPress={expandPhotos}>
         <Icon type="ionicon" name="expand-sharp" color="black" size={28} style ={styles.expandIcon} />
-        </TouchableOpacity>
         </View>
+        </TouchableOpacity>
         
         {showPhotos? (
         <View className = "flex flex-row">
