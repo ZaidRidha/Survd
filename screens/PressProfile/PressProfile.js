@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Keyboard, Image, StyleSheet,PanResponder,SafeAreaView,Linking} from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Keyboard, Image, StyleSheet,PanResponder,SafeAreaView,Linking,FlatList,Dimensions} from 'react-native';
 import React, { useState,useEffect } from 'react';
 import useFont from '../../useFont';
 import { Icon,Button } from '@rneui/themed';
@@ -10,6 +10,7 @@ import { useSelector,useDispatch} from 'react-redux';
 import { selectCurrentBasket,selectCurrentVendor } from '../../slices/locSlice';
 import { setcurrentBasket,clearBasket } from '../../slices/locSlice';
 import { LinearGradient } from 'expo-linear-gradient';
+const WIDTH = Dimensions.get("window").width;
 
 const PressProfile = ({}) => {
   const [services, setServices] = useState([]);
@@ -36,6 +37,18 @@ const PressProfile = ({}) => {
       return null;
     }
   };
+
+  const pressContinue = () => {
+    navigation.navigate("ContinueScreen", {
+      lat: lat,
+      long: long,
+
+    })
+  }
+
+  const renderCarouselItem = ({ item }) => (
+    <Image source={item.image} style={styles.displayImage} />
+  );
   
 
   useEffect(() => {
@@ -176,8 +189,12 @@ for (const service of currentBasket) {
   },
   {
     id: 3,
-
     image: require('../../assets/images/fade3.jpg'),
+  },
+
+  {
+    id: 4,
+    image: require('../../assets/images/AppLogo.png'),
   },
 ];
 
@@ -266,6 +283,7 @@ for (const service of currentBasket) {
         <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">Specialises in: </Text>
         <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
 
+
         {instagram? (
                 <TouchableOpacity onPress={openInsta}>
                  <View className = "flex flex-row items-center justify-center self-start mt-2">
@@ -283,7 +301,7 @@ for (const service of currentBasket) {
         </View>
         </TouchableOpacity>
         ): null}
-
+        <Text className = "text-sm mt-1" style = {styles.PoppinsLight}>Estimated Waiting Time: <Text className = "text-blue-600">32 Mins</Text> </Text>
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
@@ -329,10 +347,16 @@ for (const service of currentBasket) {
         </TouchableOpacity>
         
         {showPhotos? (
-        <View className = "flex flex-row">
-        <Image source={require('../../assets/images/bizlogo.jpg')} style = {styles.displayImage}/>
-        <Image source={require('../../assets/images/bizlogo.jpg')} style = {styles.displayImage}/>
-
+        <View>
+        <FlatList
+        horizontal
+        data={carouselData}
+        renderItem={renderCarouselItem}
+        keyExtractor={(item) => item.id.toString()}
+        showsHorizontalScrollIndicator={true}
+        
+      />
+        <Text className = "mt-2" style = {styles.PoppinsMed}>Show all</Text>
         </View>
 
         ):null}
@@ -393,6 +417,7 @@ for (const service of currentBasket) {
 {showCheckout && (
   <Button
     titleStyle={styles.PoppinsReg}
+    onPress={pressContinue}
     title={`Continue (£${total.toFixed(2)})`}
     color={'black'}
     containerStyle={{
@@ -487,15 +512,13 @@ const styles = StyleSheet.create({
   },
 
   displayImage:{
-    aspectRatio: 1,
-    width: '48%',
-    height: '48%',
-    alignSelf: 'center',
+    width: WIDTH*0.8,
+    height: 300,
     borderWidth: 1,
     borderColor: 'black',
-    borderRadius: 2,
+    borderRadius: 10,
     marginTop:5,
-    marginRight:5,
+    marginRight:8,
   },
 
   Pinnedtext:{

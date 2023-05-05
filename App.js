@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { requireNativeComponent, StyleSheet, Text, SafeAreaView,TouchableWithoutFeedback, Keyboard,KeyboardAvoidingView,View} from 'react-native';
+import { requireNativeComponent, StyleSheet, Text, SafeAreaView,TouchableWithoutFeedback, Keyboard,KeyboardAvoidingView,View,} from 'react-native';
 import { useFonts } from 'expo-font';
 
 
@@ -11,17 +11,18 @@ import HomeScreen from './screens/HomeScreen/HomeScreen';
 import Navigation from './navigation/index';
 import { store } from './store.js';
 import { Provider } from 'react-redux';
-
-Icon.loadFont();
+import AnimatedSplash from "react-native-animated-splash-screen";
+import React, { useState,useEffect } from 'react';
 
 export default function App() {
-  // Load the font
-/*   let [fontsLoaded] = useFonts({
-    'Gilroy-ExtraBold': require('./assets/fonts/Gilroy-ExtraBold.otf'),
-  });
-  if (!fontsLoaded) {
-    return <View />;
-  } */
+
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoaded(true);
+   }, 1500);
+  }, []);
 
   const styles = StyleSheet.create({
     root:{
@@ -31,11 +32,19 @@ export default function App() {
   });
 
   return ( 
+  <AnimatedSplash
+    translucent={true}
+    isLoaded={isLoaded}
+    logoImage={require("./assets/images/APPLOGOHD.png")}
+    backgroundColor={"white"}
+    logoHeight={300}
+    logoWidth={300}> 
   <Provider store={store}>
   <View style = {styles.root}>
     <Navigation/>
   </View>
   </Provider>
+  </AnimatedSplash>
   );
 
 

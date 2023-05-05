@@ -6,6 +6,7 @@ import SignUpScreen from '../screens/SignUpScreen/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import PhoneScreen from '../screens/PhoneScreen/PhoneScreen';
+import ContinueScreen from '../screens/ContinueScreen/ContinueScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -169,11 +170,23 @@ const Navigation = () => {
               headerBackTitleVisible:true,
               headerBackTitle: " ",
               presentation: "modal",
-              gestureEnabled: true,
               headerTitle: "",
               headerTintColor: "#000000",
             }}
 />
+
+            <Stack.Screen
+            name="ContinueScreen"
+            component={ContinueScreen}
+            options={{
+              headerShown:true,
+              headerBackTitleVisible:true,
+              headerBackTitle: " ",
+              headerTitle: "Mike Tha Barber",
+              headerTintColor: "#000000",
+            }}
+          />
+
 
       </Stack.Navigator>
     </NavigationContainer>

@@ -4,7 +4,7 @@
     "slug": "barber-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/AppIconJPG.jpg",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -18,13 +18,19 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zaid.barberapp",
+      "config": {
+        "googleMapsApiKey": "AIzaSyCjYfUwiN9N0SvFY_wT2OkUBne4MjO-CvQ"
+    }
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+      "config": {
+        "googleMaps": {
+            "apiKey": "AIzaSyCjYfUwiN9N0SvFY_wT2OkUBne4MjO-CvQ"
+        }
+    }
+
     },
     "web": {
       "favicon": "./assets/favicon.png"

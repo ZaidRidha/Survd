@@ -119,6 +119,7 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
             style={[
               {
                 opacity: index === activeIndex ? 1 : 0.5,
+                
               },
               styles.dot,
             ]}
@@ -147,14 +148,14 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
  
       </View>
 
-      <Text className = "text-sm" style = {styles.figlight}>★5.0 (135)</Text>
+      <Text className = "text-sm" style = {styles.figreg}>★5.0 (135)</Text>
       </View>
       <View className = "flex flex-row items-center justify-between">
-      <Text className = "text-sm" style = {styles.figlight}><Text className = "text-sm text-purple-800" style = {styles.figlight}>After Hours</Text> · Fades · Afro · Caucasian</Text>
+      <Text className = "text-sm" style = {styles.figreg}><Text className = "text-sm text-purple-800" style = {styles.figreg}>After Hours</Text> · Fades · Afro · Caucasian</Text>
       </View>
 
-      <Text className = "text-sm " style = {styles.figlight}>Est. Waiting time : <Text  style = {styles.figlight} className = "text-sm text-blue-600">32 Mins</Text></Text>
-      <Text className = "text-sm mb-3 " style = {styles.figlight}>££ · <Text className = "text-sm text-gray-500" style = {styles.figlight}>{distance} mi</Text></Text>
+      <Text className = "text-sm " style = {styles.figreg}>Est. Waiting time : <Text  style = {styles.figreg} className = "text-sm text-blue-600">32 Mins</Text></Text>
+      <Text className = "text-sm mb-3 " style = {styles.figreg}>££ · <Text className = "text-sm text-gray-500" style = {styles.figreg}>{distance} mi</Text></Text>
   </View>
   </View>
   );
@@ -193,11 +194,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     },
   dot: {
-  width: 5,
-  height: 5,
+  width: 6,
+  height: 6,
   margin: 3,
   borderRadius: 30,
-  backgroundColor: "white",
+  backgroundColor: "lightgray",
+  
   },
   circle: {
     width: 8,
