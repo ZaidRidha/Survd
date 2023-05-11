@@ -110,7 +110,7 @@ const PressService = () => {
     setTotalDuration(duration);
   }, [price]);
 
-  const addStr = "Add To basket " + "(£"+totalPrice + ")";
+  const addStr = "Add Service " + "(£"+totalPrice + ")";
 
   const goBack = () => {
     navigation.goBack();
@@ -141,7 +141,8 @@ const PressService = () => {
           <View className="flex flex-row justify-between">
             <View>
             {extra.name ? <Text style={styles.PoppinsReg} className="text-lg">{extra.name}</Text> : null}
-            {extra.description ? <Text style={[styles.PoppinsLight,]} className="text-base text-gray-500">{extra.description}</Text> : null}
+            {extra.description ? <Text style={[styles.PoppinsLight,]} className="text-base text-gray-600">{extra.description}</Text> : null}
+            {extra.duration ? <Text style={[styles.PoppinsLight,]} className="text-base text-gray-500">{extra.duration} Minutes</Text> : null}
             {extra.price ? <Text style={[styles.PoppinsLight,]} className="text-base text-gray-600 mb-2">£{extra.price.toFixed(2)}</Text> : null}
             </View>
             <CheckBox

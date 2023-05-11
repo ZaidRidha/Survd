@@ -35,7 +35,7 @@ export default function App() {
   <AnimatedSplash
     translucent={true}
     isLoaded={isLoaded}
-    logoImage={require("./assets/images/APPLOGOHD.png")}
+    logoImage={require("./assets/images/UpdatedLogo.jpg")}
     backgroundColor={"white"}
     logoHeight={300}
     logoWidth={300}> 

@@ -70,18 +70,17 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
 
   useFont();
   return (
-    <View className = "mb-2">
-    <View style = {styles.headerContainer} className = "flex flex-row items-center justify-between ">
-    <View>
-    <View className = "flex flex-row items-center ">
+    <View style = {styles.full} className = "mb-4">
+    <View style = {styles.headerContainer} className>
     <Text className = "text-base" style = {[styles.poppinsMed,{ width: 200}]}>{name} </Text>
-    </View>
+    <View className = "flex flex-row items-center justify-between">
     <Text className = "text-sm text-gray-700  " style = {styles.figlight}>{username}</Text>
-    </View>
-
+    <View>
     <View className = "flex flex-row items-center">
     <View style={styles.circle}></View>
-    <Text className = "text-sm " style = {styles.figreg}>Active Now </Text>
+    <Text className = "text-sm " style = {[styles.figreg,]}>Active Now </Text>
+    </View>
+    </View>
     </View>
     </View>
 
@@ -129,33 +128,40 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
     )}
 
 <View className = "flex flex-row items-center justify-between">
+      <Text className = "text-sm " style = {styles.figreg}>Est. Waiting time : <Text  style = {styles.figreg} className = "text-sm text-blue-600">32 Mins</Text></Text>
+      <View className = "flex flex-row items-center">
+      <Icon type="font-awesome" name="star" color="black" size={15} />
+      <Text className = "text-sm" style = {styles.poppinsMed}> 5.0 <Text className = "text-sm" style = {styles.poppinsMed}>(135)</Text></Text>
+      </View>
+
+      </View>
+
+
+      <View className = "flex flex-row items-center justify-between ">
+      <Text className = "text-sm" style = {styles.figreg}><Text className = "text-sm text-purple-800" style = {styles.figreg}>After Hours</Text> <Text className = "text-sm text-gray-500" style = {styles.figreg}>· Fades </Text><Text className = "text-sm text-gray-500" style = {styles.figreg}>· Afro </Text></Text>
+      <Text className = "text-sm " style = {styles.figreg}>££ · <Text className = "text-sm text-gray-500" style = {styles.figreg}>{distance} mi</Text></Text>
+
+      </View>
       <View className = "flex flex-row items-center">
       {mobile ? (
-      <Icon type='font-awesome-5' name="car-alt" color="black" size={18} />
+      <Icon type='font-awesome-5' name="car-alt" color="black" size={16} />
       ) : null}
       {shop ? (
       <>
-        {mobile && <Text style = {styles.figreg} className = "text-lg"> / </Text>}
-        <Icon type="entypo" name="shop" color="black" size={18} />
+        {mobile && <Text style = {{ fontSize: 18 }}> / </Text>}
+        <Icon type="entypo" name="shop" color="black" size={16} />
       </>
        ) : null}
       {home ? (
       <>
-        {(mobile || shop) && <Text style={{ fontSize: 22 }}> / </Text>}
-        <Icon type="ionicon" name="home" color="black" size={18} />
+        {(mobile || shop) && <Text style={{ fontSize: 18 }}> / </Text>}
+        <Icon type="ionicon" name="home" color="black" size={16} />
       </>
       ) : null}
  
       </View>
 
-      <Text className = "text-sm" style = {styles.figreg}>★5.0 (135)</Text>
-      </View>
-      <View className = "flex flex-row items-center justify-between">
-      <Text className = "text-sm" style = {styles.figreg}><Text className = "text-sm text-purple-800" style = {styles.figreg}>After Hours</Text> · Fades · Afro · Caucasian</Text>
-      </View>
 
-      <Text className = "text-sm " style = {styles.figreg}>Est. Waiting time : <Text  style = {styles.figreg} className = "text-sm text-blue-600">32 Mins</Text></Text>
-      <Text className = "text-sm mb-3 " style = {styles.figreg}>££ · <Text className = "text-sm text-gray-500" style = {styles.figreg}>{distance} mi</Text></Text>
   </View>
   </View>
   );
@@ -185,6 +191,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: HEIGHT,
     borderRadius: 10,
+
   },
   dotContainer: {
     position: "absolute",

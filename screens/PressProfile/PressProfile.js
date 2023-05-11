@@ -134,8 +134,8 @@ for (const service of currentBasket) {
   }, {});
 
 
-  const [infoPressed, setInfoPressed] = useState(true);
-  const [servicesPressed, setServicesPressed] = useState(false);
+  const [infoPressed, setInfoPressed] = useState(false);
+  const [servicesPressed, setServicesPressed] = useState(true);
   
   const PressService = ({name,price,duration,description,notes,serviceId}) => {
     navigation.navigate("PressService", {
@@ -208,12 +208,12 @@ for (const service of currentBasket) {
       <Text style={[styles.PoppinsMed,{ width: 200}]}  className = "text-lg mt-5">{name}</Text>
       <Text style = {styles.PoppinsLight} className ="text-sm text-gray-500">{username}</Text>
       <View className = "flex flex-row ">
-      <Icon type="font-awesome" name="star" color="black" size={16} />
-      <Icon type="font-awesome" name="star" color="black" size={16} />
-      <Icon type="font-awesome" name="star" color="black" size={16} />
-      <Icon type="font-awesome" name="star" color="black" size={16} />
-      <Icon type="font-awesome" name="star" color="black" size={16} />
-      <Text className = "text-sm text-gray-700" style = {styles.PoppinsReg}> 5.0 (140)</Text>
+      <Icon type="font-awesome" name="star" color="#f7bf25" size={16} />
+      <Icon type="font-awesome" name="star" color="#f7bf25" size={16} />
+      <Icon type="font-awesome" name="star" color="#f7bf25" size={16} />
+      <Icon type="font-awesome" name="star" color="#f7bf25" size={16} />
+      <Icon type="font-awesome" name="star" color="#f7bf25" size={16} />
+      <Text className = "text-sm " style = {styles.PoppinsMed}> 5.0 (140)</Text>
       </View>
       <View className = "flex flex-row items-center">
       <View style={styles.circle}></View>
@@ -224,28 +224,28 @@ for (const service of currentBasket) {
         </View>
 
       <View style={styles.clickers}>
-        <TouchableOpacity onPress={handleInfoPress}>
-          <Text
-          className = "text-xl mx-10"
-            style={[
-              styles.PoppinsMed,
-              infoPressed ? styles.underline : null,
-              { marginHorizontal: 10 },
-            ]}
-          >
-            Info
-          </Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={handleServicesPress}>
           <Text
           className = "text-xl mx-10"
             style={[
               styles.PoppinsMed,
-              servicesPressed ? styles.underline : null,
-              { marginHorizontal: 10 },
+              servicesPressed? styles.underline : null,
+  
             ]}
           >
             Services
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleInfoPress}>
+          <Text
+          className = "text-xl mx-10"
+            style={[
+              styles.PoppinsMed,
+              infoPressed  ? styles.underline : null,
+        
+            ]}
+          >
+            Information
           </Text>
         </TouchableOpacity>
       </View>
@@ -276,7 +276,7 @@ for (const service of currentBasket) {
         {home ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
           <Icon type="ionicon" name="home" color="black" size={22} />
-          <Text style = {styles.PoppinsReg} className = "text-sm text-purple-800 "> (Vendor's Home)</Text> 
+          <Text style = {styles.PoppinsReg} className = "text-sm text-purple-800"> (Vendor's Home)</Text> 
           </View>
       ) : null}
       </View>
@@ -309,10 +309,10 @@ for (const service of currentBasket) {
         <TouchableOpacity onPress={expandLocation}>
         <View className = "flex flex-row items-center justify-between ">
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
-        <Icon type="entypo" name="location" color="black" size={25} style ={styles.locationIcon} />
-        <Text style = {styles.PoppinsMed} className = "text-xl mt-3">Location & Hours</Text>
+        <Icon type="entypo" name="location" color="black" size={23} style ={styles.locationIcon} />
+        <Text style = {styles.PoppinsMed} className = "text-lg mt-3">Location & Hours</Text>
         </View>
-        <Icon type="ionicon" name="expand-sharp" color="black" size={28} style ={styles.expandIcon} />
+        <Icon type="ionicon" name="expand-sharp" color="black" size={25} style ={styles.expandIcon} />
         </View>
         </TouchableOpacity>
         
@@ -339,10 +339,10 @@ for (const service of currentBasket) {
         <TouchableOpacity onPress={expandPhotos}>
         <View className = "flex flex-row items-center justify-between ">
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
-        <Icon type="font-awesome" name="photo" color="black" size={25} style ={styles.locationIcon} />
-        <Text style = {styles.PoppinsMed} className = "text-xl">Photos</Text>
+        <Icon type="font-awesome" name="photo" color="black" size={23} style ={styles.locationIcon} />
+        <Text style = {styles.PoppinsMed} className = "text-lg">Photos</Text>
         </View>
-        <Icon type="ionicon" name="expand-sharp" color="black" size={28} style ={styles.expandIcon} />
+        <Icon type="ionicon" name="expand-sharp" color="black" size={25} style ={styles.expandIcon} />
         </View>
         </TouchableOpacity>
         
@@ -371,17 +371,20 @@ for (const service of currentBasket) {
         </View>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully compliant with hygiene standards.</Text>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">5 years experience barbering</Text>
+        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a £10.00 Flat Rate cancellation fee</Text>
+        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a 20% Late fee</Text>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully Insured</Text>
+
 
 
       </ScrollView>
     ) : null}
 
 {servicesPressed ? (
-  <ScrollView className="ml-5">
+  <ScrollView className="ml-5 mt-2">
     {Object.entries(groupedServices).map(([categoryName, categoryServices], index) => (
       <View key={categoryName}>
-        <Text style={styles.PoppinsMed} className="text-xl mt-1 mb-2">
+        <Text style={styles.PoppinsMed} className="text-lg mt-1 mb-1">
           {categoryName}
         </Text>
         {categoryServices.map((service) => (
@@ -407,7 +410,7 @@ for (const service of currentBasket) {
         ))}
         {index < Object.entries(groupedServices).length - 1 && (  
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:3,marginBottom:3}}>
-        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:3, marginBottom:3 }} />   
+        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:3, marginBottom:1 }} />   
         </View>
         )}
       </View>
@@ -516,7 +519,7 @@ const styles = StyleSheet.create({
     height: 300,
     borderWidth: 1,
     borderColor: 'black',
-    borderRadius: 10,
+    borderRadius: 0,
     marginTop:5,
     marginRight:8,
   },
