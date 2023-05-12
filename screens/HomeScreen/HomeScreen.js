@@ -3,7 +3,7 @@ import React from 'react'
 import { useState,useEffect,useRef} from 'react'
 import { Icon } from '@rneui/themed';
 import useFont from '../../useFont';
-import * as Location from 'expo-location';;
+import * as Location from 'expo-location';
 import { useNavigation, useScrollToTop,} from '@react-navigation/native';
 import BarberCard from '../../components/BarberCard/BarberCard';
 import { SearchBar } from '@rneui/themed';
@@ -146,7 +146,7 @@ const HomeScreen = () => {
          <Icon type="entypo" name="chevron-down" color="black" size={18} />
          </View>
          </TouchableOpacity>
-         <Icon style = {styles.bellIcon} type="material-community" name="bell" color="black" size={22} />
+         <Icon style = {styles.bellIcon} type="material-community" name="bell" color="black" size={24} />
          </View>
 
 
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
 
   loctext: {
     fontFamily : 'PoppinsMed',
-    fontSize: 16,
+    fontSize: 18,
   },
 
   fgreg: {

@@ -35,6 +35,9 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
     {
       image: require('../../assets/images/fade3.jpg'),
     },
+    {
+      image: require('../../assets/images/hdfade.jpg'),
+    },
   ];
   
 
@@ -72,7 +75,7 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
   return (
     <View style = {styles.full} className = "mb-4">
     <View style = {styles.headerContainer} className>
-    <Text className = "text-base" style = {[styles.poppinsMed,{ width: 200}]}>{name} </Text>
+    <Text className = "text-lg" style = {[styles.poppinsMed,{ width: 200}]}>{name} </Text>
     <View className = "flex flex-row items-center justify-between">
     <Text className = "text-sm text-gray-700  " style = {styles.figlight}>{username}</Text>
     <View>
@@ -186,7 +189,10 @@ const styles = StyleSheet.create({
     zIndex: 10,
     padding: 10,
   },
-  imageContainer: { width: WIDTH - 60 },
+  imageContainer: {
+  width: WIDTH - 60,
+
+  },
   image: {
     width: "100%",
     height: HEIGHT,
@@ -208,6 +214,8 @@ const styles = StyleSheet.create({
   backgroundColor: "lightgray",
   
   },
+
+  
   circle: {
     width: 8,
     height: 8,

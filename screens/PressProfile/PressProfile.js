@@ -10,6 +10,8 @@ import { useSelector,useDispatch} from 'react-redux';
 import { selectCurrentBasket,selectCurrentVendor } from '../../slices/locSlice';
 import { setcurrentBasket,clearBasket } from '../../slices/locSlice';
 import { LinearGradient } from 'expo-linear-gradient';
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
+
 const WIDTH = Dimensions.get("window").width;
 
 const PressProfile = ({}) => {
@@ -319,6 +321,22 @@ for (const service of currentBasket) {
 
         {showLoc? (
         <View>
+        <MapView 
+        initialRegion={{
+          latitude: lat,
+          longitude: long,
+          latitudeDelta: 0.04,
+          longitudeDelta: 0.04,
+        }} 
+        provider={PROVIDER_GOOGLE} style={styles.map} 
+        scrollEnabled={false} // Disable map panning
+        zoomEnabled={true} // Enable zooming
+        >
+          <Marker
+          coordinate={{ latitude: lat, longitude: long }}
+          markerStyle={styles.marker}
+        />
+      </MapView>
         <Text style = {styles.PoppinsMed} className = "text-lg ">{Address}</Text>
         <Text style = {styles.PoppinsLight} className = "text-base ">{distance} Miles away</Text>
         <Text style = {styles.PoppinsLight} className = "text-lg ">Updated Hours:</Text>
@@ -504,6 +522,13 @@ const styles = StyleSheet.create({
     marginLeft:3
   },
 
+  marker: {
+    color:"black",
+    backgroundColor: 'black', // Change marker background color
+    borderRadius: 10, // Adjust marker border radius
+    padding: 5, // Adjust marker padding
+  },
+
   pinIcon:{
     alignSelf: "flex-start",
     marginTop:10,
@@ -522,6 +547,15 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     marginTop:5,
     marginRight:8,
+  },
+
+  map:{
+    width: WIDTH - 40,
+    borderRadius: 10,
+    borderColor: "black",
+    borderWidth:1,
+    height: 150,
+    marginBottom:5,
   },
 
   Pinnedtext:{
