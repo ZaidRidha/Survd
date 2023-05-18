@@ -73,17 +73,45 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
 
   useFont();
   return (
-    <View style = {styles.full} className = "mb-4">
+    <View style = {styles.full} className = "mb-8">
     <View style = {styles.headerContainer} className>
-    <Text className = "text-lg" style = {[styles.poppinsMed,{ width: 200}]}>{name} </Text>
     <View className = "flex flex-row items-center justify-between">
-    <Text className = "text-sm text-gray-700  " style = {styles.figlight}>{username}</Text>
+    <Text className = "text-lg" style = {[styles.poppinsMed,{ width: 200}]}>{name} </Text>
+
     <View>
     <View className = "flex flex-row items-center">
     <View style={styles.circle}></View>
     <Text className = "text-sm " style = {[styles.figreg,]}>Active Now </Text>
     </View>
     </View>
+    
+    
+
+    </View>
+    
+    
+    <View className = "flex flex-row items-center justify-between">
+    <Text className = "text-sm text-gray-700  " style = {styles.figlight}>{username}</Text>
+
+    <View className = "flex flex-row items-center">
+      {mobile ? (
+      <Icon type='font-awesome-5' name="car-alt" color="black" size={16} />
+      ) : null}
+      {shop ? (
+      <>
+        {mobile && <Text style = {{ fontSize: 18 }}> / </Text>}
+        <Icon type="entypo" name="shop" color="black" size={16} />
+      </>
+       ) : null}
+      {home ? (
+      <>
+        {(mobile || shop) && <Text style={{ fontSize: 18 }}> / </Text>}
+        <Icon type="ionicon" name="home" color="black" size={16} />
+      </>
+      ) : null}
+ 
+      </View>
+
     </View>
     </View>
 
@@ -92,7 +120,7 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
       onPress={handleFavoriteItemClicked}
       style={styles.favoriteContainer}
     >
-      <Icon type="ionicon" name= {iconType} color={iconColor} size={24} />
+    <Icon type="ionicon" name= {iconType} color={iconColor} size={24} />
     </Pressable>
     {/* Images */}
     <FlatList
@@ -145,24 +173,7 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
       <Text className = "text-sm " style = {styles.figreg}>££ · <Text className = "text-sm text-gray-500" style = {styles.figreg}>{distance} mi</Text></Text>
 
       </View>
-      <View className = "flex flex-row items-center">
-      {mobile ? (
-      <Icon type='font-awesome-5' name="car-alt" color="black" size={16} />
-      ) : null}
-      {shop ? (
-      <>
-        {mobile && <Text style = {{ fontSize: 18 }}> / </Text>}
-        <Icon type="entypo" name="shop" color="black" size={16} />
-      </>
-       ) : null}
-      {home ? (
-      <>
-        {(mobile || shop) && <Text style={{ fontSize: 18 }}> / </Text>}
-        <Icon type="ionicon" name="home" color="black" size={16} />
-      </>
-      ) : null}
- 
-      </View>
+
 
 
   </View>

@@ -17,6 +17,7 @@ const WIDTH = Dimensions.get("window").width;
 const PressProfile = ({}) => {
   const [services, setServices] = useState([]);
   const[Address,setAddress] = useState("");
+  
   const [showCheckout, setshowCheckout] = useState(false);
   const [showLoc, setShowLoc] = useState(false);
   const [showPhotos, setShowPhotos] = useState(false);
@@ -44,6 +45,7 @@ const PressProfile = ({}) => {
     navigation.navigate("ContinueScreen", {
       lat: lat,
       long: long,
+      barberID: docId,
 
     })
   }
@@ -282,28 +284,30 @@ for (const service of currentBasket) {
           </View>
       ) : null}
       </View>
-        <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">Specialises in: </Text>
-        <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
+
 
 
         {instagram? (
-                <TouchableOpacity onPress={openInsta}>
                  <View className = "flex flex-row items-center justify-center self-start mt-2">
+                  <TouchableOpacity onPress={openInsta}>
                  <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={28} />
+                 </TouchableOpacity>
                  <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{instagram}</Text>
                  </View>
-                 </TouchableOpacity>
+
         ): null}
 
       {phone? (
-        <TouchableOpacity onPress={callPhone}>
         <View className = "flex flex-row items-center justify-center self-start mt-2">
+        <TouchableOpacity onPress={callPhone}>
         <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={28} />
+        </TouchableOpacity>
         <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{phone}</Text>
         </View>
-        </TouchableOpacity>
+
         ): null}
-        <Text className = "text-sm mt-1" style = {styles.PoppinsLight}>Estimated Waiting Time: <Text className = "text-blue-600">32 Mins</Text> </Text>
+        <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">Specialises in: </Text>
+        <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
@@ -325,8 +329,8 @@ for (const service of currentBasket) {
         initialRegion={{
           latitude: lat,
           longitude: long,
-          latitudeDelta: 0.04,
-          longitudeDelta: 0.04,
+          latitudeDelta: 0.03,
+          longitudeDelta: 0.03,
         }} 
         provider={PROVIDER_GOOGLE} style={styles.map} 
         scrollEnabled={false} // Disable map panning
@@ -442,7 +446,7 @@ for (const service of currentBasket) {
     title={`Continue (£${total.toFixed(2)})`}
     color={'black'}
     containerStyle={{
-      width: '75%',
+      width: WIDTH - 120,
       borderRadius:10,
       alignSelf: 'center',
       justifyContent: 'center',

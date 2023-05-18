@@ -7,7 +7,7 @@ import { doc,getDocs,query,collection,where,onSnapshot} from "firebase/firestore
 import useFont from '../../useFont';
 import { CheckBox } from '@rneui/themed';
 import { useDispatch,useSelector } from 'react-redux';
-import { setcurrentBasket,addToBasket,addtoB, addtest,setcurrentVendor,selectCurrentVendor,clearBasket } from '../../slices/locSlice';
+import { setcurrentBasket,addToBasket,addtoB, addtest,setcurrentVendor,selectCurrentVendor,clearBasket, selectCurrentBasket } from '../../slices/locSlice';
 
 
 const PressService = () => {
@@ -17,6 +17,7 @@ const PressService = () => {
   const [check2, setCheck2] = useState(false);
   const [extras, setExtras] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [objectId, setobjectId] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const route = useRoute();
   const [checkedItems, setCheckedItems] = useState([]);
@@ -26,6 +27,7 @@ const PressService = () => {
   const { name,price,duration,description,docId,notes,serviceId} = route.params;
   const dispatch = useDispatch();
   const currentVendor = useSelector(selectCurrentVendor);
+  const reduxBasket = useSelector(selectCurrentBasket);
 
   
 
@@ -94,8 +96,9 @@ const PressService = () => {
 
 
   useEffect(() => {
+    const basketLength = reduxBasket.length;
     setBasket(
-      { name: name, price: price, duration: duration }
+      { name: name, price: price, duration: duration, serviceId: serviceId, objectId: basketLength}
     );
   }, [name, price, duration]);
 

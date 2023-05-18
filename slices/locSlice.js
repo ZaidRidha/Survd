@@ -28,9 +28,10 @@ export const locSlice = createSlice({
         addtoB: (state, action) => {
             state.totalBasket.push(action.payload);
          },  
-        removeFromBasket: (state, action) => {
-            state.totalBasket = state.currentBasket.filter(item => item !== action.payload);
-        },
+         removeFromBasket: (state, action) => {
+            const serviceIdToRemove = action.payload;
+            state.totalBasket = state.totalBasket.filter(service => service[0].objectId !== serviceIdToRemove);
+          },
         clearBasket: (state) => {
             state.totalBasket = [];
         },
