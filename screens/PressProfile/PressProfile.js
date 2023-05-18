@@ -288,22 +288,24 @@ for (const service of currentBasket) {
 
 
         {instagram? (
+                <TouchableOpacity onPress={openInsta}>
                  <View className = "flex flex-row items-center justify-center self-start mt-2">
-                  <TouchableOpacity onPress={openInsta}>
                  <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={28} />
-                 </TouchableOpacity>
                  <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{instagram}</Text>
                  </View>
+                 </TouchableOpacity>
 
         ): null}
 
       {phone? (
-        <View className = "flex flex-row items-center justify-center self-start mt-2">
         <TouchableOpacity onPress={callPhone}>
+        <View className = "flex flex-row items-center justify-center self-start mt-2">
+        
         <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={28} />
-        </TouchableOpacity>
+       
         <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{phone}</Text>
         </View>
+        </TouchableOpacity>
 
         ): null}
         <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">Specialises in: </Text>

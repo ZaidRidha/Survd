@@ -60,7 +60,7 @@ const ContinueScreen = () => {
 
   ];
 
-  console.log("selected date" + selectedDate);
+
 
   useEffect(() => {
     if (showCalendar) {
@@ -100,7 +100,7 @@ useEffect(() => {
 }, [sortedSlots]);
 
 
-console.log(availableSlots);
+
 
 
 
@@ -119,7 +119,14 @@ console.log(availableSlots);
           : 0;
   
         totalPrice += servicePrice + extrasPrice;
-        totalDuration += service[0].duration !== undefined ? service[0].duration : 0;
+
+        const serviceDuration = service[0].duration !== undefined ? service[0].duration : 0;
+        const extrasDuration = service[0].extras
+          ? service[0].extras.reduce((totalExtras, extra) => totalExtras + (extra.duration !== undefined ? extra.duration : 0), 0)
+          : 0;
+
+        totalDuration += serviceDuration + extrasDuration;
+  
       });
   
       settotalServicesPrice(totalPrice);
@@ -128,6 +135,8 @@ console.log(availableSlots);
   
     calculateTotalPriceAndDuration();
   }, [Basket]);
+
+  console.log(Basket);
 
   
   useEffect(() => {
