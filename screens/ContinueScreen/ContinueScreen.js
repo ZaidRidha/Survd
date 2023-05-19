@@ -51,6 +51,10 @@ const ContinueScreen = () => {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+
+
+
+
   useEffect(() => {
     const currentDate = new Date().toISOString().split('T')[0];
     setSelectedDate(currentDate);
@@ -65,14 +69,7 @@ const ContinueScreen = () => {
 
 
 
-
-  const handleMonthChange = (date) => {
-    const newDate = new Date(date);
-    newDate.setDate(1);
-    setCurrentMonth(newDate.getMonth() + 1);
-    setSelectedDate(newDate);
-  };
-
+ 
 
 
   useEffect(() => {
@@ -120,11 +117,18 @@ useEffect(() => {
   const getCurrentMonthDays = () => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
+    const totalDays = new Date(currentDate.getFullYear(), currentMonth, 0).getDate();
     const daysArray = [];
 
-    for (let day = 1; day <= 31; day++) {
-      const date = new Date(currentYear, currentMonth, day);
+    const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(currentMonth).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+    for (let day = 1; day <= totalDays; day++) {
+      const date = new Date(currentYear, currentMonth-1, day);
       const formattedDate = formatDate(date);
       daysArray.push(formattedDate);
     }
@@ -132,15 +136,13 @@ useEffect(() => {
     setMonthDays(daysArray);
   };
 
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
   getCurrentMonthDays();
-}, []);
+}, [currentMonth]);
+
+
+
+
+
 
 
 
@@ -156,12 +158,6 @@ const sortedSlots = availableSlots.sort((a, b) => {
 useEffect(() => {
   setAvailableSlots(sortedSlots);
 }, [sortedSlots]);
-
-
-
-
-
-
 
   
 
@@ -230,6 +226,11 @@ useEffect(() => {
     Linking.openURL(mapsUrl);
   };
 
+  const handleMonthChange = (month) => {
+    const currentMonth = new Date(month).getMonth() + 1;
+    setCurrentMonth(currentMonth);
+  };
+
   const handleAppButton = () => {
     setshowCalendar(!showCalendar);
     setLiveAppointment(!liveAppointment);
@@ -253,7 +254,7 @@ useEffect(() => {
 
 
 
- 
+
 
   return (
     <SafeAreaView style={styles.root}>
@@ -368,6 +369,7 @@ useEffect(() => {
        
         monthTitleStyle ={{ fontFamily: 'PoppinsMed' }}
         yearTitleStyle ={{ fontFamily: 'PoppinsMed' }}
+        onMonthChange={handleMonthChange}
         onDateChange={handleDateChange}
         selectedDayStyle={{ backgroundColor: 'black' }} // Change the selector color
         selectedDayTextColor={'white'}
@@ -375,7 +377,6 @@ useEffect(() => {
         minDate={today}
         restrictMonthNavigation = {true}
         disabledDates={disabledDates}
-        onMonthChange={handleMonthChange}
         previousComponent={<Icon name="chevron-left" type="material" color="black" />} // Render custom previous title component
         nextComponent={<Icon name="chevron-right" type="material" color="black" />}
       />
