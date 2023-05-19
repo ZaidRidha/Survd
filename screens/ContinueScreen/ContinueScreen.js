@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions,Text,ScrollView, Linking, TouchableOpacity,SafeAreaView,FlatList} from 'react-native';
+import React, { useState, useEffect, } from 'react';
+import { View, StyleSheet, Dimensions,Text,ScrollView, Linking, TouchableOpacity,SafeAreaView,FlatList,} from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useRoute } from '@react-navigation/native';
 import { useSelector,useDispatch } from 'react-redux';
@@ -33,12 +33,20 @@ const ContinueScreen = () => {
   const [totalServicesDuration, settotalServicesDuration] = useState(0);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [selectedTimeslot, setSelectedTimeslot] = useState('');
+  const [liveAppointment, setLiveAppointment] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth()+1);
+  const [monthDays, setMonthDays] = useState([]);
+  const [disabledDates, setDisabledDates] = useState([]);
+  const [availableDates, setAvailableDates] = useState([]);
+
+
+
 
 
   const [barColor, setBarColor] = useState('#1a993f');
   const today = new Date();
 
-  const availableDates = ['2023-05-20', '2023-05-22', '2023-05-25'];
+
 
 
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -56,9 +64,14 @@ const ContinueScreen = () => {
 
 
 
-  const disabledDates = [
 
-  ];
+
+  const handleMonthChange = (date) => {
+    const newDate = new Date(date);
+    newDate.setDate(1);
+    setCurrentMonth(newDate.getMonth() + 1);
+    setSelectedDate(newDate);
+  };
 
 
 
@@ -67,23 +80,68 @@ const ContinueScreen = () => {
       const q = query(collection(database, 'barbers', barberID, 'availability'));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         let found = false;
+        const availableDates = []; // Create a new array for available dates
+  
         querySnapshot.forEach((doc) => {
           if (doc.id === selectedDate) {
-            
             setAvailableSlots(doc.data().timeslots);
             found = true;
           }
+          availableDates.push(doc.id); // Add the doc ID to availableDates array
         });
+  
         if (!found) {
           setAvailableSlots([]);
         }
+  
+        setAvailableDates(availableDates); // Update the availableDates state
       });
   
       return () => {
         unsubscribe();
       };
     }
-  }, [database, barberID, showCalendar, selectedDate]);
+  }, [database, barberID, showCalendar, selectedDate])
+
+  useEffect(() => {
+    const disabledDatesArray = [];
+  
+    monthDays.forEach((day) => {
+      if (!availableDates.includes(day)) {
+        disabledDatesArray.push(day);
+      }
+    });
+  
+    setDisabledDates(disabledDatesArray);
+  }, [monthDays, availableDates]);
+
+ 
+useEffect(() => {
+  const getCurrentMonthDays = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const daysArray = [];
+
+    for (let day = 1; day <= 31; day++) {
+      const date = new Date(currentYear, currentMonth, day);
+      const formattedDate = formatDate(date);
+      daysArray.push(formattedDate);
+    }
+
+    setMonthDays(daysArray);
+  };
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  getCurrentMonthDays();
+}, []);
+
 
 
 const sortedSlots = availableSlots.sort((a, b) => {
@@ -136,7 +194,7 @@ useEffect(() => {
     calculateTotalPriceAndDuration();
   }, [Basket]);
 
-  console.log(Basket);
+
 
   
   useEffect(() => {
@@ -174,6 +232,7 @@ useEffect(() => {
 
   const handleAppButton = () => {
     setshowCalendar(!showCalendar);
+    setLiveAppointment(!liveAppointment);
   };
 
   const handleRemoveItem = (objectId) => {
@@ -182,7 +241,6 @@ useEffect(() => {
 
   const renderTimeslot = ({ item }) => {
     const isSelected = selectedTimeslot === item;
-
     return (
       <TouchableOpacity
         onPress={() => setSelectedTimeslot(item)}
@@ -192,6 +250,8 @@ useEffect(() => {
       </TouchableOpacity>
     );
   };
+
+
 
  
 
@@ -314,8 +374,8 @@ useEffect(() => {
         selectedStartDate={selectedDate}
         minDate={today}
         restrictMonthNavigation = {true}
-        rest
         disabledDates={disabledDates}
+        onMonthChange={handleMonthChange}
         previousComponent={<Icon name="chevron-left" type="material" color="black" />} // Render custom previous title component
         nextComponent={<Icon name="chevron-right" type="material" color="black" />}
       />
