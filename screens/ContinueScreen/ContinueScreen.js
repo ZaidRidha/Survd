@@ -1,5 +1,5 @@
 import React, { useState, useEffect, } from 'react';
-import { View, StyleSheet, Dimensions,Text,ScrollView, Linking, TouchableOpacity,SafeAreaView,FlatList,} from 'react-native';
+import { View, StyleSheet, Dimensions,Text,ScrollView, Linking, TouchableOpacity,SafeAreaView,FlatList,TouchableWithoutFeedback} from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useRoute } from '@react-navigation/native';
 import { useSelector,useDispatch } from 'react-redux';
@@ -11,6 +11,8 @@ import {Calendar} from 'react-native-calendars';
 import { database } from '../../firebaseConfig';
 import { doc,getDocs,query,collection,where,onSnapshot,getDoc} from "firebase/firestore"; 
 import CalendarPicker from 'react-native-calendar-picker';
+import Toast from 'react-native-root-toast';
+import * as Clipboard from 'expo-clipboard';
 
 
 
@@ -61,9 +63,20 @@ const ContinueScreen = () => {
   }, []);
 
   const handleDateChange = (date) => {
+    setSelectedTimeslot('');
     const selectedDate = new Date(date).toISOString().split('T')[0];
     setSelectedDate(selectedDate);
    
+  };
+  
+
+
+  const handleLocationPress = async () => {
+    const copytext = address.toString();
+    await Clipboard.setStringAsync(copytext);
+    Toast.show('Location copied to clipboard', {
+      duration: Toast.durations.SHORT
+    });
   };
 
 
@@ -252,6 +265,8 @@ useEffect(() => {
     );
   };
 
+  
+
 
 
 
@@ -259,7 +274,7 @@ useEffect(() => {
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView showsVerticalScrollIndicator = {false}>
-      <TouchableOpacity onPress={handlePressMaps}> 
+      <TouchableOpacity onPress={handleLocationPress}>
       <View className = "items-center justify-center mt-2"> 
       <View className = "flex flex-row items-center">
       <Icon type="font-awesome" name="location-arrow" color="black" size={28} />
@@ -374,9 +389,15 @@ useEffect(() => {
         selectedDayStyle={{ backgroundColor: 'black' }} // Change the selector color
         selectedDayTextColor={'white'}
         selectedStartDate={selectedDate}
+        todayBackgroundColor={"#AEB2FF"}
+
+
+
         minDate={today}
+
         restrictMonthNavigation = {true}
         disabledDates={disabledDates}
+        
         previousComponent={<Icon name="chevron-left" type="material" color="black" />} // Render custom previous title component
         nextComponent={<Icon name="chevron-right" type="material" color="black" />}
       />

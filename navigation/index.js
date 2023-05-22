@@ -7,6 +7,8 @@ import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import PhoneScreen from '../screens/PhoneScreen/PhoneScreen';
 import ContinueScreen from '../screens/ContinueScreen/ContinueScreen';
+import ImageScreen from '../screens/ImageScreen/ImageScreen';
+import PaymentScreen from '../screens/PaymentScreen/PaymentScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -187,6 +189,28 @@ const Navigation = () => {
             }}
           />
 
+            <Stack.Screen
+              name="ImageScreen"
+              component={ImageScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+            name="PaymentScreen"
+            component={PaymentScreen}
+            options={{
+              headerShown:true,
+              headerBackTitleVisible:true,
+              headerBackTitle: " ",
+              headerTitle: "",
+              headerTintColor: "#000000",
+            }}
+          />
+
+
+
+          
 
       </Stack.Navigator>
     </NavigationContainer>

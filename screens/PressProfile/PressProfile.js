@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Keyboard, Image, StyleSheet,PanResponder,SafeAreaView,Linking,FlatList,Dimensions} from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Keyboard, Image, StyleSheet,PanResponder,SafeAreaView,Linking,FlatList,Dimensions,TouchableWithoutFeedback} from 'react-native';
 import React, { useState,useEffect } from 'react';
 import useFont from '../../useFont';
 import { Icon,Button } from '@rneui/themed';
@@ -22,6 +22,7 @@ const PressProfile = ({}) => {
   const [showLoc, setShowLoc] = useState(false);
   const [showPhotos, setShowPhotos] = useState(false);
   const [ighandle, setigHandle] = useState(" ");
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
 
   const navigation = useNavigation();
   useFont();
@@ -41,6 +42,26 @@ const PressProfile = ({}) => {
     }
   };
 
+  const carouselData = [ //images that go into the carousel
+  {
+    id: 1,
+    image: require('../../assets/images/bizlogo.jpg'),
+  },
+  {
+    id: 2,
+    image: require('../../assets/images/fade2.jpg'),
+  },
+  {
+    id: 3,
+    image: require('../../assets/images/fade3.jpg'),
+  },
+
+  {
+    id: 4,
+    image: require('../../assets/images/AppLogo.png'),
+  },
+];
+
   const pressContinue = () => {
     navigation.navigate("ContinueScreen", {
       lat: lat,
@@ -50,10 +71,27 @@ const PressProfile = ({}) => {
     })
   }
 
-  const renderCarouselItem = ({ item }) => (
-    <Image source={item.image} style={styles.displayImage} />
+
+
+  const navigateToImageScreen = (index) => {
+    const currindex = index;
+
+    navigation.navigate('ImageScreen', {
+      carouselData: carouselData,
+      index: currindex,
+
+    })
+  };
+
+
+  const renderCarouselItem = ({ item, index }) => (
+    <TouchableWithoutFeedback onPress={() => navigateToImageScreen(index)}>
+      <Image source={item.image} style={styles.displayImage} />
+    </TouchableWithoutFeedback>
   );
   
+
+
 
   useEffect(() => {
     sethandle();
@@ -182,25 +220,7 @@ for (const service of currentBasket) {
   };
 
 
-  const carouselData = [ //images that go into the carousel
-  {
-    id: 1,
-    image: require('../../assets/images/bizlogo.jpg'),
-  },
-  {
-    id: 2,
-    image: require('../../assets/images/fade2.jpg'),
-  },
-  {
-    id: 3,
-    image: require('../../assets/images/fade3.jpg'),
-  },
 
-  {
-    id: 4,
-    image: require('../../assets/images/AppLogo.png'),
-  },
-];
 
 
 
@@ -372,14 +392,17 @@ for (const service of currentBasket) {
         
         {showPhotos? (
         <View>
+
+      <View style={styles.carouselContainer}>
         <FlatList
-        horizontal
-        data={carouselData}
-        renderItem={renderCarouselItem}
-        keyExtractor={(item) => item.id.toString()}
-        showsHorizontalScrollIndicator={true}
-        
-      />
+          horizontal
+          data={carouselData}
+          renderItem={renderCarouselItem}
+          keyExtractor={(item) => item.id.toString()}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+
         <Text className = "mt-2" style = {styles.PoppinsMed}>Show all</Text>
         </View>
 
@@ -395,8 +418,8 @@ for (const service of currentBasket) {
         </View>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully compliant with hygiene standards.</Text>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">5 years experience barbering</Text>
-        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a £10.00 Flat Rate cancellation fee</Text>
-        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a 20% Late fee</Text>
+        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a <Text style = {styles.PoppinsMed} className = "text-s text-blue-600">£10.00</Text> Flat Rate cancellation fee</Text>
+        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a <Text style = {styles.PoppinsMed} className = "text-s text-blue-600">20%</Text> Late fee</Text>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully Insured</Text>
 
 
