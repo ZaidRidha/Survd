@@ -1,15 +1,15 @@
 import React, { useState, useEffect, } from 'react';
 import { View, StyleSheet, Dimensions,Text,ScrollView, Linking, TouchableOpacity,SafeAreaView,FlatList,TouchableWithoutFeedback} from 'react-native';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation,useRoute  } from '@react-navigation/native';
 import { useSelector,useDispatch } from 'react-redux';
-import { selectCurrentLoc,selectCurrentBasket,removeFromBasket } from '../../slices/locSlice';
+import { selectCurrentLoc,selectCurrentBasket,removeFromBasket,} from '../../slices/locSlice';
 import { Icon, Button} from '@rneui/themed';
 import * as Location from 'expo-location';
 import * as Progress from 'react-native-progress';
 import {Calendar} from 'react-native-calendars';
 import { database } from '../../firebaseConfig';
-import { doc,getDocs,query,collection,where,onSnapshot,getDoc} from "firebase/firestore"; 
+import { doc,getDocs,query,collection,where,onSnapshot,getDoc,deleteDoc} from "firebase/firestore"; 
 import CalendarPicker from 'react-native-calendar-picker';
 import Toast from 'react-native-root-toast';
 import * as Clipboard from 'expo-clipboard';
@@ -22,9 +22,12 @@ const ContinueScreen = () => {
   const route = useRoute();
   const currentLoc = useSelector(selectCurrentLoc);
   const Basket = useSelector(selectCurrentBasket);
-  const { lat, long, barberID } = route.params;
+  const { lat, long, barberID,vendorName,isLive} = route.params;
   const WIDTH = Dimensions.get("window").width;
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+
 
 
   const [address, setAddress] = useState(null);
@@ -40,9 +43,9 @@ const ContinueScreen = () => {
   const [monthDays, setMonthDays] = useState([]);
   const [disabledDates, setDisabledDates] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
-
-
-
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [calendarStart, setcalendarStart] = useState(new Date());
+  const [displayError, setDisplayError] = useState(false);
 
 
   const [barColor, setBarColor] = useState('#1a993f');
@@ -50,8 +53,15 @@ const ContinueScreen = () => {
 
 
 
+ 
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  useEffect(() => {
+    // Check if showCalendar is false
+    if (!showCalendar) {
+      // Set timeslot to empty
+      setSelectedTimeslot('');
+    }
+  }, [showCalendar]);
 
 
 
@@ -81,6 +91,45 @@ const ContinueScreen = () => {
 
 
 
+
+  useEffect(() => {
+    if (isLive === false) {
+      setshowCalendar(true);
+    }
+  }, [isLive]);
+
+
+  useEffect(() => {
+    if (showCalendar) {
+      const currentDate = new Date(); // Get the current date
+      const collectionRef = collection(database, 'barbers', barberID, 'availability');
+  
+      const fetchData = async () => {
+        const q = query(collectionRef);
+        const querySnapshot = await getDocs(q);
+  
+        const deletePromises = [];
+  
+        querySnapshot.forEach((doc) => {
+          const docDate = new Date(doc.id);
+  
+          if (docDate < currentDate) {
+            // Delete documents before the current date
+            deletePromises.push(deleteDoc(doc.ref));
+          }
+        });
+  
+        await Promise.all(deletePromises);
+      };
+  
+      fetchData();
+  
+      // Cleanup function
+      return () => {
+        // Cleanup tasks (if any)
+      };
+    }
+  }, [database, barberID, showCalendar]);
 
  
 
@@ -249,6 +298,24 @@ useEffect(() => {
     setLiveAppointment(!liveAppointment);
   };
 
+  const handleContinue = () => {
+    if (showCalendar && selectedTimeslot === '') {
+      setDisplayError(true);
+      setTimeout(() => {
+        setDisplayError(false);
+      }, 3000); // 3000 milliseconds = 3 seconds
+    } else {
+      navigation.navigate('PaymentScreen', {
+        selectedTimeslot: selectedTimeslot,
+        address: address,
+        postCode: postCode,
+        selectedDate: selectedDate,
+        vendorName: vendorName,
+      });
+    }
+  };
+
+
   const handleRemoveItem = (objectId) => {
     dispatch(removeFromBasket(objectId));
   };
@@ -265,6 +332,8 @@ useEffect(() => {
     );
   };
 
+
+
   
 
 
@@ -273,22 +342,37 @@ useEffect(() => {
 
   return (
     <SafeAreaView style={styles.root}>
-      <ScrollView showsVerticalScrollIndicator = {false}>
-      <TouchableOpacity onPress={handleLocationPress}>
-      <View className = "items-center justify-center mt-2"> 
-      <View className = "flex flex-row items-center">
-      <Icon type="font-awesome" name="location-arrow" color="black" size={28} />
-      <Text  style = {styles.poppinsReg} className = "text-xl"> {address}</Text>
-      </View>
-      <Text  style = {styles.poppinsReg} className = "text-xl"> {postCode}</Text>
-      </View>
-      </TouchableOpacity>
       
+      <View className = "items-center justify-center mt-2"> 
+      <View className = "">
+      <Text  style = {styles.poppinsReg} className = "text-xl"> {vendorName} </Text>
+      </View>
+      </View>
+      <ScrollView showsVerticalScrollIndicator = {false}>
+
+
       <View className = "mt-2"style={{flexDirection: 'row', alignItems: 'center',justifyContent:"center"}}>
-      <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", }} />   
+      <View style={{flex: 0.95, height: 1, backgroundColor: '#F4F4F4', alignSelf: "center", justifyContent: "center", }} />   
+      </View>
+      <View className = "mb-1">
+
+      <View className = "flex flex-row items-center ml-2 mt-3">
+      <Icon type="entypo" name="shop" color="#0F7D00" size={21} />
+      <Text  style = {styles.poppinsMed} className = "text-lg"> Ismail's Barbershop</Text>
+      </View>
+      
+
+      
+      
+
       </View>
 
-      {!showCalendar && (
+    
+
+      
+
+      
+  {!showCalendar && (
   <View>
   <View style={styles.queueInfo} className="ml-2 mt-3 mr-5">
     <View className="ml-2 mt-3 mr-2">
@@ -336,50 +420,49 @@ useEffect(() => {
 )}
 
 
+{isLive ? (
+  <Button
+    onPress={handleAppButton}
+    icon={
+      showCalendar ? (
+        <Icon
+          type="material-community"
+          name="walk"
+          color="black"
+          size={28}
+          style={{ marginRight: 3 }}
+        />
+      ) : (
+        <Icon
+          type="entypo"
+          name="calendar"
+          color="black"
+          style={{ marginRight: 7 }}
+        />
+      )
+    }
+    title={showCalendar ? <Text>Walk In</Text> : <Text>Schedule Appointment</Text>}
+    buttonStyle={{
+      borderColor: 'black',
+      borderWidth: 1,
+      borderRadius: 5,
+      marginBottom: 5,
+    }}
+    type="outline"
+    titleStyle={{ color: 'black', marginLeft: 10 }}
+    containerStyle={{
+      width: WIDTH - 50,
+      marginTop: 10,
+      alignSelf: 'center',
+      marginBottom: 5,
+    }}
+  />
+) : null}
 
-              <Button
-              onPress={handleAppButton}
-              icon={
-                showCalendar ? (
-                  <Icon
-                  type="material-community"
-                  name="walk"
-                  color="black"
-                  size={28}
-                  style={{ marginRight: 3 }}
-                />
-                ) : (
-                  <Icon
-                  type="entypo"
-                  name="calendar"
-                  color="black"
-                  style={{ marginRight: 7 }}
-                />
-                )
-              }
-              title= {showCalendar ? (
-                <Text>Walk In</Text>
-              ) : (
-              <Text>Schedule Appointment</Text>
-              )}
-              buttonStyle={{
-                borderColor: 'black',
-                borderWidth:1,
-                borderRadius:5,
-                marginBottom:5,
-              }}
-              type="outline"
-              titleStyle={{ color: 'black',marginLeft:10, }}
-              containerStyle={{
-                width: WIDTH - 50,
-                marginTop:10,
-                alignSelf:"center",
-                marginBottom: 5,
-              }}
-            />
+
 
       {showCalendar ?
-      <View>
+      <View className = "my-5">
       <CalendarPicker
        
         monthTitleStyle ={{ fontFamily: 'PoppinsMed' }}
@@ -389,10 +472,8 @@ useEffect(() => {
         selectedDayStyle={{ backgroundColor: 'black' }} // Change the selector color
         selectedDayTextColor={'white'}
         selectedStartDate={selectedDate}
-        todayBackgroundColor={"#AEB2FF"}
-
-
-
+        todayBackgroundColor={"gray"}
+      
         minDate={today}
 
         restrictMonthNavigation = {true}
@@ -402,13 +483,18 @@ useEffect(() => {
         nextComponent={<Icon name="chevron-right" type="material" color="black" />}
       />
       <View style={styles.slotContainer}>
-      <FlatList
-        data={availableSlots}
-        renderItem={renderTimeslot}
-        keyExtractor={(item) => item}
-        horizontal
-        showsHorizontalScrollIndicator = {false}
-      />
+        
+      {availableSlots.length > 0 ? (
+        <FlatList
+          data={availableSlots}
+          renderItem={renderTimeslot}
+          keyExtractor={(item) => item}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
+      ) : (
+        <Text style = {styles.poppinsMed} className = "ml-2 text-red-600">Sorry, no available slots for this day :(</Text>
+      )}
     </View>
     </View>
      : null}
@@ -456,17 +542,29 @@ useEffect(() => {
       <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", }} />   
       </View>
 
+<View className = "mb-6">
 <Text className="text-lg ml-3 mt-2" style={styles.poppinsMed}>
  Subtotal: £{totalServicesPrice.toFixed(2)}
 </Text>
 
-<Text className="text-gray-500 text-base ml-3 mb-5" style={styles.poppinsReg}>
+<Text className="text-gray-500 text-base ml-3 " style={styles.poppinsReg}>
  Total Duration: {totalServicesDuration} minutes
 </Text>
+
+{displayError && (
+        <Text style={styles.poppinsMed} className= "ml-3 text-red-600 mt-2">
+          Please select a timeslot from the calendar.
+        </Text>
+)}
+
+</View>
+
+
 
 
 <Button
     titleStyle={styles.PoppinsReg}
+    onPress={handleContinue}
     title={`Continue`}
     color={'black'}
     containerStyle={{
@@ -499,7 +597,7 @@ const styles = StyleSheet.create({
   },
   queueInfo:{
     borderWidth:2,
-    borderColor: "black",
+    borderColor: "#0F7D00",
     backgroundColor: "white",
     borderRadius:5,
 

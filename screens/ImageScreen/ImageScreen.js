@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, FlatList, Image, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, FlatList, Image, SafeAreaView, TouchableWithoutFeedback} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState, useRef } from 'react';
 import { Icon } from '@rneui/themed';
@@ -47,10 +47,12 @@ const ImageScreen = () => {
 
   return (
     <SafeAreaView style={styles.root}>
+      <TouchableWithoutFeedback onPress={goBack} >
       <View className="items-center flex flex-row">
-        <Icon onPress={goBack} type="entypo" name="chevron-left" color="white" size={42} />
+        <Icon  type="entypo" name="chevron-left" color="white" size={42} />
         <Text className="text-white self-center"> Photos ({currentIndex + 1}/{carouselData.length})</Text>
       </View>
+      </TouchableWithoutFeedback>
       <FlatList
         ref={flatListRef}
         data={carouselData}
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: WIDTH,
-    height: 340, // Adjust the height according to your image requirements
+    height: 320, // Adjust the height according to your image requirements
   },
 
 

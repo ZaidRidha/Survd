@@ -33,6 +33,7 @@
     "firebase": "^9.17.1",
     "firebase-admin": "^11.5.0",
     "geolib": "^3.3.3",
+    "lottie-react-native": "^5.1.6",
     "moment": "^2.29.4",
     "nativewind": "^2.0.11",
     "ping": "^0.4.2",

@@ -16,7 +16,8 @@ import LocationScreen from '../screens/LocationScreen/LocationScreen';
 import PressProfile from '../screens/PressProfile/PressProfile';
 import { Icon } from '@rneui/themed';
 import PressService from '../screens/PressService/PressService';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View} from 'react-native';
+import ConfirmationScreen from '../screens/ConfirmationScreen/ConfirmationScreen';
 
 
 const Stack = createStackNavigator();
@@ -25,11 +26,26 @@ const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
   
   return (
-    <Tab.Navigator screenOptions={{headerShown:false}}>
+    <Tab.Navigator
+     screenOptions={{
+      headerShown:false,
+      tabBarStyle: {
+      height:90,
+      backgroundColor: 'white',
+      borderTopColor:"white",
+
+
+      },
+  
+    }}
+
+  >
+
+
       <Tab.Screen 
         name = "Home"
         component = {HomeScreen} 
-        
+  
         options={{
           tabBarActiveTintColor: 'black',
           tabBarInactiveTintColor: 'gray',
@@ -38,7 +54,7 @@ const BottomTabNavigator = () => {
           focused ?
           <Icon
           name='home'
-          size = {30}
+          size = {34}
           color = "black" />:
           <Icon
           name='home'
@@ -61,7 +77,7 @@ const BottomTabNavigator = () => {
           focused ?
           <Icon
           name='search'
-          size = {30}
+          size = {34}
           color = "black" />:
           <Icon
           name='search'
@@ -84,7 +100,7 @@ const BottomTabNavigator = () => {
           focused ?
           <Icon
           name='person'
-          size = {30}
+          size = {34}
           color = "black" />:
           <Icon
           name='person'
@@ -146,23 +162,39 @@ const Navigation = () => {
           <Stack.Screen 
           name = "PressProfile"
           component = {PressProfile}
-          options={{ 
+          options={{
             headerShown: true,
+
             headerBackTitleVisible: true,
             headerBackTitle: ' ',
             headerTitle: ' ',
             headerTintColor: '#000000',
+
             headerRight: () => (
-              <Icon
-                style={styles.msgIcon}
-                type = 'feather'
-                name='message-square'
-                size = {28}
-                color = "black" 
-              />
+              <View className = "flex flex-row items-center">
+                <Icon
+                  style={styles.icon}
+                  type='octiicon'
+                  name='report'
+                  size={35}
+                  color="black" 
+                />
+
+                <Icon
+                  style={styles.icon}
+                  type='material-community'
+                  name='message-outline'
+                  size={32}
+                  color="black" 
+                />
+
+ 
+              </View>
             )
           }}
           />
+
+
 
           <Stack.Screen
             name="PressService"
@@ -183,8 +215,9 @@ const Navigation = () => {
             options={{
               headerShown:true,
               headerBackTitleVisible:true,
+              headerTransparent: true,
               headerBackTitle: " ",
-              headerTitle: "Mike Tha Barber",
+              headerTitle: " ",
               headerTintColor: "#000000",
             }}
           />
@@ -201,12 +234,23 @@ const Navigation = () => {
             component={PaymentScreen}
             options={{
               headerShown:true,
+              headerTransparent:true,
               headerBackTitleVisible:true,
               headerBackTitle: " ",
               headerTitle: "",
               headerTintColor: "#000000",
             }}
           />
+
+
+            <Stack.Screen
+              name="ConfirmationScreen"
+              component={ConfirmationScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+
 
 
 

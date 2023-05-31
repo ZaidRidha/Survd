@@ -27,7 +27,7 @@ const PressProfile = ({}) => {
   const navigation = useNavigation();
   useFont();
   const route = useRoute();
-  const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId} = route.params;
+  const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId,isLive} = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
   let total = 0;
@@ -62,11 +62,15 @@ const PressProfile = ({}) => {
   },
 ];
 
+console.log(isLive);
+
   const pressContinue = () => {
     navigation.navigate("ContinueScreen", {
       lat: lat,
       long: long,
       barberID: docId,
+      vendorName: name,
+      isLive:isLive,
 
     })
   }
@@ -287,47 +291,27 @@ for (const service of currentBasket) {
         {mobile ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
         <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
-        <Text style = {styles.PoppinsReg} className = "text-sm text-blue-800 "> (Mobile)</Text>
+        <Text style = {styles.PoppinsLight} className = "text-sm "> (Mobile)</Text>
           </View>
       ) : null}
         {shop ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1 ">
           <Icon type="entypo" name="shop" color="black" size={22} />
-          <Text style = {styles.PoppinsReg} className = "text-sm text-green-800 "> (In Shop)</Text> 
+          <Text style = {styles.PoppinsLight} className = "text-sm "> (In Shop)</Text> 
           </View>
       ) : null}
 
         {home ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
           <Icon type="ionicon" name="home" color="black" size={22} />
-          <Text style = {styles.PoppinsReg} className = "text-sm text-purple-800"> (Vendor's Home)</Text> 
+          <Text style = {styles.PoppinsLight} className = "text-sm"> (Home/Studio)</Text> 
           </View>
       ) : null}
       </View>
 
 
 
-        {instagram? (
-                <TouchableOpacity onPress={openInsta}>
-                 <View className = "flex flex-row items-center justify-center self-start mt-2">
-                 <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={28} />
-                 <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{instagram}</Text>
-                 </View>
-                 </TouchableOpacity>
 
-        ): null}
-
-      {phone? (
-        <TouchableOpacity onPress={callPhone}>
-        <View className = "flex flex-row items-center justify-center self-start mt-2">
-        
-        <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={28} />
-       
-        <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{phone}</Text>
-        </View>
-        </TouchableOpacity>
-
-        ): null}
         <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">Specialises in: </Text>
         <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
@@ -338,7 +322,7 @@ for (const service of currentBasket) {
         <View className = "flex flex-row items-center justify-between ">
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
         <Icon type="entypo" name="location" color="black" size={23} style ={styles.locationIcon} />
-        <Text style = {styles.PoppinsMed} className = "text-lg mt-3">Location & Hours</Text>
+        <Text style = {styles.PoppinsMed} className = "text-xl mt-3">Location & Hours</Text>
         </View>
         <Icon type="ionicon" name="expand-sharp" color="black" size={25} style ={styles.expandIcon} />
         </View>
@@ -384,7 +368,7 @@ for (const service of currentBasket) {
         <View className = "flex flex-row items-center justify-between ">
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
         <Icon type="font-awesome" name="photo" color="black" size={23} style ={styles.locationIcon} />
-        <Text style = {styles.PoppinsMed} className = "text-lg">Photos</Text>
+        <Text style = {styles.PoppinsMed} className = "text-xl">Photos</Text>
         </View>
         <Icon type="ionicon" name="expand-sharp" color="black" size={25} style ={styles.expandIcon} />
         </View>
@@ -409,9 +393,38 @@ for (const service of currentBasket) {
         ):null}
 
 
-        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
+        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
+
+        {instagram? (
+                <TouchableOpacity onPress={openInsta}>
+                 <View className = "flex flex-row items-center justify-center self-start mt-2">
+                 <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={28} />
+                 <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{instagram}</Text>
+                 </View>
+                 </TouchableOpacity>
+
+        ): null}
+
+      {phone? (
+        <TouchableOpacity onPress={callPhone}>
+        <View className = "flex flex-row items-center justify-center self-start mt-2">
+        
+        <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={28} />
+       
+        <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{phone}</Text>
+        </View>
+        </TouchableOpacity>
+
+        ): null}
+
+        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,}}>
+        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
+        </View>
+
+
+
         <View className = "flex flex-row items-center justify-center self-start">
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Health and safety verified</Text>
         <Icon style = {styles.verifiedIcon} type="material" name="verified" color="green" size={22} />
@@ -451,7 +464,7 @@ for (const service of currentBasket) {
               {service.description}
             </Text>
             <Text style={styles.PoppinsLight} className="text-sm text-gray-500 mb-2">
-              {service.duration ? `${service.duration}min` : "Duration not available"}
+              {service.duration ? `${service.duration}min` : null}
             </Text>
           </TouchableOpacity>
         ))}

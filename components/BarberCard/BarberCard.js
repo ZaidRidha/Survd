@@ -11,10 +11,27 @@ const HEIGHT = 270;
 const WIDTH = Dimensions.get("window").width;
 
 
-const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,shop,home,pinmsg,docId}) => {
+const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,shop,home,pinmsg,docId,mobileActive,shopActive,homeActive,liveHome,liveMobile,liveShop}) => {
   const navigation = useNavigation();
   const [iconColor, setIconColor] = useState("darkgray");
   const [iconType, setIconType] = useState("heart-outline");
+  const [isLive, setIsLive] = useState(false);
+
+
+
+
+  useEffect(() => {
+    if (liveHome || liveMobile || liveShop) {
+      setIsLive(true);
+    } else {
+      setIsLive(false);
+    }
+  }, [liveHome, liveMobile, liveShop]);
+
+
+
+
+
 
 
   const handleFavoriteItemClicked = () => {
@@ -23,6 +40,8 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
     setIconColor(newColor);
     setIconType(newType);
   };
+
+
 
 
   const images = [ //images that go into the carousel
@@ -56,6 +75,10 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
       shop: shop,
       pinmsg: pinmsg,
       docId: docId,
+      mobileActive:mobileActive,
+      shopActive:shopActive,
+      homeActive:homeActive,
+      isLive: isLive,
 
     });
   }
@@ -81,7 +104,9 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
     <View>
     <View className = "flex flex-row items-center">
     <View style={styles.circle}></View>
-    <Text className = "text-sm " style = {[styles.figreg,]}>Active Now </Text>
+    <Text className="text-sm" style={[styles.figreg]}>
+    {isLive ? "Live Now" : "Active Now"}
+    </Text>
     </View>
     </View>
     
@@ -95,18 +120,23 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
 
     <View className = "flex flex-row items-center">
       {mobile ? (
-      <Icon type='font-awesome-5' name="car-alt" color="black" size={16} />
+      <Icon
+      type='font-awesome-5'
+      name="car-alt"
+      color={mobileActive ? "#005D19" : "black"}
+      size={16}
+    />
       ) : null}
       {shop ? (
       <>
         {mobile && <Text style = {{ fontSize: 18 }}> / </Text>}
-        <Icon type="entypo" name="shop" color="black" size={16} />
+        <Icon type="entypo" name="shop" color={shopActive ? "#005D19" : "black"} size={16} />
       </>
        ) : null}
       {home ? (
       <>
         {(mobile || shop) && <Text style={{ fontSize: 18 }}> / </Text>}
-        <Icon type="ionicon" name="home" color="black" size={16} />
+        <Icon type="ionicon" name="home" color={homeActive ? "#005D19" : "black"} size={16} />
       </>
       ) : null}
  
@@ -159,7 +189,26 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
     )}
 
 <View className = "flex flex-row items-center justify-between">
-      <Text className = "text-sm " style = {styles.figreg}>Est. Waiting time : <Text  style = {styles.figreg} className = "text-sm text-blue-600">32 Mins</Text></Text>
+
+<Text className="text-sm" style={styles.figreg}>
+  {isLive ? (
+    <>
+      Est. Waiting time :{" "}
+      <Text className="text-sm text-blue-600" style={styles.figreg}>
+        32 Mins
+      </Text>
+    </>
+  ) : (
+    <>
+      Next Appointment :{" "}
+      <Text className="text-sm text-blue-600" style={styles.figreg}>
+        14:00
+      </Text>
+    </>
+  )}
+</Text>
+
+
       <View className = "flex flex-row items-center">
       <Icon type="font-awesome" name="star" color="black" size={15} />
       <Text className = "text-sm" style = {styles.poppinsMed}> 5.0 <Text className = "text-sm" style = {styles.poppinsMed}>(135)</Text></Text>

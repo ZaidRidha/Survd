@@ -83,10 +83,16 @@ const HomeScreen = () => {
         const shop = doc.get("shop");
         const home = doc.get("home");
         const pinmsg = doc.get("pinmsg");
+        const mobileActive = doc.get("mobileactive");
+        const homeActive = doc.get("homeactive");
+        const shopActive = doc.get("shopactive");
+        const liveHome = doc.get("livehome");
+        const liveMobile = doc.get("livemobile");
+        const liveShop = doc.get("liveshop");
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
         const distanceInMiles = (distance / 1609).toFixed(1);
         if (distance<6000){
-          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId});
+          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId,mobileActive:mobileActive,homeActive:homeActive,shopActive:shopActive,liveMobile:liveMobile,liveShop:liveShop,liveHome:liveHome});
 
         };
         setNearbyBarbers(nearBarbers);
@@ -96,7 +102,7 @@ const HomeScreen = () => {
 
   }, [currentLat, currentLong, setNearbyBarbers]);
 
-  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long} instagram = {item.instagram} phone = {item.phone} mobile = {item.mobile} shop = {item.shop} home = {item.home} pinmsg = {item.pinmsg} docId = {item.docId}/>
+  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long} instagram = {item.instagram} phone = {item.phone} mobile = {item.mobile} shop = {item.shop} home = {item.home} pinmsg = {item.pinmsg} docId = {item.docId} homeActive = {item.homeActive} shopActive = {item.shopActive} mobileActive = {item.mobileActive} liveMobile = {item.liveMobile} liveShop = {item.liveShop} liveHome = {item.liveHome}/>
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -116,10 +122,16 @@ const HomeScreen = () => {
         const shop = doc.get("shop");
         const home = doc.get("home");
         const pinmsg = doc.get("pinmsg");
+        const mobileActive = doc.get("mobileactive");
+        const homeActive = doc.get("homeactive");
+        const shopActive = doc.get("shopactive");
+        const liveHome = doc.get("livehome");
+        const liveMobile = doc.get("livemobile");
+        const liveShop = doc.get("liveshop");
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
         const distanceInMiles = (distance / 1609).toFixed(1);
         if (distance<6000){
-          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId});
+          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId,mobileActive:mobileActive,homeActive:homeActive,shopActive:shopActive,liveMobile:liveMobile,liveShop:liveShop,liveHome:liveHome});
 
         };
       });
