@@ -1,48 +1,93 @@
-import { StyleSheet, Text, View,SafeAreaView,TouchableOpacity,Linking, ScrollView,Dimensions} from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View,SafeAreaView,TouchableOpacity,Linking, ScrollView,Dimensions,TouchableWithoutFeedback} from 'react-native'
+import React, { useState,useEffect } from "react";
 import { useNavigation,useRoute,CommonActions  } from '@react-navigation/native';
 import { useSelector,useDispatch } from 'react-redux';
-import { selectCurrentLoc,selectCurrentBasket,removeFromBasket,} from '../../slices/locSlice';
+import { selectCurrentLoc,selectCurrentBasket,removeFromBasket,selectCurrentVendor} from '../../slices/locSlice';
 import { Icon, Button} from '@rneui/themed';
 import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-root-toast';
 import moment from 'moment';
+import { database } from '../../firebaseConfig';
+import { collection, addDoc } from "firebase/firestore"; 
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const PaymentScreen = () => {
+  const auth = getAuth();
   const WIDTH = Dimensions.get('window').width;
   const route = useRoute();
-  const {selectedTimeslot,address,postCode,selectedDate,vendorName} = route.params;
+  const { selectedTimeslot, address, postCode, selectedDate, vendorName, servicesDuration, subtotal, docId } = route.params;
   const navigation = useNavigation();
   const Basket = useSelector(selectCurrentBasket);
   const dispatch = useDispatch();
+  const [showServices, setShowServices] = useState(false);
   const formattedDate = moment(selectedDate).format('D MMMM YYYY');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [uid, setUid] = useState(null); // Add the state for storing uid
 
-  
 
-  const handlePressPay = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{
-          name: 'ConfirmationScreen',
-          params: {
-            address: address,
-            postCode: postCode,
-            formattedDate: formattedDate,
-            selectedTimeslot: selectedTimeslot,
-            vendorName: vendorName,
-          },
-        }],
-      })
-    );
-  }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUid(user.uid);
+      } else {
+        setUid(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the event listener on unmount
+  }, []);
+
+
+  console.log(uid);
+
+
+
+
+  const handlePressPay = async () => {
+    if (!isButtonDisabled) {
+      setIsButtonDisabled(true);
   
+      const docRef = await addDoc(collection(database, 'appointments'), {
+        barberID: docId,
+        date: selectedDate,
+        duration: servicesDuration,
+        price: subtotal,
+        time: selectedTimeslot,
+        userID: uid,
+        barberName: vendorName,
+      });
+  
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'ConfirmationScreen',
+              params: {
+                address: address,
+                postCode: postCode,
+                formattedDate: formattedDate,
+                selectedTimeslot: selectedTimeslot,
+                vendorName: vendorName,
+                appointmentId: docRef.id, // Add the new appointment ID as a parameter
+              },
+            },
+          ],
+        })
+      );
+    }
+  };
 
 
   const handleGetDirections = () => {
     const mapsUrl = `http://maps.google.com/maps?q=${address} ${postCode}`;
     Linking.openURL(mapsUrl);
   };
+
+  const pressServices = () => {
+    setShowServices(!showServices);
+  };
+
 
 
 
@@ -96,44 +141,52 @@ const PaymentScreen = () => {
       </View>
 
   <View className="mt-2 ">
+  <TouchableWithoutFeedback onPress={pressServices}>
   <View className = "flex flex-row items-center">
-
-  <Text className="text-lg" style={styles.poppinsMed}>Selected Services:</Text>
+  <Text className="text-lg mr-1" style={styles.poppinsMed}>Selected Services</Text>
+  <Icon type="antdesign" name="down" color="black" size={21}  />
   </View>
-  {Basket.map((service, index) => (
+  </TouchableWithoutFeedback>
+
+  {showServices ? (
+  Basket.map((service, index) => (
+    <View>
     <View className="flex flex-row justify-between items-center mt-2" key={index}>
       <View>
-        <Text className="text-base" style={styles.poppinsReg}>{service[0].name}</Text>
+        <Text className="text-base" style={styles.poppinsMed}>{service[0].name}</Text>
 
         {/* Render the extras if available */}
         {service[0].extras && service[0].extras.map((extra, extraIndex) => (
           <View key={extraIndex}>
-            <View className = "flex flex-row items-center">
-            <Icon type="entypo" name="plus" color="black" size={21}  />
-            <Text className="text-sm" style={styles.poppinsReg}>{extra.name}</Text>
+            <View className="flex flex-row items-center">
+              <Icon type="entypo" name="plus" color="black" size={21}  />
+              <Text className="text-sm" style={styles.poppinsReg}>{extra.name}</Text>
             </View>
           </View>
         ))} 
-      <Text className=" text-sm" style={styles.poppinsReg}>
-        Price: £{(service[0].price + (service[0].extras ? service[0].extras.reduce((total, extra) => total + extra.price, 0) : 0)).toFixed(2)}
-      </Text>
 
-      {service[0].duration !== undefined && (
-        <Text className="text-gray-600 text-sm" style={styles.poppinsReg}>
-          Duration: {service[0].duration + (service[0].extras ? service[0].extras.reduce((total, extra) => (extra.duration !== undefined ? total + extra.duration : total), 0) : 0)} minutes
+        <Text className="text-sm" style={styles.poppinsReg}>
+          Price: £{(service[0].price + (service[0].extras ? service[0].extras.reduce((total, extra) => total + extra.price, 0) : 0)).toFixed(2)}
         </Text>
-      )}
-            </View>
-          </View>
-        ))}
 
-      <Text className=" text-sm mt-1 text-gray-500" style={styles.poppinsMed}>
+        {service[0].duration !== undefined && (
+          <Text className="text-gray-600 text-sm" style={styles.poppinsReg}>
+            Duration: {service[0].duration + (service[0].extras ? service[0].extras.reduce((total, extra) => (extra.duration !== undefined ? total + extra.duration : total), 0) : 0)} minutes
+          </Text>
+        )}
+      </View>
+    </View>  
+    <Text className=" text-sm mt-1 " style={styles.poppinsMed}>
         Total Duration: 30 Minutes
       </Text>
+    </View>
+  ))
+) : null}
+
 
       
-      <Text className=" text-sm mb-1 text-gray-500" style={styles.poppinsMed}>
-        Subtotal: £11.00
+      <Text className=" text-base mb-1 " style={styles.poppinsMed}>
+        Subtotal: £{subtotal.toFixed(2)}
       </Text>
       </View>
       <View className = "mt-1"style={{flexDirection: 'row', alignItems: 'center',justifyContent:"center"}}>
@@ -208,6 +261,7 @@ const PaymentScreen = () => {
       </View> 
     <Button
     onPress={handlePressPay}
+    disabled={isButtonDisabled}
     titleStyle={styles.PoppinsReg}
     title={`Pay Now`}
     color={'black'}

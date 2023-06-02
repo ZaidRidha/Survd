@@ -18,6 +18,7 @@ import { Icon } from '@rneui/themed';
 import PressService from '../screens/PressService/PressService';
 import { StyleSheet, View} from 'react-native';
 import ConfirmationScreen from '../screens/ConfirmationScreen/ConfirmationScreen';
+import AppointmentsScreen from '../screens/AppointmentsScreen/AppointmentsScreen';
 
 
 const Stack = createStackNavigator();
@@ -53,10 +54,12 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ focused }) => 
           focused ?
           <Icon
+          type='antdesign'
           name='home'
           size = {34}
           color = "black" />:
           <Icon
+          type='antdesign'
           name='home'
           size = {30}
           color = "gray" />
@@ -66,6 +69,33 @@ const BottomTabNavigator = () => {
       }
 
       />
+
+        <Tab.Screen 
+        name = "Appointments"
+        component = {AppointmentsScreen} 
+
+        options={{
+          tabBarActiveTintColor: 'black',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({ focused }) => 
+          focused ?
+          <Icon
+          type='antdesign'
+          name='calendar'
+          size = {34}
+          color = "black" />:
+          <Icon
+          type='antdesign'
+          name='calendar'
+          size = {30}
+          color = "gray" />
+          
+        }
+      }
+
+      />
+
+      
       <Tab.Screen 
         name = "Explore"
         component = {ExploreScreen} 
@@ -76,18 +106,19 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ focused }) => 
           focused ?
           <Icon
-          name='search'
+          type='entypo'
+          name='magnifying-glass'
           size = {34}
           color = "black" />:
           <Icon
-          name='search'
+          type='entypo'
+          name='magnifying-glass'
           size = {30}
           color = "gray" />
           
         }
       }
 
-        
       />
 
       <Tab.Screen 
@@ -99,11 +130,13 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ focused }) => 
           focused ?
           <Icon
-          name='person'
+          type='antdesign'
+          name='user'
           size = {34}
           color = "black" />:
           <Icon
-          name='person'
+          type='antdesign'
+          name='user'
           size = {30}
           color = "gray" />
           

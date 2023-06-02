@@ -11,11 +11,13 @@ const HEIGHT = 270;
 const WIDTH = Dimensions.get("window").width;
 
 
-const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,shop,home,pinmsg,docId,mobileActive,shopActive,homeActive,liveHome,liveMobile,liveShop}) => {
+const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,shop,home,pinmsg,docId,mobileActive,shopActive,homeActive,liveHome,liveMobile,liveShop,unavailable,walkins,onbreak,updatedhours}) => {
   const navigation = useNavigation();
   const [iconColor, setIconColor] = useState("darkgray");
   const [iconType, setIconType] = useState("heart-outline");
   const [isLive, setIsLive] = useState(false);
+
+
 
 
 
@@ -27,7 +29,6 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
       setIsLive(false);
     }
   }, [liveHome, liveMobile, liveShop]);
-
 
 
 
@@ -79,6 +80,7 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
       shopActive:shopActive,
       homeActive:homeActive,
       isLive: isLive,
+      updatedhours:updatedhours
 
     });
   }
@@ -103,10 +105,13 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
 
     <View>
     <View className = "flex flex-row items-center">
-    <View style={styles.circle}></View>
-    <Text className="text-sm" style={[styles.figreg]}>
-    {isLive ? "Live Now" : "Active Now"}
+    <View style={[styles.circle, walkins && { backgroundColor: 'purple' }, onbreak ? { backgroundColor: '#FFD700' } : unavailable ? { backgroundColor: 'gray' } : null]}></View>
+
+    <Text style={[styles.figreg, unavailable && { color: 'gray' }, walkins && { color: 'purple' }, onbreak && { color: '#FFD700' }, !unavailable && !onbreak && !walkins && { color: 'green' }]}>
+    {unavailable ? 'Offline' : onbreak ? 'On Break' : walkins ? 'Walk Ins' : isLive ? 'Live Now' : 'Active Now'}
     </Text>
+
+    
     </View>
     </View>
     
@@ -123,20 +128,20 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
       <Icon
       type='font-awesome-5'
       name="car-alt"
-      color={mobileActive ? "#005D19" : "black"}
+      color={mobileActive ? "green" : "black"}
       size={16}
     />
       ) : null}
       {shop ? (
       <>
         {mobile && <Text style = {{ fontSize: 18 }}> / </Text>}
-        <Icon type="entypo" name="shop" color={shopActive ? "#005D19" : "black"} size={16} />
+        <Icon type="entypo" name="shop" color={shopActive ? "green" : "black"} size={16} />
       </>
        ) : null}
       {home ? (
       <>
         {(mobile || shop) && <Text style={{ fontSize: 18 }}> / </Text>}
-        <Icon type="ionicon" name="home" color={homeActive ? "#005D19" : "black"} size={16} />
+        <Icon type="ionicon" name="home" color={homeActive ? "green" : "black"} size={16} />
       </>
       ) : null}
  

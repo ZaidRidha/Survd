@@ -27,10 +27,12 @@ const PressProfile = ({}) => {
   const navigation = useNavigation();
   useFont();
   const route = useRoute();
-  const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId,isLive} = route.params;
+  const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId,isLive,mobileActive,shopActive,homeActive,updatedhours} = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
   let total = 0;
+
+
 
   const sethandle = () => {
     if (instagram) {
@@ -62,18 +64,24 @@ const PressProfile = ({}) => {
   },
 ];
 
-console.log(isLive);
 
-  const pressContinue = () => {
+
+const pressContinue = () => {
+  if (currentBasket.length > 0) {
     navigation.navigate("ContinueScreen", {
       lat: lat,
       long: long,
       barberID: docId,
       vendorName: name,
-      isLive:isLive,
-
-    })
+      isLive: isLive,
+      docId: docId,
+    });
+  } else {
+    // Handle the case when the basket is empty
+    alert("Basket is empty. Please add items before continuing.");
+    // You can display a message to the user or perform any other desired action
   }
+};
 
 
 
@@ -291,20 +299,20 @@ for (const service of currentBasket) {
         {mobile ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
         <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
-        <Text style = {styles.PoppinsLight} className = "text-sm "> (Mobile)</Text>
+        <Text style={mobileActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight} className="text-sm"> (Mobile)</Text>
           </View>
       ) : null}
         {shop ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1 ">
           <Icon type="entypo" name="shop" color="black" size={22} />
-          <Text style = {styles.PoppinsLight} className = "text-sm "> (In Shop)</Text> 
+          <Text style={shopActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight} className="text-sm"> (In Shop)</Text>
           </View>
       ) : null}
 
         {home ? (
           <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
           <Icon type="ionicon" name="home" color="black" size={22} />
-          <Text style = {styles.PoppinsLight} className = "text-sm"> (Home/Studio)</Text> 
+          <Text style={homeActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight} className="text-sm"> (Home/Studio)</Text> 
           </View>
       ) : null}
       </View>
@@ -322,7 +330,7 @@ for (const service of currentBasket) {
         <View className = "flex flex-row items-center justify-between ">
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
         <Icon type="entypo" name="location" color="black" size={23} style ={styles.locationIcon} />
-        <Text style = {styles.PoppinsMed} className = "text-xl mt-3">Location & Hours</Text>
+        <Text style = {styles.PoppinsMed} className = "text-lg mt-3">Location & Hours</Text>
         </View>
         <Icon type="ionicon" name="expand-sharp" color="black" size={25} style ={styles.expandIcon} />
         </View>
@@ -349,12 +357,18 @@ for (const service of currentBasket) {
       </MapView>
         <Text style = {styles.PoppinsMed} className = "text-lg ">{Address}</Text>
         <Text style = {styles.PoppinsLight} className = "text-base ">{distance} Miles away</Text>
-        <Text style = {styles.PoppinsLight} className = "text-lg ">Updated Hours:</Text>
-        <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
-        <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
-        <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
-        <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
-        <Text style = {styles.PoppinsReg} className = "text-l ">Mon 9-5</Text>
+        <Text style={styles.PoppinsLight} className="text-lg">Updated Hours:</Text>
+
+        <Text style={styles.PoppinsMed} className="text-l">Monday: <Text style={styles.PoppinsReg}>{updatedhours.monstart && updatedhours.monend ? `${updatedhours.monstart}-${updatedhours.monend}` : null}</Text></Text>
+        <Text style={styles.PoppinsMed} className="text-l">Tuesday: <Text style={styles.PoppinsReg}>{updatedhours.tuestart && updatedhours.tueend ? `${updatedhours.tuestart}-${updatedhours.tueend}` : null}</Text></Text>
+        <Text style={styles.PoppinsMed} className="text-l">Wednesday: <Text style={styles.PoppinsReg}>{updatedhours.wedstart && updatedhours.wedend ? `${updatedhours.wedstart}-${updatedhours.wedend}` : null}</Text></Text>
+        <Text style={styles.PoppinsMed} className="text-l">Thursday: <Text style={styles.PoppinsReg}>{updatedhours.thustart && updatedhours.thuend ? `${updatedhours.thustart}-${updatedhours.thuend}` : null}</Text></Text>
+        <Text style={styles.PoppinsMed} className="text-l">Friday: <Text style={styles.PoppinsReg}>{updatedhours.fristart && updatedhours.friend ? `${updatedhours.fristart}-${updatedhours.friend}` : null}</Text></Text>
+        <Text style={styles.PoppinsMed} className="text-l">Saturday: <Text style={styles.PoppinsReg}>{updatedhours.satstart && updatedhours.satend ? `${updatedhours.satstart}-${updatedhours.satend}` : null}</Text></Text>
+        <Text style={styles.PoppinsMed} className="text-l">Sunday: <Text style={styles.PoppinsReg}>{updatedhours.sunstart && updatedhours.sunend ? `${updatedhours.sunstart}-${updatedhours.sunend}` : null}</Text></Text>
+
+
+
         </View>
         ): null}
 
@@ -368,7 +382,7 @@ for (const service of currentBasket) {
         <View className = "flex flex-row items-center justify-between ">
         <View className = "flex flex-row items-center justify-center mb-2 self-start">
         <Icon type="font-awesome" name="photo" color="black" size={23} style ={styles.locationIcon} />
-        <Text style = {styles.PoppinsMed} className = "text-xl">Photos</Text>
+        <Text style = {styles.PoppinsMed} className = "text-lg">Photos</Text>
         </View>
         <Icon type="ionicon" name="expand-sharp" color="black" size={25} style ={styles.expandIcon} />
         </View>

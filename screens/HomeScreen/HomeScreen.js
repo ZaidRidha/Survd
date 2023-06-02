@@ -12,11 +12,14 @@ import { doc,getDocs,query,collection,where} from "firebase/firestore";
 import { database } from '../../firebaseConfig';
 import { useDispatch } from 'react-redux';
 import { setLoc,setAddress as setReduxAddress } from '../../slices/locSlice';
+import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
 const HomeScreen = () => {
   useFont();
   const navigation = useNavigation();
+  const auth = getAuth();
 
   const [currentLat, setcurrentLat,] = useState(null);
   const [currentLong, setcurrentLong,] = useState(null);
@@ -26,12 +29,50 @@ const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [nearbyBarbers, setNearbyBarbers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [uid, setUid] = useState(null); // Add the state for storing uid
+  const [matchingAppointments, setMatchingAppointments] = useState([]);
 
   
   const dispatch = useDispatch();
 
   const scrollRef = useRef(null);
   useScrollToTop(scrollRef);
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUid(user.uid);
+      } else {
+        setUid(null);
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the event listener on unmount
+  }, []);
+
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      const appointmentsRef = collection(database, 'appointments');
+      const q = query(appointmentsRef, where('userID', '==', uid));
+
+      const querySnapshot = await getDocs(q);
+
+      const appointments = [];
+      querySnapshot.forEach((doc) => {
+        const appointmentData = doc.data();
+        // Process the appointment data if needed
+        appointments.push(appointmentData);
+      });
+
+      setMatchingAppointments(appointments);
+    };
+
+    fetchAppointments();
+  }, [uid]);
+
+
 
 
   useEffect(() => {
@@ -89,10 +130,14 @@ const HomeScreen = () => {
         const liveHome = doc.get("livehome");
         const liveMobile = doc.get("livemobile");
         const liveShop = doc.get("liveshop");
+        const walkins = doc.get("walkins");
+        const unavailable = doc.get("unavailable");
+        const onbreak = doc.get("onbreak");
+        const updatedhours = doc.get("updatedhours");
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
         const distanceInMiles = (distance / 1609).toFixed(1);
         if (distance<6000){
-          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId,mobileActive:mobileActive,homeActive:homeActive,shopActive:shopActive,liveMobile:liveMobile,liveShop:liveShop,liveHome:liveHome});
+          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId,mobileActive:mobileActive,homeActive:homeActive,shopActive:shopActive,liveMobile:liveMobile,liveShop:liveShop,liveHome:liveHome,walkins:walkins,unavailable:unavailable,onbreak:onbreak,updatedhours:updatedhours});
 
         };
         setNearbyBarbers(nearBarbers);
@@ -102,7 +147,7 @@ const HomeScreen = () => {
 
   }, [currentLat, currentLong, setNearbyBarbers]);
 
-  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long} instagram = {item.instagram} phone = {item.phone} mobile = {item.mobile} shop = {item.shop} home = {item.home} pinmsg = {item.pinmsg} docId = {item.docId} homeActive = {item.homeActive} shopActive = {item.shopActive} mobileActive = {item.mobileActive} liveMobile = {item.liveMobile} liveShop = {item.liveShop} liveHome = {item.liveHome}/>
+  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long} instagram = {item.instagram} phone = {item.phone} mobile = {item.mobile} shop = {item.shop} home = {item.home} pinmsg = {item.pinmsg} docId = {item.docId} homeActive = {item.homeActive} shopActive = {item.shopActive} mobileActive = {item.mobileActive} liveMobile = {item.liveMobile} liveShop = {item.liveShop} liveHome = {item.liveHome} walkins = {item.walkins} onbreak = {item.onbreak} unavailable = {item.unavailable} updatedhours = {item.updatedhours}/>
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -128,10 +173,14 @@ const HomeScreen = () => {
         const liveHome = doc.get("livehome");
         const liveMobile = doc.get("livemobile");
         const liveShop = doc.get("liveshop");
+        const walkins = doc.get("walkins");
+        const unavailable = doc.get("unavailable");
+        const onbreak = doc.get("onbreak");
+        const updatedhours = doc.get("updatedhours");
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
         const distanceInMiles = (distance / 1609).toFixed(1);
         if (distance<6000){
-          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId,mobileActive:mobileActive,homeActive:homeActive,shopActive:shopActive,liveMobile:liveMobile,liveShop:liveShop,liveHome:liveHome});
+          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId,mobileActive:mobileActive,homeActive:homeActive,shopActive:shopActive,liveMobile:liveMobile,liveShop:liveShop,liveHome:liveHome,walkins:walkins,unavailable:unavailable,onbreak:onbreak,updatedhours:updatedhours});
 
         };
       });
@@ -178,6 +227,10 @@ const HomeScreen = () => {
         inputStyle = {{fontSize:14, color: 'black'}}
         clearIcon={{ size: 25 }}
       />
+
+      {matchingAppointments.map((appointment, index) => (
+        <AppointmentCard key={index} appointmentData={appointment} />
+      ))}
 
 
     <Text style = {styles.fgreg} className = "text-xl mb-2 ml-5 ">Active barbers near you:</Text>

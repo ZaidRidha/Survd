@@ -14,7 +14,7 @@ const ConfirmationScreen = () => {
 
     const {selectedTimeslot,address,postCode,formattedDate,vendorName} = route.params;
 
-    console.log(selectedTimeslot);
+
 
     const handleButtonPressed = () => {
         navigation.dispatch(

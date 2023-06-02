@@ -22,7 +22,7 @@ const ContinueScreen = () => {
   const route = useRoute();
   const currentLoc = useSelector(selectCurrentLoc);
   const Basket = useSelector(selectCurrentBasket);
-  const { lat, long, barberID,vendorName,isLive} = route.params;
+  const { lat, long, barberID,vendorName,isLive,docId} = route.params;
   const WIDTH = Dimensions.get("window").width;
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -90,6 +90,15 @@ const ContinueScreen = () => {
   };
 
 
+  const isSameDate = (date1, date2) => {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  };
+
+
 
 
   useEffect(() => {
@@ -109,14 +118,15 @@ const ContinueScreen = () => {
         const querySnapshot = await getDocs(q);
   
         const deletePromises = [];
-  
+
         querySnapshot.forEach((doc) => {
           const docDate = new Date(doc.id);
-  
-          if (docDate < currentDate) {
-            // Delete documents before the current date
+
+          if (docDate < currentDate && !isSameDate(docDate, currentDate)) {
             deletePromises.push(deleteDoc(doc.ref));
           }
+
+
         });
   
         await Promise.all(deletePromises);
@@ -299,7 +309,9 @@ useEffect(() => {
   };
 
   const handleContinue = () => {
-    if (showCalendar && selectedTimeslot === '') {
+    if (Basket.length === 0) {
+      alert("Basket is empty. Please add items before continuing.");
+    } else if (showCalendar && selectedTimeslot === '') {
       setDisplayError(true);
       setTimeout(() => {
         setDisplayError(false);
@@ -311,9 +323,13 @@ useEffect(() => {
         postCode: postCode,
         selectedDate: selectedDate,
         vendorName: vendorName,
+        subtotal: totalServicesPrice,
+        servicesDuration: totalServicesDuration,
+        docId:docId
       });
     }
   };
+  
 
 
   const handleRemoveItem = (objectId) => {
