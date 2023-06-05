@@ -70,32 +70,7 @@ const BottomTabNavigator = () => {
 
       />
 
-        <Tab.Screen 
-        name = "Appointments"
-        component = {AppointmentsScreen} 
-
-        options={{
-          tabBarActiveTintColor: 'black',
-          tabBarInactiveTintColor: 'gray',
-          tabBarIcon: ({ focused }) => 
-          focused ?
-          <Icon
-          type='antdesign'
-          name='calendar'
-          size = {34}
-          color = "black" />:
-          <Icon
-          type='antdesign'
-          name='calendar'
-          size = {30}
-          color = "gray" />
-          
-        }
-      }
-
-      />
-
-      
+ 
       <Tab.Screen 
         name = "Explore"
         component = {ExploreScreen} 
@@ -113,6 +88,31 @@ const BottomTabNavigator = () => {
           <Icon
           type='entypo'
           name='magnifying-glass'
+          size = {30}
+          color = "gray" />
+          
+        }
+      }
+
+      />
+
+        <Tab.Screen 
+        name = "Appointments"
+        component = {AppointmentsScreen} 
+
+        options={{
+          tabBarActiveTintColor: 'black',
+          tabBarInactiveTintColor: 'gray',
+          tabBarIcon: ({ focused }) => 
+          focused ?
+          <Icon
+          type='antdesign'
+          name='calendar'
+          size = {34}
+          color = "black" />:
+          <Icon
+          type='antdesign'
+          name='calendar'
           size = {30}
           color = "gray" />
           
@@ -178,19 +178,22 @@ const Navigation = () => {
             headerLeft:null,
             title: "Verification"}}
           />
-          <Stack.Screen
-            name="Location"
-            component={LocationScreen}
-            options={{
-              headerShown:true,
-              headerBackTitleVisible:true,
-              headerBackTitle: " ",
-              presentation: "modal",
-              gestureEnabled: true,
-              headerTitle: "Location",
-              headerTintColor: "#000000",
-            }}
-/>
+      <Stack.Screen
+        name="Location"
+        component={LocationScreen}
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerBackTitleVisible: false,
+          headerBackTitle: " ",
+          presentation: "modal",
+          gestureEnabled: true,
+          headerTitle: " ",
+          headerTintColor: "#000000",
+          headerLeft: null, // Remove the back button
+        }}
+      />
+
 
           <Stack.Screen 
           name = "PressProfile"

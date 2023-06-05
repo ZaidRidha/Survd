@@ -28,16 +28,18 @@ const ExploreScreen = () => {
         />
         <Text style={styles.PoppinsMed} className="text-xl">Top Categories</Text>
         <View className = "flex flex-row items-center">
-        <Card containerStyle = {styles.cardContainer} wrapperStyle = {styles.cardWrapper}>
-          <Card.Image style = {styles.cardImage} source={require('../../assets/images/hdfade.jpg')} />
+        <Card containerStyle = {styles.cardContainer} >
+          <Card.Image style = {styles.cardImage} source={require('../../assets/images/CategoryIcon.png')} />
           <Card.Divider />
           <Card.Title>Barber</Card.Title>
         </Card>
-        <Card>
-          <Card.Image source={require('../../assets/images/hdfade.jpg')} />
+
+        <Card containerStyle = {styles.cardContainer} >
+          <Card.Image style = {styles.cardImage} source={require('../../assets/images/CategoryIcon.png')} />
           <Card.Divider />
-          <Card.Title>Lash technician</Card.Title>
+          <Card.Title>Barber</Card.Title>
         </Card>
+
         </View>
       </View>
     </SafeAreaView>
@@ -53,14 +55,18 @@ const styles = StyleSheet.create({
   },
 
   inner: {
-    padding: 15,
+    padding: 10,
   },
   PoppinsReg: {
     fontFamily: 'PoppinsReg',
   },
 
   cardContainer: {
-    borderRadius:10,
+    backgroundColor: 'transparent',
+    borderWidth:1,
+    borderColor:"black",
+    borderRadius: 2,
+    padding: 0, // Remove padding to reduce whitespace
 
   },
 
@@ -74,7 +80,7 @@ const styles = StyleSheet.create({
   },
 
   cardImage:{
-    width: WIDTH *0.3
+    width: WIDTH *0.4
   },
 
   PoppinsMed: {
