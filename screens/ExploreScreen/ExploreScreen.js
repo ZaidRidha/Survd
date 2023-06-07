@@ -26,7 +26,7 @@ const ExploreScreen = () => {
           inputStyle={{ fontSize: 14, color: 'black' }}
           clearIcon={{ size: 25 }}
         />
-        <Text style={styles.PoppinsMed} className="text-xl">Top Categories</Text>
+        <Text style={styles.PoppinsMed} className="ml-3 text-xl">Top Categories</Text>
         <View className = "flex flex-row items-center">
         <Card containerStyle = {styles.cardContainer} >
           <Card.Image style = {styles.cardImage} source={require('../../assets/images/CategoryIcon.png')} />
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
 
   inner: {
-    padding: 10,
+    padding: 5,
   },
   PoppinsReg: {
     fontFamily: 'PoppinsReg',
@@ -86,4 +86,5 @@ const styles = StyleSheet.create({
   PoppinsMed: {
     fontFamily: 'PoppinsMed',
   },
+  
 });

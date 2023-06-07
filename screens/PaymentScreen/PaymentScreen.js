@@ -230,7 +230,7 @@ const PaymentScreen = () => {
       <Icon type="font-awesome" name="cc-visa" color="#000F9E" size={28} />
       <Text style = {styles.poppinsReg} className = "self-center text-sm ml-4 ">●●●● 4003</Text>
       </View>
-      <Icon type="antdesign" name="right" color="black" size={28} />
+      <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
 
 

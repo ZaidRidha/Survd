@@ -61,19 +61,21 @@ const LocationScreen = () => {
       <View style={styles.root}>
       <View className = "self-start ">
       <TouchableOpacity onPress={goBack}>
-      <Icon type="ant-design" name="close" color="black" size={32} style ={styles.locationIcon} />
+      <Icon type="ant-design" name="close" color="black" size={38} style ={styles.locationIcon} />
       </TouchableOpacity>
       </View>
-      <View className = "flex flex-row  items-center justify-between mb-2 ">
+      <View className = " p-2 rounded self-center w-full mb-1">
+      <View className = "flex flex-row  items-center justify-between">
       <View className = "flex flex-row items-center">
-      <Icon type="font-awesome" name="location-arrow" color="black" size={38} />
+      <Icon type="font-awesome" name="location-arrow" color="black" size={28} />
       <View>
-      <Text style = {styles.poppinsMed} className = " text-lg ml-4 ">Current Location</Text>
-      <Text style = {styles.poppinsReg} className = " text-lg ml-4 ">{currentAddress}</Text>
-      <Text style = {styles.poppinsReg} className = " text-lg ml-4 ">{postcode}</Text>
+      <Text style = {styles.poppinsMed} className = " text-sm ml-4 ">Current Location</Text>
+      <Text style = {styles.poppinsReg} className = " text-sm ml-4 ">{currentAddress}</Text>
+      <Text style = {styles.poppinsReg} className = " text-sm ml-4 ">{postcode}</Text>
       </View>
       </View>
       <Icon type="antdesign" name="right" color="black" size={21} />
+      </View>
       </View>
 
       <MapView 
@@ -108,14 +110,15 @@ const styles = StyleSheet.create({
   },
 
   map:{
-    width: WIDTH ,
+    width: WIDTH,
     alignSelf:"center",
-    borderRadius:5,
     height:HEIGHT,
     marginBottom:5,
-
+    borderColor:"black",
     borderWidth:2,
-    borderColor:"gray",
+    borderRadius:10,
+
+ 
   },
 
   locationIcon:{
