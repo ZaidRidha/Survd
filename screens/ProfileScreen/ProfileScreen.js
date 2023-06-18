@@ -24,109 +24,117 @@ const ProfileScreen = () => {
       </View>
 
 
-      <Text style = {styles.PoppinsMed} className = "mt-5 ml-2 text-xl">Account Settings</Text>
+      <Text style = {styles.PoppinsMed} className = "mt-5  text-xl">Account Settings</Text>
       <View className = "flex flex-row mt-4 items-center justify-between">
-      <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">Personal Information</Text>
+      <Text style = {styles.PoppinsReg} className = "self-center text-base  ">Personal Information</Text>
       <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-      <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
+      <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, }} />   
       </View>
       
 
       <View className = "flex flex-row mt-4 items-center justify-between">
-      <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">Payment Methods</Text>
+      <Text style = {styles.PoppinsReg} className = "self-center text-base  ">Payment Methods</Text>
       <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-      <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
+      <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, }} />   
       </View>
 
       <View className = "flex flex-row mt-4 items-center justify-between">
-      <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">Notification Settings</Text>
+      <Text style = {styles.PoppinsReg} className = "self-center text-base  ">Notification Settings</Text>
       <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-      <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
+      <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, }} />   
       </View>
 
       <View className = "flex flex-row mt-4 items-center justify-between">
-      <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">Privacy Settings</Text>
+      <Text style = {styles.PoppinsReg} className = "self-center text-base  ">Privacy Settings</Text>
       <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-      <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
+      <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, }} />   
       </View>
 
 
-      <Text style = {styles.PoppinsMed} className = "mt-5 ml-2 text-xl">Business</Text>
+      <Text style = {styles.PoppinsMed} className = "mt-5  text-xl">Business</Text>
       <View className = "flex flex-row mt-4 items-center justify-between">
-      <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">My Business</Text>
+      <Text style = {styles.PoppinsReg} className = "self-center text-base  ">My Business</Text>
       <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-      <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
+      <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, }} />   
       </View>
 
-      <Text style = {styles.PoppinsMed} className = "mt-5 ml-2 text-xl">Referral</Text>
+      <Text style = {styles.PoppinsMed} className = "mt-5 text-xl">Referral</Text>
       <View className = "flex flex-row mt-4 items-center justify-between">
-      <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">Refer a vendor/user</Text>
+      <Text style = {styles.PoppinsReg} className = "self-center text-base  ">Refer a vendor/user</Text>
       <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-      <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
+      <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5,}} />   
       </View>
 
 
-      <Text style = {styles.PoppinsMed} className = "mt-5 ml-2 text-xl">Support</Text>
-
-      <View className = "flex flex-row mt-4 items-center justify-between">
-      <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">How to use</Text>
-      <Icon type="antdesign" name="right" color="black" size={24} />
-      </View>
-      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-      <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
-      </View>
+      <Text style = {styles.PoppinsMed} className = "mt-5  text-xl">Support</Text>
 
       <View className = "flex flex-row mt-4 items-center justify-between">
-      <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">Health & Safety</Text>
+      <Text style = {styles.PoppinsReg} className = "self-center text-base  ">How to use</Text>
       <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-      <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
+      <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, }} />   
       </View>
 
       <View className = "flex flex-row mt-4 items-center justify-between">
-      <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">Get Help</Text>
+      <Text style = {styles.PoppinsReg} className = "self-center text-base ">Health & Safety</Text>
       <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-      <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
+      <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5,}} />   
+      </View>
+
+      <View className = "flex flex-row mt-4 items-center justify-between">
+      <Text style = {styles.PoppinsReg} className = "self-center text-base ">Get Help</Text>
+      <Icon type="antdesign" name="right" color="black" size={24} />
+      </View>
+      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
+      <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5,}} />   
+      </View>
+
+      <View className = "flex flex-row mt-4 items-center justify-between">
+      <Text style = {styles.PoppinsReg} className = "self-center text-base ">Contact Us</Text>
+      <Icon type="antdesign" name="right" color="black" size={24} />
+      </View>
+      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
+      <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5,}} />   
       </View>
 
 
-      <Text style = {styles.PoppinsMed} className = "mt-5 ml-2 text-xl">Legal</Text>
+      <Text style = {styles.PoppinsMed} className = "mt-5  text-xl">Legal</Text>
 
     <View className = "flex flex-row mt-4 items-center justify-between">
-    <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">Terms of service</Text>
+    <Text style = {styles.PoppinsReg} className = "self-center text-base  ">Terms of service</Text>
     <Icon type="antdesign" name="right" color="black" size={24} />
     </View>
     <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-    <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
+    <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, }} />   
     </View>
 
 
-    <View className = "flex flex-row mt-4 items-center justify-between">
-    <Text style = {styles.PoppinsReg} className = "self-center text-base ml-2 ">Privacy Policy</Text>
+    <View className = "flex flex-row mt-4 items-center justify-between ">
+    <Text style = {styles.PoppinsReg} className = "self-center text-base  ">Privacy Policy</Text>
     <Icon type="antdesign" name="right" color="black" size={24} />
     </View>
     <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
-    <View style={{flex: 0.98, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, marginLeft:6,}} />   
+    <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, }} />   
     </View>
 
 
     
-    <View style={{ marginBottom: 10 }}>
+    <View style={{ marginBottom: 10, marginTop:10, }}>
       <Button
         title="Log Out"
         buttonStyle={{
@@ -163,7 +171,7 @@ const styles = StyleSheet.create({
   },
 
   inner:{
-    padding:5
+    padding:10,
   },
 
   PoppinsReg: {

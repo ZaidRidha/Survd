@@ -23,6 +23,10 @@ const PaymentScreen = () => {
   const formattedDate = moment(selectedDate).format('D MMMM YYYY');
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [uid, setUid] = useState(null); // Add the state for storing uid
+  const currentDate = new Date();
+
+  const serializedBasket = JSON.stringify(Basket);
+
 
 
   useEffect(() => {
@@ -38,7 +42,7 @@ const PaymentScreen = () => {
   }, []);
 
 
-  console.log(uid);
+
 
 
 
@@ -55,7 +59,15 @@ const PaymentScreen = () => {
         time: selectedTimeslot,
         userID: uid,
         barberName: vendorName,
+        Basket: serializedBasket,
+        timeDate:currentDate,
+        address: address,
+        postCode: postCode,
+        hidden: false,
+
       });
+
+
   
       navigation.dispatch(
         CommonActions.reset({
@@ -218,8 +230,6 @@ const PaymentScreen = () => {
       <Text className=" text-lg mt-1 " style={styles.poppinsMed}>
         Total: £21.50
       </Text>
-
-
 
       </View>
 

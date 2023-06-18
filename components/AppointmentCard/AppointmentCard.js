@@ -1,35 +1,72 @@
 import React, {useState} from 'react';
 import { Icon } from '@rneui/themed';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions,TouchableWithoutFeedback,} from 'react-native';
+import { useNavigation,useRoute  } from '@react-navigation/native';
+import { database } from '../../firebaseConfig';
+import { collection, addDoc, setDoc,updateDoc,doc} from "firebase/firestore"; 
+
 
 const WIDTH = Dimensions.get('window').width;
 
-const AppointmentCard = ({appointmentData}) => {
+const AppointmentCard = ({appointmentData,showHide,hideablePage}) => {
   const barberName = 'John Doe';
   const date = 'June 10, 2023';
   const time = '10:00 AM';
+  const navigation = useNavigation();
+  const [hideCard, setHideCard] = useState(appointmentData.hidden);
+  const appointmentID = appointmentData.appointmentID;
 
-  const [isVisible, setIsVisible] = useState(true);
 
 
-  const handleIconPress = () => {
-    setIsVisible(false);
+
+
+
+
+  const handleIconPress = async () => {
+    setHideCard(true);
+    const appRef = doc(database, "appointments", appointmentID);
+    await updateDoc(appRef, {
+      hidden: true
+    });
+
+
   };
+  
 
-  if (!isVisible) {
+  if (hideCard & hideablePage) {
     return null; // Render null if isVisible is false
   }
 
+
+  const handleNavigate = () =>{
+
+    navigation.navigate('ViewAppointment', {
+      barberName: appointmentData.barberName,
+      date: appointmentData.date,
+      duration: appointmentData.duration,
+      price: appointmentData.price,
+      time: appointmentData.time,
+      basket: appointmentData.Basket,
+      timeDate: appointmentData.timeDate,
+      postcode: appointmentData.postCode,
+      address: appointmentData.address,
+
+    });
+
+  }
+
   return (
+    <TouchableWithoutFeedback onPress={handleNavigate}>
     <View style={styles.container}>
       <View className = "flex flex-row items-centre justify-between">
       <Text style={styles.barberName}>{appointmentData.barberName}</Text>
-      <Icon type="antdesign" name="close" color="black" size={18} onPress={handleIconPress} />
+      {showHide? <Icon type="antdesign" name="close" color="black" size={18} onPress={handleIconPress} />: null}
       </View>
       <View className = "flex flex-row items-centre justify-between">
       <Text style={styles.dateTime}>{appointmentData.date} at {appointmentData.time}</Text>
       </View>
     </View>
+    </TouchableWithoutFeedback>
   );
 };
 

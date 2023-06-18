@@ -64,10 +64,11 @@ const LocationScreen = () => {
       <Icon type="ant-design" name="close" color="black" size={38} style ={styles.locationIcon} />
       </TouchableOpacity>
       </View>
-      <View className = " p-2 rounded self-center w-full mb-1">
+
+      <View className = "p-2 rounded self-center w-full mb-2">
       <View className = "flex flex-row  items-center justify-between">
       <View className = "flex flex-row items-center">
-      <Icon type="font-awesome" name="location-arrow" color="black" size={28} />
+      <Icon type="font-awesome" name="location-arrow" color="black" size={31} />
       <View>
       <Text style = {styles.poppinsMed} className = " text-sm ml-4 ">Current Location</Text>
       <Text style = {styles.poppinsReg} className = " text-sm ml-4 ">{currentAddress}</Text>
@@ -78,20 +79,31 @@ const LocationScreen = () => {
       </View>
       </View>
 
+
       <MapView 
         initialRegion={{
           latitude:lat,
           longitude:long,
-          latitudeDelta: 0.03,
-          longitudeDelta: 0.03,
+          latitudeDelta: 0.004,
+          longitudeDelta: 0.004,
         }} 
-        provider={PROVIDER_GOOGLE} style={styles.map} 
-
+        provider={PROVIDER_GOOGLE}
+        style={styles.map} 
         >
+          <Marker
+          coordinate={{ latitude: lat, longitude: long }}
 
+        />
+
+          <Marker
+          coordinate={{ latitude: 51.3812, longitude: -0.2452 }}
+          >
+        <Icon type="entypo" name="scissors" color="black" size={38} style ={styles.locationIcon} />
+        </Marker>
       </MapView>
 
       </View>
+
     </SafeAreaView>
   );
 };
@@ -99,6 +111,7 @@ const LocationScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: 'white',
   },
   root: {
     flex: 1,
@@ -110,15 +123,18 @@ const styles = StyleSheet.create({
   },
 
   map:{
-    width: WIDTH,
+    width: WIDTH *0.95,
     alignSelf:"center",
-    height:HEIGHT,
+    height:HEIGHT*0.70,
     marginBottom:5,
-    borderColor:"black",
+    borderColor:"gray",
     borderWidth:2,
-    borderRadius:10,
+    borderRadius:5,
 
- 
+  },
+
+  marker: {
+    color:"black"
   },
 
   locationIcon:{

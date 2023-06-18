@@ -19,6 +19,7 @@ import PressService from '../screens/PressService/PressService';
 import { StyleSheet, View} from 'react-native';
 import ConfirmationScreen from '../screens/ConfirmationScreen/ConfirmationScreen';
 import AppointmentsScreen from '../screens/AppointmentsScreen/AppointmentsScreen';
+import ViewAppointment from '../screens/ViewAppointment/ViewAppointment';
 
 
 const Stack = createStackNavigator();
@@ -284,6 +285,14 @@ const Navigation = () => {
               component={ConfirmationScreen}
               options={{
                 headerShown: false,
+              }}
+            />
+
+              <Stack.Screen
+              name="ViewAppointment"
+              component={ViewAppointment}
+              options={{
+              
               }}
             />
 

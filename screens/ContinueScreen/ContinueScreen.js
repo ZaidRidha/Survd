@@ -44,6 +44,7 @@ const ContinueScreen = () => {
   const [disabledDates, setDisabledDates] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+
   const [calendarStart, setcalendarStart] = useState(new Date());
   const [displayError, setDisplayError] = useState(false);
 
@@ -171,6 +172,8 @@ const ContinueScreen = () => {
       };
     }
   }, [database, barberID, showCalendar, selectedDate])
+
+  //the format of timeslots is YYYY-MM-DD
 
   useEffect(() => {
     const disabledDatesArray = [];

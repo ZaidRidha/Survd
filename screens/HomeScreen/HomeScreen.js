@@ -8,7 +8,7 @@ import { useNavigation, useScrollToTop,} from '@react-navigation/native';
 import BarberCard from '../../components/BarberCard/BarberCard';
 import { SearchBar } from '@rneui/themed';
 import { getDistance } from 'geolib';
-import { doc,getDocs,query,collection,where} from "firebase/firestore"; 
+import { doc,getDocs,query,collection,where,onSnapshot} from "firebase/firestore"; 
 import { database } from '../../firebaseConfig';
 import { useDispatch } from 'react-redux';
 import { setLoc,setAddress as setReduxAddress } from '../../slices/locSlice';
@@ -52,25 +52,33 @@ const HomeScreen = () => {
   }, []);
 
 
+
   useEffect(() => {
-    const fetchAppointments = async () => {
+    const fetchAppointments = () => {
       const appointmentsRef = collection(database, 'appointments');
       const q = query(appointmentsRef, where('userID', '==', uid));
-
-      const querySnapshot = await getDocs(q);
-
-      const appointments = [];
-      querySnapshot.forEach((doc) => {
-        const appointmentData = doc.data();
-        // Process the appointment data if needed
-        appointments.push(appointmentData);
+  
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const appointments = [];
+        querySnapshot.forEach((doc) => {
+          const appointmentData = {
+            appointmentID: doc.id,
+            ...doc.data(),
+          };
+  
+          // Process the appointment data if needed
+          appointments.push(appointmentData);
+        });
+  
+        setMatchingAppointments(appointments);
       });
-
-      setMatchingAppointments(appointments);
+  
+      return () => unsubscribe();
     };
-
+  
     fetchAppointments();
   }, [uid]);
+  
 
 
 
@@ -229,7 +237,7 @@ const HomeScreen = () => {
       />
 
       {matchingAppointments.map((appointment, index) => (
-        <AppointmentCard key={index} appointmentData={appointment} />
+        <AppointmentCard key={index} appointmentData={appointment} showHide={true} hideablePage={true} />
       ))}
 
 
