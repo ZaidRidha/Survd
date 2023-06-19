@@ -115,47 +115,29 @@ const HomeScreen = () => {
     })();
   }, [setLocation, setcurrentLat, setcurrentLong, setAddress]);
 
-  useEffect(() => { //useffect for finding nearby
+
+  useEffect(() => {
     (async () => {
       const querySnapshot = await getDocs(collection(database, "barbers"));
       const nearBarbers = [];
       querySnapshot.forEach((doc) => {
-        const docId = doc.id;
-        const latitude = doc.get("latitude");
-        const longitude = doc.get("longitude");
-        const barberName = doc.get("name");
-        const barberUsername = doc.get("username");
-        const barberId = doc.get("barberID");
-        const instagram = doc.get("instagram");
-        const phone = doc.get("phone");
-        const mobile = doc.get("mobile");
-        const shop = doc.get("shop");
-        const home = doc.get("home");
-        const pinmsg = doc.get("pinmsg");
-        const mobileActive = doc.get("mobileactive");
-        const homeActive = doc.get("homeactive");
-        const shopActive = doc.get("shopactive");
-        const liveHome = doc.get("livehome");
-        const liveMobile = doc.get("livemobile");
-        const liveShop = doc.get("liveshop");
-        const walkins = doc.get("walkins");
-        const unavailable = doc.get("unavailable");
-        const onbreak = doc.get("onbreak");
-        const updatedhours = doc.get("updatedhours");
-        const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
+        const docData = doc.data(); // Retrieve all the document data at once
+  
+        const distance = getDistance({ latitude: currentLat, longitude: currentLong }, { latitude: docData.latitude, longitude: docData.longitude });
         const distanceInMiles = (distance / 1609).toFixed(1);
-        if (distance<6000){
-          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId,mobileActive:mobileActive,homeActive:homeActive,shopActive:shopActive,liveMobile:liveMobile,liveShop:liveShop,liveHome:liveHome,walkins:walkins,unavailable:unavailable,onbreak:onbreak,updatedhours:updatedhours});
-
-        };
-        setNearbyBarbers(nearBarbers);
+  
+        if (distance < 6000) {
+          nearBarbers.push({ ...docData, distance: distanceInMiles, docId: doc.id });
+        }
       });
-    })()
-
-
+  
+      setNearbyBarbers(nearBarbers);
+    })();
   }, [currentLat, currentLong, setNearbyBarbers]);
 
-  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long} instagram = {item.instagram} phone = {item.phone} mobile = {item.mobile} shop = {item.shop} home = {item.home} pinmsg = {item.pinmsg} docId = {item.docId} homeActive = {item.homeActive} shopActive = {item.shopActive} mobileActive = {item.mobileActive} liveMobile = {item.liveMobile} liveShop = {item.liveShop} liveHome = {item.liveHome} walkins = {item.walkins} onbreak = {item.onbreak} unavailable = {item.unavailable} updatedhours = {item.updatedhours} />
+
+
+  const renderBarberCard = ({ item }) => <BarberCard cardData={item} />;
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -163,35 +145,16 @@ const HomeScreen = () => {
       const querySnapshot = await getDocs(collection(database, "barbers"));
       const nearBarbers = [];
       querySnapshot.forEach((doc) => {
-        const docId = doc.id;
-        const latitude = doc.get("latitude");
-        const longitude = doc.get("longitude");
-        const barberName = doc.get("name");
-        const barberUsername = doc.get("username");
-        const barberId = doc.get("barberID");
-        const instagram = doc.get("instagram");
-        const phone = doc.get("phone");
-        const mobile = doc.get("mobile");
-        const shop = doc.get("shop");
-        const home = doc.get("home");
-        const pinmsg = doc.get("pinmsg");
-        const mobileActive = doc.get("mobileactive");
-        const homeActive = doc.get("homeactive");
-        const shopActive = doc.get("shopactive");
-        const liveHome = doc.get("livehome");
-        const liveMobile = doc.get("livemobile");
-        const liveShop = doc.get("liveshop");
-        const walkins = doc.get("walkins");
-        const unavailable = doc.get("unavailable");
-        const onbreak = doc.get("onbreak");
-        const updatedhours = doc.get("updatedhours");
-        const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
+        const docData = doc.data(); // Retrieve all the document data at once
+  
+        const distance = getDistance({ latitude: currentLat, longitude: currentLong }, { latitude: docData.latitude, longitude: docData.longitude });
         const distanceInMiles = (distance / 1609).toFixed(1);
-        if (distance<6000){
-          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId,mobileActive:mobileActive,homeActive:homeActive,shopActive:shopActive,liveMobile:liveMobile,liveShop:liveShop,liveHome:liveHome,walkins:walkins,unavailable:unavailable,onbreak:onbreak,updatedhours:updatedhours,});
-
-        };
+  
+        if (distance < 6000) {
+          nearBarbers.push({ ...docData, distance: distanceInMiles, docId: doc.id });
+        }
       });
+  
       setNearbyBarbers(nearBarbers);
     } catch (error) {
       console.log(error);
@@ -245,7 +208,7 @@ const HomeScreen = () => {
     <FlatList
         ref={scrollRef}
         data={nearbyBarbers}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.docId}
         renderItem={renderBarberCard}
         showsHorizontalScrollIndicator={false} // remove horizontal scroll indicator
         showsVerticalScrollIndicator={false} 

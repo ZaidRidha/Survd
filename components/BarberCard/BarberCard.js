@@ -11,13 +11,36 @@ const HEIGHT = 270;
 const WIDTH = Dimensions.get("window").width;
 
 
-const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,shop,home,pinmsg,docId,mobileActive,shopActive,homeActive,liveHome,liveMobile,liveShop,unavailable,walkins,onbreak,updatedhours,shopname}) => {
+const BarberCard = ({cardData}) => {
+
   const navigation = useNavigation();
   const [iconColor, setIconColor] = useState("darkgray");
   const [iconType, setIconType] = useState("heart-outline");
   const [isLive, setIsLive] = useState(false);
+  //gathering variables from the data
+  const liveHome = cardData.liveHome;
+  const liveMobile = cardData.liveMobile;
+  const liveShop = cardData.liveShop;
+  const name = cardData.name;
+  const username = cardData.username;
+  const lat = cardData.latitude;
+  const long = cardData.longitude;
+  const distance = cardData.distance;
+  const instagram = cardData.instagram;
+  const phone = cardData.phone;
+  const mobile = cardData.mobile;
+  const home = cardData.home;
+  const shop = cardData.shop;
+  const pinmsg = cardData.pinmsg;
+  const docId = cardData.docId;
+  const mobileActive = cardData.mobileactive;
+  const shopActive = cardData.shopactive;
+  const homeActive = cardData.homeactive;
+  const updatedhours = cardData.updatedhours;
+  const walkins = cardData.walkins;
+  const onbreak = cardData.onbreak;
+  const unavailable = cardData.unavailable;
 
-  console.log(shopname);
 
 
 
@@ -81,7 +104,8 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
       shopActive:shopActive,
       homeActive:homeActive,
       isLive: isLive,
-      updatedhours:updatedhours
+      updatedhours:updatedhours,
+      walkins: walkins,
 
     });
   }
@@ -109,7 +133,7 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
     <View style={[styles.circle, walkins && { backgroundColor: 'purple' }, onbreak ? { backgroundColor: '#FFD700' } : unavailable ? { backgroundColor: 'gray' } : null]}></View>
 
     <Text style={[styles.figreg, unavailable && { color: 'gray' }, walkins && { color: 'purple' }, onbreak && { color: '#FFD700' }, !unavailable && !onbreak && !walkins && { color: 'green' }]}>
-    {unavailable ? 'Offline' : onbreak ? 'On Break' : walkins ? 'Walk Ins' : isLive ? 'Live Now' : 'Active Now'}
+    {unavailable ? 'Offline' : onbreak ? 'On Break' : walkins ? 'Walk Ins ' : isLive ? 'Live Now' : 'Active Now'}
     </Text>
 
     
@@ -124,29 +148,38 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
     <View className = "flex flex-row items-center justify-between">
     <Text className = "text-sm text-gray-700  " style = {styles.figlight}>{username}</Text>
 
-    <View className = "flex flex-row items-center">
-      {mobile ? (
-      <Icon
-      type='font-awesome-5'
+    <View className="flex flex-row items-center">
+  {mobile && (
+    <Icon
+      type="font-awesome-5"
       name="car-alt"
-      color={mobileActive ? "green" : "black"}
+      color={mobileActive && walkins ? "purple" : mobileActive ? "green" : "black"}
       size={16}
     />
-      ) : null}
-      {shop ? (
-      <>
-        {mobile && <Text style = {{ fontSize: 18 }}> / </Text>}
-        <Icon type="entypo" name="shop" color={shopActive ? "green" : "black"} size={16} />
-      </>
-       ) : null}
-      {home ? (
-      <>
-        {(mobile || shop) && <Text style={{ fontSize: 18 }}> / </Text>}
-        <Icon type="ionicon" name="home" color={homeActive ? "green" : "black"} size={16} />
-      </>
-      ) : null}
- 
-      </View>
+  )}
+  {shop && (
+    <>
+      {mobile && <Text style={{ fontSize: 18 }}> / </Text>}
+      <Icon
+        type="entypo"
+        name="shop"
+        color={shopActive && walkins ? "purple" : shopActive ? "green" : "black"}
+        size={16}
+      />
+    </>
+  )}
+  {home && (
+    <>
+      {(mobile || shop) && <Text style={{ fontSize: 18 }}> / </Text>}
+      <Icon
+        type="ionicon"
+        name="home"
+        color={homeActive && walkins ? "purple" : homeActive ? "green" : "black"}
+        size={16}
+      />
+    </>
+  )}
+</View>
 
     </View>
     </View>
@@ -204,7 +237,16 @@ const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,sh
         32 Mins
       </Text>
     </>
-  ) : (
+  ):
+  walkins? (
+    <>
+       <Text className="text-sm" style={styles.figreg}>
+        Capacity: 
+        <Text className="text-sm text-red-600" style={styles.poppinsMed}> BUSY</Text>
+      </Text>
+    </>
+  ):
+  (
     <>
       Next Appointment :{" "}
       <Text className="text-sm text-blue-600" style={styles.figreg}>

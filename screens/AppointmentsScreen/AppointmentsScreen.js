@@ -82,7 +82,7 @@ const AppointmentsScreen = () => {
           {upcomingPressed ? (
       matchingAppointments.map((appointment, index) => (
         <View className = "mt-3">
-        <AppointmentCard key={index} appointmentData={appointment} showHide={true} promptUser={true} hideablePage={true}/>
+        <AppointmentCard key={index} appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false}/>
         </View>
       ))
 ) : null}

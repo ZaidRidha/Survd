@@ -27,7 +27,7 @@ const PressProfile = ({}) => {
   const navigation = useNavigation();
   useFont();
   const route = useRoute();
-  const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId,isLive,mobileActive,shopActive,homeActive,updatedhours} = route.params;
+  const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId,isLive,mobileActive,shopActive,homeActive,updatedhours,walkins} = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
   let total = 0;
@@ -319,7 +319,9 @@ for (const service of currentBasket) {
 
 
 
-
+      {walkins ? (
+        <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">HELLO </Text>
+      ) : null}
         <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">Specialises in: </Text>
         <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>

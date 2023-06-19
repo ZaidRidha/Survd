@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View,SafeAreaView, Dimensions,TouchableWithoutFeedback,ScrollView,Alert} from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View,SafeAreaView, Dimensions,TouchableWithoutFeedback,ScrollView,Alert,TouchableOpacity} from 'react-native'
+import React,{ useEffect, useState } from 'react'
 import Lottie from 'lottie-react-native';
 import { Icon, Button} from '@rneui/themed';
 import { useNavigation,useRoute  } from '@react-navigation/native';
+
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -13,6 +14,7 @@ const ViewAppointment = () => {
 
 const navigation = useNavigation();
 const route = useRoute();
+const [showServices, setShowServices] = useState(false);
 
 
 const { barberName,date,duration,price,time,basket,timeDate,postcode,address} = route.params;
@@ -36,6 +38,9 @@ const formattedDate = timestamp.toLocaleString(undefined, options);
 
 
 
+const pressServices = () => {
+  setShowServices(!showServices);
+};
 
 
 const goBack = () =>{
@@ -105,9 +110,16 @@ const goBack = () =>{
       <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", }} />   
       </View>
 
-<Text style = {styles.PoppinsMed} className = "text-lg mt-2">Selected Services:</Text>
 
-{deserializedBasket.map((serviceGroup, index) => (
+  <TouchableOpacity onPress={pressServices}>
+  <View className = "flex flex-row items-center">
+  <Text className="text-lg mr-1" style={styles.PoppinsMed}>Selected Services</Text>
+  <Icon type="antdesign" name="down" color="black" size={21}  />
+  </View>
+  </TouchableOpacity>
+
+
+  {showServices && deserializedBasket.map((serviceGroup, index) => (
   <View key={index} style={styles.serviceGroup}>
     {serviceGroup.map((service, serviceIndex) => (
       <View key={serviceIndex}>
@@ -126,6 +138,7 @@ const goBack = () =>{
     ))}
   </View>
 ))}
+
 
 
 <Text className=" text-sm mt-1 " style={styles.PoppinsReg}>
@@ -166,7 +179,7 @@ const goBack = () =>{
 
 
 
-  <View className = "flex flex-row items-center justify-between" style={{ marginBottom: 10, marginTop:10, }}>
+  <View className = "flex flex-row items-center justify-between" style={{ marginBottom: 15, marginTop:10, }}>
       <Button
         title="Cancel"
         buttonStyle={{
