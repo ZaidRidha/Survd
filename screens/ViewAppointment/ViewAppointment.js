@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,SafeAreaView, Dimensions,TouchableWithoutFeedback,ScrollView} from 'react-native'
+import { StyleSheet, Text, View,SafeAreaView, Dimensions,TouchableWithoutFeedback,ScrollView,Alert} from 'react-native'
 import React from 'react'
 import Lottie from 'lottie-react-native';
 import { Icon, Button} from '@rneui/themed';
@@ -19,7 +19,22 @@ const { barberName,date,duration,price,time,basket,timeDate,postcode,address} = 
 
 const deserializedBasket = JSON.parse(basket);
 
-console.log(deserializedBasket);
+const timestamp = new Date(
+  timeDate.seconds * 1000 + timeDate.nanoseconds / 1000000
+);
+
+const options = {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  hour12: true
+};
+
+const formattedDate = timestamp.toLocaleString(undefined, options);
+
+
 
 
 
@@ -60,27 +75,27 @@ const goBack = () =>{
     <Text style={styles.PoppinsReg} className="text-base ml-1 ">{barberName}</Text>
   </View>
   <View className="flex flex-row items-center my-1">
-    <Icon type="entypo" name="shop" color="black" size={18} />
+    <Icon type="entypo" name="shop" color="black" size={24} />
     <Text style={styles.PoppinsReg} className="text-base ml-1">Ismail's Barbershop</Text>
   </View>
   <View className="flex flex-row items-center my-1 flex flex-wrap">
-    <Icon type="ionicon" name="location-sharp" color="black" size={18} />
+    <Icon type="ionicon" name="location-sharp" color="black" size={24} />
     <Text style={styles.PoppinsReg} className="text-base ml-1 ">{address},</Text>
     <Text style={styles.PoppinsReg} className="text-base ml-1">{postcode}</Text>
   </View>
   <View className="flex flex-row items-center my-1">
-    <Icon type="entypo" name="calendar" color="black" size={18} />
+    <Icon type="entypo" name="calendar" color="black" size={24} />
     <Text style={styles.PoppinsReg} className="text-base ml-1">{date}, {time}</Text>
   </View>
 
   <View className="flex flex-row items-center my-1">
-    <Icon type="antdesign" name="creditcard" color="black" size={18} />
+    <Icon type="antdesign" name="creditcard" color="black" size={24} />
     <Text style={styles.PoppinsReg} className="text-base ml-1">Payment Method</Text>
   </View>
 
   <View className="flex flex-row items-center my-1">
-    <Icon type="feather" name="clock" color="black" size={18} />
-    <Text style={styles.PoppinsReg} className="text-base ml-1">Time of booking</Text>
+    <Icon type="feather" name="clock" color="black" size={24} />
+    <Text style={styles.PoppinsReg} className="text-base ml-1">Booked on {formattedDate}</Text>
   </View>
 
 
@@ -114,7 +129,7 @@ const goBack = () =>{
 
 
 <Text className=" text-sm mt-1 " style={styles.PoppinsReg}>
-        Total Duration: 30 Minutes
+        Total Duration: {duration} Minutes
       </Text>
 
       <Text className=" text-base mb-1 " style={styles.PoppinsMed}>

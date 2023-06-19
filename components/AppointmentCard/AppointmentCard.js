@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { Icon } from '@rneui/themed';
-import { StyleSheet, Text, View, Dimensions,TouchableWithoutFeedback,} from 'react-native';
+import { StyleSheet, Text, View, Dimensions,TouchableWithoutFeedback,Alert} from 'react-native';
 import { useNavigation,useRoute  } from '@react-navigation/native';
 import { database } from '../../firebaseConfig';
 import { collection, addDoc, setDoc,updateDoc,doc} from "firebase/firestore"; 
@@ -8,7 +8,7 @@ import { collection, addDoc, setDoc,updateDoc,doc} from "firebase/firestore";
 
 const WIDTH = Dimensions.get('window').width;
 
-const AppointmentCard = ({appointmentData,showHide,hideablePage}) => {
+const AppointmentCard = ({appointmentData,showHide,hideablePage,promptUser}) => {
   const barberName = 'John Doe';
   const date = 'June 10, 2023';
   const time = '10:00 AM';
@@ -18,22 +18,31 @@ const AppointmentCard = ({appointmentData,showHide,hideablePage}) => {
 
 
 
-
-
-
-
   const handleIconPress = async () => {
+    if (promptUser) {
+      Alert.alert(
+        'Delete ',
+        'Are you sure you want to hide appointment?',
+        [
+          { text: 'No', onPress: () => {} },
+          { text: 'Yes', onPress: hideAppointmentCard },
+
+        ]
+      );
+    } else {
+      hideAppointmentCard();
+    }
+  };
+
+  const hideAppointmentCard = async () => {
     setHideCard(true);
-    const appRef = doc(database, "appointments", appointmentID);
+    const appRef = doc(database, 'appointments', appointmentID);
     await updateDoc(appRef, {
       hidden: true
     });
-
-
   };
-  
 
-  if (hideCard & hideablePage) {
+  if (hideCard && hideablePage) {
     return null; // Render null if isVisible is false
   }
 

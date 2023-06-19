@@ -155,7 +155,7 @@ const HomeScreen = () => {
 
   }, [currentLat, currentLong, setNearbyBarbers]);
 
-  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long} instagram = {item.instagram} phone = {item.phone} mobile = {item.mobile} shop = {item.shop} home = {item.home} pinmsg = {item.pinmsg} docId = {item.docId} homeActive = {item.homeActive} shopActive = {item.shopActive} mobileActive = {item.mobileActive} liveMobile = {item.liveMobile} liveShop = {item.liveShop} liveHome = {item.liveHome} walkins = {item.walkins} onbreak = {item.onbreak} unavailable = {item.unavailable} updatedhours = {item.updatedhours}/>
+  const renderBarberCard = ({ item }) => <BarberCard name = {item.name} username = {item.username} distance = {item.distance} lat = {item.lat} long = {item.long} instagram = {item.instagram} phone = {item.phone} mobile = {item.mobile} shop = {item.shop} home = {item.home} pinmsg = {item.pinmsg} docId = {item.docId} homeActive = {item.homeActive} shopActive = {item.shopActive} mobileActive = {item.mobileActive} liveMobile = {item.liveMobile} liveShop = {item.liveShop} liveHome = {item.liveHome} walkins = {item.walkins} onbreak = {item.onbreak} unavailable = {item.unavailable} updatedhours = {item.updatedhours} />
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -188,7 +188,7 @@ const HomeScreen = () => {
         const distance = getDistance({latitude:currentLat, longitude:currentLong}, {latitude: latitude, longitude: longitude});
         const distanceInMiles = (distance / 1609).toFixed(1);
         if (distance<6000){
-          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId,mobileActive:mobileActive,homeActive:homeActive,shopActive:shopActive,liveMobile:liveMobile,liveShop:liveShop,liveHome:liveHome,walkins:walkins,unavailable:unavailable,onbreak:onbreak,updatedhours:updatedhours});
+          nearBarbers.push({id: barberId, name: barberName,username:barberUsername, distance: distanceInMiles,lat:latitude,long:longitude,instagram: instagram, phone: phone,mobile:mobile,shop:shop,home:home,pinmsg:pinmsg,docId:docId,mobileActive:mobileActive,homeActive:homeActive,shopActive:shopActive,liveMobile:liveMobile,liveShop:liveShop,liveHome:liveHome,walkins:walkins,unavailable:unavailable,onbreak:onbreak,updatedhours:updatedhours,});
 
         };
       });

@@ -11,12 +11,13 @@ const HEIGHT = 270;
 const WIDTH = Dimensions.get("window").width;
 
 
-const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,shop,home,pinmsg,docId,mobileActive,shopActive,homeActive,liveHome,liveMobile,liveShop,unavailable,walkins,onbreak,updatedhours}) => {
+const BarberCard = ({name, username, distance,lat,long,instagram,phone,mobile,shop,home,pinmsg,docId,mobileActive,shopActive,homeActive,liveHome,liveMobile,liveShop,unavailable,walkins,onbreak,updatedhours,shopname}) => {
   const navigation = useNavigation();
   const [iconColor, setIconColor] = useState("darkgray");
   const [iconType, setIconType] = useState("heart-outline");
   const [isLive, setIsLive] = useState(false);
 
+  console.log(shopname);
 
 
 
