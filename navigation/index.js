@@ -16,10 +16,12 @@ import LocationScreen from '../screens/LocationScreen/LocationScreen';
 import PressProfile from '../screens/PressProfile/PressProfile';
 import { Icon } from '@rneui/themed';
 import PressService from '../screens/PressService/PressService';
+import SelectPaymentScreen from '../screens/SelectPaymentScreen/SelectPaymentScreen';
 import { StyleSheet, View} from 'react-native';
 import ConfirmationScreen from '../screens/ConfirmationScreen/ConfirmationScreen';
 import AppointmentsScreen from '../screens/AppointmentsScreen/AppointmentsScreen';
 import ViewAppointment from '../screens/ViewAppointment/ViewAppointment';
+
 
 
 const Stack = createStackNavigator();
@@ -292,6 +294,15 @@ const Navigation = () => {
               name="ViewAppointment"
               component={ViewAppointment}
               options={{
+              
+              }}
+            />
+
+              <Stack.Screen
+              name="SelectPaymentScreen"
+              component={SelectPaymentScreen}
+              options={{
+                presentation: "modal",
               
               }}
             />

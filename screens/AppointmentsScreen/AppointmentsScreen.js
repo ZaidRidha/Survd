@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-na
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
 import React, { useState,useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc,getDocs,query,collection,where} from "firebase/firestore"; 
+import { doc,getDocs,query,collection,where,onSnapshot} from "firebase/firestore"; 
 import { database } from '../../firebaseConfig';
 
 const AppointmentsScreen = () => {
@@ -10,7 +10,10 @@ const AppointmentsScreen = () => {
   const [completedPressed, setCompletedPressed] = useState(false);
   const [cancelledPressed, setCancelledPressed] = useState(false);
   const [uid, setUid] = useState(null); // Add the state for storing uid
-  const [matchingAppointments, setMatchingAppointments] = useState([]);
+  const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+  const [completedAppointments, setCompletedAppointments] = useState([]);
+  const [cancelledAppointments, setCancelledAppointments] = useState([]);
+
   const auth = getAuth();
   
 
@@ -45,24 +48,50 @@ const AppointmentsScreen = () => {
   }, []);
 
   useEffect(() => {
-    const fetchAppointments = async () => {
+    const fetchAppointments = () => {
       const appointmentsRef = collection(database, 'appointments');
       const q = query(appointmentsRef, where('userID', '==', uid));
-
-      const querySnapshot = await getDocs(q);
-
-      const appointments = [];
-      querySnapshot.forEach((doc) => {
-        const appointmentData = doc.data();
-        // Process the appointment data if needed
-        appointments.push(appointmentData);
+  
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const upcomingAppointments = [];
+        const completedAppointments = [];
+        const cancelledAppointments = [];
+  
+        querySnapshot.forEach((doc) => {
+          const appointmentData = doc.data();
+          const status  = appointmentData.status;
+          console.log(status);
+  
+          if (status === 'awaiting' || status === 'confirmed') {
+            upcomingAppointments.push(appointmentData);
+          } else if (status === 'completed') {
+            completedAppointments.push(appointmentData);
+          } else if (status === 'cancelled') {
+            cancelledAppointments.push(appointmentData);
+          }
+        });
+  
+        // Update state with the three arrays
+        setUpcomingAppointments(upcomingAppointments);
+        setCompletedAppointments(completedAppointments);
+        setCancelledAppointments(cancelledAppointments);
       });
-
-      setMatchingAppointments(appointments);
+  
+      return unsubscribe; // Cleanup function to unsubscribe from the snapshot listener
     };
-
-    fetchAppointments();
+  
+    const unsubscribe = fetchAppointments();
+  
+    return () => {
+      unsubscribe(); // Unsubscribe when the component is unmounted
+    };
   }, [uid]);
+
+
+
+  
+
+
 
 
 
@@ -79,15 +108,34 @@ const AppointmentsScreen = () => {
           <Text style={[styles.PoppinsMed, cancelledPressed ? styles.underline : null]} className="text-lg">Cancelled</Text>
         </TouchableOpacity>
       </View>
-          {upcomingPressed ? (
-      matchingAppointments.map((appointment, index) => (
-        <View className = "mt-3">
-        <AppointmentCard key={index} appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false}/>
-        </View>
-      ))
-) : null}
+  
+      {upcomingPressed && upcomingAppointments.length > 0 ? (
+        upcomingAppointments.map((appointment, index) => (
+          <View key={index} className="mt-3">
+            <AppointmentCard appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false} />
+          </View>
+        ))
+      ) : null}
+  
+      {completedPressed && completedAppointments.length > 0 ? (
+        completedAppointments.map((appointment, index) => (
+          <View key={index} className="mt-3">
+            <AppointmentCard appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false} />
+          </View>
+        ))
+      ) : null}
+  
+      {cancelledPressed && cancelledAppointments.length > 0 ? (
+        cancelledAppointments.map((appointment, index) => (
+          <View key={index} className="mt-3">
+            <AppointmentCard appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false} />
+          </View>
+        ))
+      ) : null}
     </SafeAreaView>
   );
+  
+
 };
 
 export default AppointmentsScreen;

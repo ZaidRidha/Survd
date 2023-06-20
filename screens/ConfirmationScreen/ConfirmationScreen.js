@@ -5,7 +5,9 @@ import { Icon, Button} from '@rneui/themed';
 import { useNavigation,useRoute,CommonActions  } from '@react-navigation/native';
 
 
+
 const WIDTH = Dimensions.get('window').width;
+const HEIGHT = Dimensions.get('window').height;
 
 const ConfirmationScreen = () => {
 
@@ -89,8 +91,8 @@ const styles = StyleSheet.create({
 
   },
   animation: {
-    width: 250, // Adjust the width as needed
-    height: 250, // Adjust the height as needed
+    width: WIDTH*0.3, // Adjust the width as needed
+    height: HEIGHT*0.3, // Adjust the height as needed
     alignSelf:"center",
   },
 

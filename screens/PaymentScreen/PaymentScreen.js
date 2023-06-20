@@ -64,6 +64,7 @@ const PaymentScreen = () => {
         address: address,
         postCode: postCode,
         hidden: false,
+        status: "awaiting",
 
       });
 
@@ -98,6 +99,10 @@ const PaymentScreen = () => {
 
   const pressServices = () => {
     setShowServices(!showServices);
+  };
+
+  const selectPayment = () => {
+    navigation.navigate("SelectPaymentScreen");
   };
 
 
@@ -234,7 +239,7 @@ const PaymentScreen = () => {
       </View>
 
 
-
+      <TouchableOpacity onPress={selectPayment}>
       <View className = "flex flex-row mt-4 items-center justify-between">
       <View className = "flex flex-row items-center">
       <Icon type="font-awesome" name="cc-visa" color="#000F9E" size={28} />
@@ -242,7 +247,7 @@ const PaymentScreen = () => {
       </View>
       <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
-
+      </TouchableOpacity>
 
 
       <View className = "mt-3"style={{flexDirection: 'row', alignItems: 'center',justifyContent:"center"}}>

@@ -8,7 +8,7 @@ import { useNavigation, useScrollToTop,} from '@react-navigation/native';
 import BarberCard from '../../components/BarberCard/BarberCard';
 import { SearchBar } from '@rneui/themed';
 import { getDistance } from 'geolib';
-import { doc,getDocs,query,collection,where,onSnapshot} from "firebase/firestore"; 
+import { doc,getDocs,query,collection,where,onSnapshot,updateDoc} from "firebase/firestore"; 
 import { database } from '../../firebaseConfig';
 import { useDispatch } from 'react-redux';
 import { setLoc,setAddress as setReduxAddress } from '../../slices/locSlice';
@@ -51,6 +51,45 @@ const HomeScreen = () => {
     return () => unsubscribe(); // Cleanup the event listener on unmount
   }, []);
 
+ 
+
+  useEffect(() => {
+    const updateAppointments = () => {
+      const appointmentsRef = collection(database, 'appointments');
+      const q = query(appointmentsRef, where('userID', '==', uid));
+  
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const status = doc.data().status;
+          const appointmentDate = doc.data().date;
+          const appointmentTime = doc.data().time;
+          const appointmentDuration = doc.data().duration;
+          console.log("status: " + status);
+          console.log("time: " + appointmentTime);
+          console.log("date: " + appointmentDate);
+          console.log("duration: " + appointmentDuration);
+  
+          // Check if appointment is completed based on date, time, and duration
+          const currentDate = new Date();
+          const appointmentDateTime = new Date(appointmentDate + ' ' + appointmentTime);
+          const appointmentEndTime = new Date(appointmentDateTime.getTime() + appointmentDuration * 60000);
+  
+          if (status === 'completed') {
+            const appointmentRef = doc.ref;
+            updateDoc(appointmentRef, { hidden: true });
+          } else if (currentDate > appointmentEndTime) {
+            const appointmentRef = doc.ref;
+            updateDoc(appointmentRef, { hidden: true, status: 'completed' });
+          }
+        });
+      });
+  
+      return unsubscribe;
+    };
+  
+    updateAppointments();
+  }, [uid]);
+  
 
 
   useEffect(() => {

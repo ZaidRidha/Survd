@@ -6,6 +6,7 @@ import { useNavigation,useRoute  } from '@react-navigation/native';
 
 
 const WIDTH = Dimensions.get('window').width;
+const HEIGHT = Dimensions.get('window').height;
 
 
 
@@ -17,7 +18,11 @@ const route = useRoute();
 const [showServices, setShowServices] = useState(false);
 
 
-const { barberName,date,duration,price,time,basket,timeDate,postcode,address} = route.params;
+
+
+const { barberName,date,duration,price,time,basket,timeDate,postcode,address,status} = route.params;
+
+
 
 const deserializedBasket = JSON.parse(basket);
 
@@ -51,28 +56,57 @@ const goBack = () =>{
 
   return (
     <SafeAreaView style={styles.root}>
-    <View className = "flex flex-row ">
-    <TouchableWithoutFeedback onPress={goBack}>
+
+<View className="flex flex-row items-center">
+  <TouchableWithoutFeedback onPress={goBack}>
     <Icon type="antdesign" name="left" color="black" size={28} />
-    </TouchableWithoutFeedback>
-     <View className = "justify-center">
-     <Text style = {styles.PoppinsMed} className = "text-2xl self-center ml-5">Appointment Confirmed</Text>
-     </View>
-     </View>
+  </TouchableWithoutFeedback>
+  <Text style={styles.PoppinsMed} className="text-2xl flex-grow text-center">
+  {status === 'awaiting'
+  ? 'Awaiting Confirmation'
+  : status === 'cancelled'
+  ? 'Appointment Cancelled'
+  : status === 'confirmed'
+  ? 'Appointment Confirmed'
+  : status === 'completed'
+  ? 'Appointment Completed'
+  : ''}
+
+</Text>
+</View>
+
+
      <ScrollView style = {styles.inner}>
 
-      <Lottie
-        source={require('../../assets/animations/104297-completed-icon.json')}
-        autoPlay
-        loop={false} // Set loop prop to false
-        style={styles.animation}
-      />
+  {status === 'cancelled' ? (
+  <Lottie
+    source={require('../../assets/animations/18053-no-error-cancelled.json')}
+    autoPlay
+    loop={false} // Set loop prop to false
+    style={styles.animation}
+  />
+) : status === 'awaiting' ? (
+  <Lottie
+    source={require('../../assets/animations/136473-waiting.json')}
+    autoPlay
+    loop={true} // Set loop prop to false
+    style={styles.animation}
+  />
+) : (
+  <Lottie
+    source={require('../../assets/animations/104297-completed-icon.json')}
+    autoPlay
+    loop={false} // Set loop prop to false
+    style={styles.animation}
+  />
+)}
+
 
 <Text style = {styles.PoppinsMed} className = "text-lg mt-5 ">Appointment Details:</Text>
 
 <View className="">
   <View className="flex flex-row items-center my-1">
-  <Text style={styles.PoppinsMed} className="text-base ">For:</Text>
+  <Text style={styles.PoppinsMed} className="text-lg ">For:</Text>
     <Text style={styles.PoppinsReg} className="text-base ml-1 ">Tommy</Text>
   </View>
   <View className="flex flex-row items-center mt-1 mb-2">
@@ -106,7 +140,7 @@ const goBack = () =>{
 
 </View>
 
-<View className = "mt-1"style={{flexDirection: 'row', alignItems: 'center',justifyContent:"center"}}>
+    <View className = "my-1"style={{flexDirection: 'row', alignItems: 'center',justifyContent:"center"}}>
       <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", }} />   
       </View>
 
@@ -149,12 +183,12 @@ const goBack = () =>{
         Subtotal: £{price.toFixed(2)}
       </Text>
 
-      <View className = "mt-1"style={{flexDirection: 'row', alignItems: 'center',justifyContent:"center"}}>
+      <View className = "my-1"style={{flexDirection: 'row', alignItems: 'center',justifyContent:"center"}}>
       <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", }} />   
       </View>
 
       <View>
-      <View className = "flex flex-row items-center mt-1">
+      <View className = "flex flex-row items-center ">
       <Icon type="antdesign" name="infocirlce" color="gray" size={14}  />
       <Text className="  text-base text-gray-500 ml-1" style={styles.PoppinsMed}>
         Fees: 
@@ -180,21 +214,25 @@ const goBack = () =>{
 
 
   <View className = "flex flex-row items-center justify-between" style={{ marginBottom: 15, marginTop:10, }}>
-      <Button
-        title="Cancel"
-        buttonStyle={{
-          backgroundColor: 'white',
-          borderWidth: 1,
-          borderColor: 'black',
-          width: WIDTH * 0.45,
-          marginTop: 10,
-          borderRadius:5,
-        }}
-        titleStyle={{
-          color: 'black',
-          fontFamily: 'PoppinsMed',
-        }}
-      />
+
+  {(status !== 'completed' && status !== 'cancelled') && (
+  <Button
+    title="Cancel"
+    buttonStyle={{
+      backgroundColor: 'white',
+      borderWidth: 1,
+      borderColor: 'black',
+      width: WIDTH * 0.45,
+      marginTop: 10,
+      borderRadius: 5,
+    }}
+    titleStyle={{
+      color: 'black',
+      fontFamily: 'PoppinsMed',
+    }}
+  />
+)}
+
 
 <Button
         title="Get Help"
@@ -202,9 +240,10 @@ const goBack = () =>{
           backgroundColor: 'white',
           borderWidth: 1,
           borderColor: 'black',
-          width: WIDTH * 0.45,
+          width: (status === 'completed' || status === 'cancelled') ? WIDTH *0.94 : WIDTH * 0.45,
           marginTop: 10,
           borderRadius:5,
+          
         }}
         titleStyle={{
           color: 'black',
@@ -239,8 +278,8 @@ const styles = StyleSheet.create({
 
 
       animation: {
-        width: 180, // Adjust the width as needed
-        height: 180, // Adjust the height as needed
+        width: WIDTH*0.25, // Adjust the width as needed
+        height: HEIGHT*0.25, // Adjust the height as needed
         alignSelf:"center",
       },
     
