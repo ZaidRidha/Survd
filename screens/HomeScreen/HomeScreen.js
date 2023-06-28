@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,FlatList,TouchableOpacity,RefreshControl,Dimensions,SafeAreaView} from 'react-native'
+import { View, Text,StyleSheet,FlatList,TouchableOpacity,RefreshControl,Dimensions,SafeAreaView,Keyboard,TouchableWithoutFeedback} from 'react-native'
 import React from 'react'
 import { useState,useEffect,useRef} from 'react'
 import { Icon } from '@rneui/themed';
@@ -14,6 +14,12 @@ import { useDispatch } from 'react-redux';
 import { setLoc,setAddress as setReduxAddress } from '../../slices/locSlice';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import SearchableDropdown from 'react-native-searchable-dropdown';
+import Fuse from 'fuse.js';
+
+
+const WIDTH = Dimensions.get('window').width;
+const HEIGHT = Dimensions.get('window').height;
 
 
 const HomeScreen = () => {
@@ -27,16 +33,56 @@ const HomeScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [address, setAddress] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
   const [nearbyBarbers, setNearbyBarbers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+
   const [uid, setUid] = useState(null); // Add the state for storing uid
   const [matchingAppointments, setMatchingAppointments] = useState([]);
 
+
+  const emptySearchBar = () => {
+    setSearchQuery("");
+    setSearchResults([])
+  };
+
+
+
+
+  const performSearch = async (text) => {
+
+    
+    try {
+      setSearchQuery(text);
+      const q = query(collection(database, 'barbers'));
+      const querySnapshot = await getDocs(q);
   
+      const data = querySnapshot.docs.map((doc) => doc.data().name);
+  
+      const fuse = new Fuse(data, {
+        keys: ['name'],
+        threshold: 0.3, // Adjust the threshold as needed
+      });
+  
+      const searchResults = fuse.search(text).map((result) => result.item);
+  
+      setSearchResults(searchResults);
+    } catch (error) {
+      console.error('Error searching Firestore:', error);
+    }
+  };
+
+  
+
   const dispatch = useDispatch();
 
   const scrollRef = useRef(null);
   useScrollToTop(scrollRef);
+
+
+
+
+
 
 
   useEffect(() => {
@@ -64,10 +110,7 @@ const HomeScreen = () => {
           const appointmentDate = doc.data().date;
           const appointmentTime = doc.data().time;
           const appointmentDuration = doc.data().duration;
-          console.log("status: " + status);
-          console.log("time: " + appointmentTime);
-          console.log("date: " + appointmentDate);
-          console.log("duration: " + appointmentDuration);
+
   
           // Check if appointment is completed based on date, time, and duration
           const currentDate = new Date();
@@ -207,9 +250,10 @@ const HomeScreen = () => {
 
 
 
-
   return (
+ 
     <SafeAreaView style = {styles.root}>
+      
          <View className = "flex flex-row items-center justify-between ">
          <TouchableOpacity onPress={openLocation} > 
         <View className = "flex flex-row items-center ml-5 ">
@@ -221,40 +265,84 @@ const HomeScreen = () => {
          </View>
 
 
+  <SearchBar
+  placeholder="Search name, username, speciality, etc."
+  value={searchQuery}
+  onChangeText={performSearch}
+  lightTheme={false}
+  round={true}
+  containerStyle={{
+    backgroundColor: 'white',
+    borderWidth: 0,
+    shadowColor: 'white',
+    borderBottomColor: 'transparent',
+    borderTopColor: 'transparent'
+  }}
+  inputContainerStyle={{ backgroundColor: '#EEEEEE' }}
+  inputStyle={{ fontSize: 14, color: 'black' }}
+  clearIcon={{ size: 25 }}
+  searchIcon={searchResults.length > 0 ? (
+    <TouchableOpacity onPress={emptySearchBar}>
+    <Icon type="ionicon" name="arrow-back" color="black" size={24} />
+      </TouchableOpacity>
+  ) : (
+    <Icon type="ionicon" name="search" color="gray" size={16} />
+  )}
+/>
 
-      <SearchBar
-        placeholder = "Search name, username, speciality, etc. "
-        onChangeText={(query) => setSearchQuery(query)}
-        value={searchQuery}
-        lightTheme = {false}
-        round = {true}
-        containerStyle={{  backgroundColor: 'white',
-        borderWidth: 0, //no effect
-        shadowColor: 'white', //no effect
-        borderBottomColor: 'transparent',
-        borderTopColor: 'transparent'}}
-        inputContainerStyle = {{backgroundColor: '#EEEEEE'}}
-        inputStyle = {{fontSize:14, color: 'black'}}
-        clearIcon={{ size: 25 }}
-      />
 
+
+
+{searchResults.length > 0 ? (
+  <View className="mb-3" style = {styles.searchParts}>
+    <FlatList
+      data={searchResults}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item }) => (
+        <View className = "mb-2"> 
+        <View className = "flex flex-row ml-2 "> 
+         <Icon type="entypo" name="scissors" color="black" size={24} />
+        <Text style={styles.fgreg} className="text-xl">
+          {item}
+        </Text>
+        </View>
+        <View style={{flexDirection: 'row', alignItems: 'center',marginLeft:5,}}>
+        <View style={{width:WIDTH * 0.90, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
+        </View>
+        </View>
+      )}
+    />
+        
+
+  </View>
+) : null}
+
+
+{
+  searchResults.length === 0 ? (
+    <React.Fragment>
       {matchingAppointments.map((appointment, index) => (
         <AppointmentCard key={index} appointmentData={appointment} showHide={true} hideablePage={true} />
       ))}
-
-
-    <Text style = {styles.fgreg} className = "text-xl mb-2 ml-5 ">Active barbers near you:</Text>
-    <FlatList
+      <Text style={styles.fgreg} className="text-xl mb-2 ml-5">
+        Active barbers near you:
+      </Text>
+      <FlatList
         ref={scrollRef}
         data={nearbyBarbers}
         keyExtractor={item => item.docId}
         renderItem={renderBarberCard}
-        showsHorizontalScrollIndicator={false} // remove horizontal scroll indicator
-        showsVerticalScrollIndicator={false} 
-        refreshControl={ // add refreshControl prop with onRefresh function
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+        }
       />
+    </React.Fragment>
+  ) : null
+}
+
+
     </SafeAreaView>
 
 
@@ -284,6 +372,15 @@ const styles = StyleSheet.create({
 
   bellIcon:{
     marginRight:5,
+  },
+
+  searchParts:{
+    backgroundColor:"white",
+    flex:1,
+    borderRadius:20,
+    alignSelf:"center",
+    width: WIDTH*0.95,
+    padding:5,
   }
 
 })

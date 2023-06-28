@@ -70,9 +70,9 @@ const LocationScreen = () => {
       <View className = "flex flex-row items-center">
       <Icon type="font-awesome" name="location-arrow" color="black" size={31} />
       <View>
-      <Text style = {styles.poppinsMed} className = " text-sm ml-4 ">Current Location</Text>
-      <Text style = {styles.poppinsReg} className = " text-sm ml-4 ">{currentAddress}</Text>
-      <Text style = {styles.poppinsReg} className = " text-sm ml-4 ">{postcode}</Text>
+      <Text style = {styles.poppinsMed} className = " text-base ml-4 ">Current Location</Text>
+      <Text style = {styles.poppinsMed} className = " text-base ml-4 ">{currentAddress}</Text>
+      <Text style = {styles.poppinsMed} className = " text-base ml-4 ">{postcode}</Text>
       </View>
       </View>
       <Icon type="antdesign" name="right" color="black" size={21} />
