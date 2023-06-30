@@ -17,7 +17,7 @@ import PressProfile from '../screens/PressProfile/PressProfile';
 import { Icon } from '@rneui/themed';
 import PressService from '../screens/PressService/PressService';
 import SelectPaymentScreen from '../screens/SelectPaymentScreen/SelectPaymentScreen';
-import { StyleSheet, View} from 'react-native';
+import { StyleSheet, View,Dimensions} from 'react-native';
 import ConfirmationScreen from '../screens/ConfirmationScreen/ConfirmationScreen';
 import AppointmentsScreen from '../screens/AppointmentsScreen/AppointmentsScreen';
 import ViewAppointment from '../screens/ViewAppointment/ViewAppointment';
@@ -26,6 +26,7 @@ import ViewAppointment from '../screens/ViewAppointment/ViewAppointment';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const HEIGHT = Dimensions.get('window').height;
 
 const BottomTabNavigator = () => {
   
@@ -34,7 +35,7 @@ const BottomTabNavigator = () => {
      screenOptions={{
       headerShown:false,
       tabBarStyle: {
-      height:90,
+      height: HEIGHT*0.1,
       backgroundColor: 'white',
       borderTopColor:"white",
 
