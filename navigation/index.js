@@ -21,6 +21,8 @@ import { StyleSheet, View,Dimensions} from 'react-native';
 import ConfirmationScreen from '../screens/ConfirmationScreen/ConfirmationScreen';
 import AppointmentsScreen from '../screens/AppointmentsScreen/AppointmentsScreen';
 import ViewAppointment from '../screens/ViewAppointment/ViewAppointment';
+import BusinessOnBoarding from '../screens/BusinessOnboarding/BusinessOnboarding';
+
 
 
 
@@ -307,6 +309,15 @@ const Navigation = () => {
               
               }}
             />
+
+            <Stack.Screen
+            name="BusinessOnboarding"
+            component={BusinessOnBoarding}
+            options={{
+              headerShown:false,
+
+            }}
+          />
 
 
 

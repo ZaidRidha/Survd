@@ -283,7 +283,7 @@ const HomeScreen = () => {
   clearIcon={{ size: 25 }}
   searchIcon={searchResults.length > 0 ? (
     <TouchableOpacity onPress={emptySearchBar}>
-    <Icon type="ionicon" name="arrow-back" color="black" size={24} />
+    <Icon type="ionicon" name="arrow-back" color="black" size={28} />
       </TouchableOpacity>
   ) : (
     <Icon type="ionicon" name="search" color="gray" size={16} />
@@ -301,7 +301,10 @@ const HomeScreen = () => {
       renderItem={({ item }) => (
         <View className = "mb-2"> 
         <View className = "flex flex-row ml-2 "> 
-         <Icon type="entypo" name="scissors" color="black" size={24} />
+
+        <View className = "mr-2"> 
+        <Icon type="entypo" name="scissors" color="black" size={24} />
+        </View>
         <Text style={styles.fgreg} className="text-xl">
           {item}
         </Text>

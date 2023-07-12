@@ -40,8 +40,6 @@ const ExploreScreen = () => {
   };
   return (
     <SafeAreaView style={styles.root}>
-      <View style={styles.inner}>
-
       <SearchBar
   placeholder="Search name, username, speciality, etc."
   value={searchQuery}
@@ -60,7 +58,7 @@ const ExploreScreen = () => {
   clearIcon={{ size: 25 }}
 
 />
-
+<ScrollView style={styles.inner}>
 {searchResults.length > 0 ? (
   <View className="mb-3" style = {styles.searchParts}>
     <FlatList
@@ -105,7 +103,9 @@ const ExploreScreen = () => {
 ) : null}
 
 
-      </View>
+
+
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
 
   inner: {
     padding: 5,
+    flex:1,
   },
   PoppinsReg: {
     fontFamily: 'PoppinsReg',

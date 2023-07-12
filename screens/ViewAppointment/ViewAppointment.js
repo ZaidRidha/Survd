@@ -61,18 +61,6 @@ const goBack = () =>{
   <TouchableWithoutFeedback onPress={goBack}>
     <Icon type="antdesign" name="left" color="black" size={28} />
   </TouchableWithoutFeedback>
-  <Text style={styles.PoppinsMed} className="text-2xl flex-grow text-center">
-  {status === 'awaiting'
-  ? 'Awaiting Confirmation'
-  : status === 'cancelled'
-  ? 'Appointment Cancelled'
-  : status === 'confirmed'
-  ? 'Appointment Confirmed'
-  : status === 'completed'
-  ? 'Appointment Completed'
-  : ''}
-
-</Text>
 </View>
 
 
@@ -101,6 +89,18 @@ const goBack = () =>{
   />
 )}
 
+<Text style={styles.PoppinsMed} className="text-xl flex-grow text-center">
+  {status === 'awaiting'
+  ? 'Awaiting Confirmation'
+  : status === 'cancelled'
+  ? 'Appointment Cancelled'
+  : status === 'confirmed'
+  ? 'Appointment Confirmed'
+  : status === 'completed'
+  ? 'Appointment Completed'
+  : ''}
+
+</Text>
 
 <Text style = {styles.PoppinsMed} className = "text-lg mt-5 ">Appointment Details:</Text>
 

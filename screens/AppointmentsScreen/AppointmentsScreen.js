@@ -60,7 +60,7 @@ const AppointmentsScreen = () => {
         querySnapshot.forEach((doc) => {
           const appointmentData = doc.data();
           const status  = appointmentData.status;
-          console.log(status);
+    
   
           if (status === 'awaiting' || status === 'confirmed') {
             upcomingAppointments.push(appointmentData);

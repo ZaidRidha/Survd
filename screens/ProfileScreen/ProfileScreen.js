@@ -3,10 +3,15 @@ import React from 'react'
 import { Button, Icon } from '@rneui/themed';
 import { authentication } from '../../firebaseConfig';
 import { signOut } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation,useRoute  } from '@react-navigation/native';
+
 
 const ProfileScreen = () => {
+
     const navigation = useNavigation();
+
+
     const signuserOut = () => {
         signOut(authentication).then(() => {
           // Sign-out successful.
@@ -15,6 +20,13 @@ const ProfileScreen = () => {
           // An error happened.
         });
       }
+
+
+      const navigateBusiness  = () => {
+        navigation.navigate("BusinessOnboarding")
+
+  
+      };
   return (
     <SafeAreaView style = {styles.root}>
       <ScrollView style = {styles.inner}>
@@ -60,10 +72,12 @@ const ProfileScreen = () => {
 
 
       <Text style = {styles.PoppinsMed} className = "mt-5  text-xl">Business</Text>
+      <TouchableOpacity onPress={navigateBusiness}> 
       <View className = "flex flex-row mt-4 items-center justify-between">
       <Text style = {styles.PoppinsReg} className = "self-center text-base  ">My Business</Text>
       <Icon type="antdesign" name="right" color="black" size={24} />
       </View>
+      </TouchableOpacity>
       <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5, }}>
       <View style={{flex: 1, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5, }} />   
       </View>

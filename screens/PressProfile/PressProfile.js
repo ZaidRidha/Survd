@@ -30,7 +30,10 @@ const PressProfile = ({}) => {
   const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId,isLive,mobileActive,shopActive,homeActive,updatedhours,walkins} = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
+
+
   let total = 0;
+
 
 
 
@@ -316,14 +319,13 @@ for (const service of currentBasket) {
           </View>
       ) : null}
       </View>
+      <Text style={styles.PoppinsLight} className="text-sm text-gray-600">*This user is not taking walkins. (bookings only)</Text>
 
 
 
       {walkins ? (
         <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">HELLO </Text>
       ) : null}
-        <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">Specialises in: </Text>
-        <Text className = "text-sm " style = {styles.PoppinsLight}>Afro, Fades, Caucasian. </Text>
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
@@ -435,10 +437,11 @@ for (const service of currentBasket) {
 
         ): null}
 
+
+
         <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,}}>
         <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
-
 
 
         <View className = "flex flex-row items-center justify-center self-start">
@@ -450,6 +453,7 @@ for (const service of currentBasket) {
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a <Text style = {styles.PoppinsMed} className = "text-s text-blue-600">£10.00</Text> Flat Rate cancellation fee</Text>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a <Text style = {styles.PoppinsMed} className = "text-s text-blue-600">20%</Text> Late fee</Text>
         <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully Insured</Text>
+        <Text style = {styles.PoppinsLight} className = "text-sm  ">Specialises in: <Text className = "text-sm " style = {styles.PoppinsMed}>Afro, Fades, Caucasian.</Text> </Text>
 
 
 
