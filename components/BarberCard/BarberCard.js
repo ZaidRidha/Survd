@@ -151,18 +151,18 @@ const BarberCard = ({cardData}) => {
     <View className="flex flex-row items-center">
   {mobile && (
     <Icon
-      type="font-awesome-5"
-      name="car-alt"
+      type="ionicon"
+      name="car-outline"
       color={mobileActive && walkins ? "purple" : mobileActive ? "green" : "black"}
-      size={16}
+      size={18}
     />
   )}
   {shop && (
     <>
-      {mobile && <Text style={{ fontSize: 18 }}> / </Text>}
+      {mobile && <Text style={{ fontSize: 14 }}> / </Text>}
       <Icon
-        type="entypo"
-        name="shop"
+        type="material"
+        name="storefront"
         color={shopActive && walkins ? "purple" : shopActive ? "green" : "black"}
         size={16}
       />
@@ -170,9 +170,9 @@ const BarberCard = ({cardData}) => {
   )}
   {home && (
     <>
-      {(mobile || shop) && <Text style={{ fontSize: 18 }}> / </Text>}
+      {(mobile || shop) && <Text style={{ fontSize: 14 }}> / </Text>}
       <Icon
-        type="ionicon"
+        type="antdesign"
         name="home"
         color={homeActive && walkins ? "purple" : homeActive ? "green" : "black"}
         size={16}
@@ -227,9 +227,9 @@ const BarberCard = ({cardData}) => {
       </View>
     )}
 
-<View className = "flex flex-row items-center justify-between">
+<View className = "flex flex-row items-center justify-between mt-1">
 
-<Text className="text-sm" style={styles.figreg}>
+<Text className="text-sm" style={styles.figlight}>
   {isLive ? (
     <>
       Est. Waiting time :{" "}
@@ -258,8 +258,8 @@ const BarberCard = ({cardData}) => {
 
 
       <View className = "flex flex-row items-center">
-      <Icon type="font-awesome" name="star" color="black" size={15} />
-      <Text className = "text-sm" style = {styles.poppinsMed}> 5.0 <Text className = "text-sm" style = {styles.poppinsMed}>(135)</Text></Text>
+      <Icon className= "mb-2" type="font-awesome" name="star" color="black" size={13} />
+      <Text className = "text-sm" style = {styles.figlight}> 5.0 <Text className = "text-sm" style = {styles.figreg}>(135)</Text></Text>
       </View>
 
       </View>

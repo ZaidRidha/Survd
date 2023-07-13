@@ -512,6 +512,21 @@ for (const service of currentBasket) {
         initialLayout={initialLayout}
         renderTabBar={renderTabBar}
       />
+
+{showCheckout && (
+  <Button
+    titleStyle={styles.PoppinsReg}
+    onPress={pressContinue}
+    title={`Continue (£${total.toFixed(2)})`}
+    color={'black'}
+    containerStyle={{
+      width: WIDTH - 120,
+      borderRadius:10,
+      alignSelf: 'center',
+      justifyContent: 'center',
+    }}
+  />
+)}
     </SafeAreaView>
   );
 };

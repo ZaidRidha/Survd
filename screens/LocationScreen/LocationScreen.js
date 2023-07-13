@@ -123,13 +123,13 @@ const styles = StyleSheet.create({
   },
 
   map:{
-    width: WIDTH *0.95,
+    width: WIDTH,
     alignSelf:"center",
-    height:HEIGHT*0.70,
+    height:HEIGHT,
     marginBottom:5,
-    borderColor:"gray",
-    borderWidth:2,
-    borderRadius:5,
+    borderColor:"black",
+    borderWidth:1,
+
 
   },
 

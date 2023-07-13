@@ -61,11 +61,7 @@ const AppointmentsScreen = () => {
   
   const navigation = useNavigation();
 
-  useEffect(() => {
-    navigation.setOptions({
-      title: routes[index].title,
-    });
-  }, [index, navigation]);
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
