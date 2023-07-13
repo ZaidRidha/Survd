@@ -36,7 +36,7 @@ const BusinessOnboarding = () => {
   {
     id: '1',
     title: 'Welcome to Survd!',
-    description :'Your platform to offer quality, on-demand services. Discover the freedom of independent work. Set your hours, decide your prices, and offer services at a time & place that work best for you.',
+    description :'Discover the freedom of independent work. Set your hours, decide your prices, and offer services at a time & place that work best for you.',
     image: require('../../assets/images/placeholder.png')
   },
   {
@@ -47,13 +47,13 @@ const BusinessOnboarding = () => {
   },
   {
     id: '3',
-    title: 'Scheduling Made Simple',
+    title: 'Set Your Schedule',
     description :'Manage your appointments with ease thanks to our intuitive calendar software. Say goodbye to scheduling conflicts and say hello to streamlined operations.',
     image: require('../../assets/images/placeholder.png'),
   },
   {
     id: '4',
-    title: 'Low Fees',
+    title: 'Low Fees.',
     description :'Joining Survd is free! Get approved fast. A low 3.5% fee on card payments, with freedom to accept other forms of payments. Survd puts you in control.',
     image: require('../../assets/images/placeholder.png'),
   },

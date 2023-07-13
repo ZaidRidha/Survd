@@ -10,6 +10,7 @@ import { useSelector,useDispatch} from 'react-redux';
 import { selectCurrentBasket,selectCurrentVendor } from '../../slices/locSlice';
 import { setcurrentBasket,clearBasket } from '../../slices/locSlice';
 import { LinearGradient } from 'expo-linear-gradient';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 
 const WIDTH = Dimensions.get("window").width;
@@ -30,6 +31,7 @@ const PressProfile = ({}) => {
   const { name, username, distance, lat, long,instagram,phone,mobile,shop,home,pinmsg,docId,isLive,mobileActive,shopActive,homeActive,updatedhours,walkins} = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
+  const initialLayout = { width: WIDTH };
 
 
   let total = 0;
@@ -236,7 +238,249 @@ for (const service of currentBasket) {
 
 
 
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'Services', title: 'Services' },
+    { key: 'Information', title: 'Information' },
 
+  ]);
+
+  const renderScene = SceneMap({
+    Services: () => <ServicesTab />,
+    Information: () => <InfoTab />,
+
+  });
+
+  const renderTabBar = props => (
+    <TabBar
+      {...props}
+      renderLabel={({ route }) => (
+        <Text style={[styles.PoppinsMed, {fontSize: 18}]}>{route.title}</Text>
+      )}
+      indicatorStyle={{ backgroundColor: 'black' }}
+      style={{ backgroundColor: 'white' }}
+    />
+  );
+  
+
+  const ServicesTab = () => {
+    return(
+      <ScrollView className="ml-5 mt-2">
+      {Object.entries(groupedServices).map(([categoryName, categoryServices], index) => (
+        <View key={categoryName}>
+          <Text style={styles.PoppinsMed} className="text-lg mt-1 mb-1">
+            {categoryName}
+          </Text>
+          {categoryServices.map((service) => (
+            <TouchableOpacity onPress={() => PressService({ name: service.name, price: service.price, duration: service.duration, description: service.description, notes: service.notes, serviceId: service.serviceId})} key={service.name}>
+              <Text style={styles.PoppinsReg} className="text-base">
+                {service.name}
+              </Text>
+              <Text style={styles.PoppinsMed} className="text-sm">
+                {service.price ? `£${service.price.toFixed(2)}` : "Price not available"}
+              </Text>
+              <Text
+                style={[styles.PoppinsLight, { maxWidth: "95%" }]}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                className="text-sm text-gray-600"
+              >
+                {service.description}
+              </Text>
+              <Text style={styles.PoppinsLight} className="text-sm text-gray-500 mb-2">
+                {service.duration ? `${service.duration}min` : null}
+              </Text>
+            </TouchableOpacity>
+          ))}
+          {index < Object.entries(groupedServices).length - 1 && (  
+          <View style={{flexDirection: 'row', alignItems: 'center',marginTop:3,marginBottom:3}}>
+          <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:3, marginBottom:1 }} />   
+          </View>
+          )}
+        </View>
+      ))}
+    </ScrollView>
+    );
+
+  }
+
+  const InfoTab = () => {
+
+    return(
+
+      <ScrollView className = "ml-5">
+      <View className = "flex flex-row items-center justify-center self-start mb-1 mt-2">
+      <Icon style = {styles.pinIcon} type="entypo" name="pin" color="black" size={20} />
+      <Text style = {styles.PoppinsMed} className = "text-lg "> Pinned Message:</Text>
+      </View>
+      <View >
+        <Text style = {styles.Pinnedtext}>{pinmsg}</Text>
+      </View>
+      <View className = "flex flex-row items-center justify-center self-start mt-2">
+      {mobile ? (
+        <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
+      <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
+      <Text style={mobileActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight} className="text-sm"> (Mobile)</Text>
+        </View>
+    ) : null}
+      {shop ? (
+        <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1 ">
+        <Icon type="entypo" name="shop" color="black" size={22} />
+        <Text style={shopActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight} className="text-sm"> (In Shop)</Text>
+        </View>
+    ) : null}
+  
+      {home ? (
+        <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
+        <Icon type="ionicon" name="home" color="black" size={22} />
+        <Text style={homeActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight} className="text-sm"> (Home/Studio)</Text> 
+        </View>
+    ) : null}
+    </View>
+    <Text style={styles.PoppinsLight} className="text-sm text-gray-600">*This user is not taking walkins. (bookings only)</Text>
+  
+  
+  
+    {walkins ? (
+      <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">HELLO </Text>
+    ) : null}
+      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
+      <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
+      </View>
+  
+      <TouchableOpacity onPress={expandLocation}>
+      <View className = "flex flex-row items-center justify-between ">
+      <View className = "flex flex-row items-center justify-center mb-2 self-start">
+      <Icon type="entypo" name="location" color="black" size={23} style ={styles.locationIcon} />
+      <Text style = {styles.PoppinsMed} className = "text-lg mt-3">Location & Hours</Text>
+      </View>
+      <Icon type="ionicon" name="expand-sharp" color="black" size={25} style ={styles.expandIcon} />
+      </View>
+      </TouchableOpacity>
+      
+  
+      {showLoc? (
+      <View>
+      <MapView 
+      initialRegion={{
+        latitude: lat,
+        longitude: long,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
+      }} 
+      provider={PROVIDER_GOOGLE} style={styles.map} 
+      scrollEnabled={false} // Disable map panning
+      zoomEnabled={true} // Enable zooming
+      >
+        <Marker
+        coordinate={{ latitude: lat, longitude: long }}
+        markerStyle={styles.marker}
+      />
+    </MapView>
+      <Text style = {styles.PoppinsMed} className = "text-lg ">{Address}</Text>
+      <Text style = {styles.PoppinsLight} className = "text-base ">{distance} Miles away</Text>
+      <Text style={styles.PoppinsLight} className="text-lg">Updated Hours:</Text>
+  
+      <Text style={styles.PoppinsMed} className="text-l">Monday: <Text style={styles.PoppinsReg}>{updatedhours.monstart && updatedhours.monend ? `${updatedhours.monstart}-${updatedhours.monend}` : null}</Text></Text>
+      <Text style={styles.PoppinsMed} className="text-l">Tuesday: <Text style={styles.PoppinsReg}>{updatedhours.tuestart && updatedhours.tueend ? `${updatedhours.tuestart}-${updatedhours.tueend}` : null}</Text></Text>
+      <Text style={styles.PoppinsMed} className="text-l">Wednesday: <Text style={styles.PoppinsReg}>{updatedhours.wedstart && updatedhours.wedend ? `${updatedhours.wedstart}-${updatedhours.wedend}` : null}</Text></Text>
+      <Text style={styles.PoppinsMed} className="text-l">Thursday: <Text style={styles.PoppinsReg}>{updatedhours.thustart && updatedhours.thuend ? `${updatedhours.thustart}-${updatedhours.thuend}` : null}</Text></Text>
+      <Text style={styles.PoppinsMed} className="text-l">Friday: <Text style={styles.PoppinsReg}>{updatedhours.fristart && updatedhours.friend ? `${updatedhours.fristart}-${updatedhours.friend}` : null}</Text></Text>
+      <Text style={styles.PoppinsMed} className="text-l">Saturday: <Text style={styles.PoppinsReg}>{updatedhours.satstart && updatedhours.satend ? `${updatedhours.satstart}-${updatedhours.satend}` : null}</Text></Text>
+      <Text style={styles.PoppinsMed} className="text-l">Sunday: <Text style={styles.PoppinsReg}>{updatedhours.sunstart && updatedhours.sunend ? `${updatedhours.sunstart}-${updatedhours.sunend}` : null}</Text></Text>
+  
+  
+  
+      </View>
+      ): null}
+  
+  
+  
+      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
+      <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
+      </View>
+      
+      <TouchableOpacity onPress={expandPhotos}>
+      <View className = "flex flex-row items-center justify-between ">
+      <View className = "flex flex-row items-center justify-center mb-2 self-start">
+      <Icon type="font-awesome" name="photo" color="black" size={23} style ={styles.locationIcon} />
+      <Text style = {styles.PoppinsMed} className = "text-lg">Photos</Text>
+      </View>
+      <Icon type="ionicon" name="expand-sharp" color="black" size={25} style ={styles.expandIcon} />
+      </View>
+      </TouchableOpacity>
+      
+      {showPhotos? (
+      <View>
+  
+    <View style={styles.carouselContainer}>
+      <FlatList
+        horizontal
+        data={carouselData}
+        renderItem={renderCarouselItem}
+        keyExtractor={(item) => item.id.toString()}
+        showsHorizontalScrollIndicator={false}
+      />
+    </View>
+  
+      <Text className = "mt-2" style = {styles.PoppinsMed}>Show all</Text>
+      </View>
+  
+      ):null}
+  
+  
+      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,}}>
+      <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
+      </View>
+  
+      {instagram? (
+              <TouchableOpacity onPress={openInsta}>
+               <View className = "flex flex-row items-center justify-center self-start mt-2">
+               <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={28} />
+               <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{instagram}</Text>
+               </View>
+               </TouchableOpacity>
+  
+      ): null}
+  
+    {phone? (
+      <TouchableOpacity onPress={callPhone}>
+      <View className = "flex flex-row items-center justify-center self-start mt-2">
+      
+      <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={28} />
+     
+      <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{phone}</Text>
+      </View>
+      </TouchableOpacity>
+  
+      ): null}
+  
+  
+  
+      <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,}}>
+      <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
+      </View>
+  
+  
+      <View className = "flex flex-row items-center justify-center self-start">
+      <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Health and safety verified</Text>
+      <Icon style = {styles.verifiedIcon} type="material" name="verified" color="green" size={22} />
+      </View>
+      <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully compliant with hygiene standards.</Text>
+      <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">5 years experience barbering</Text>
+      <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a <Text style = {styles.PoppinsMed} className = "text-s text-blue-600">£10.00</Text> Flat Rate cancellation fee</Text>
+      <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a <Text style = {styles.PoppinsMed} className = "text-s text-blue-600">20%</Text> Late fee</Text>
+      <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully Insured</Text>
+      <Text style = {styles.PoppinsLight} className = "text-sm  ">Specialises in: <Text className = "text-sm " style = {styles.PoppinsMed}>Afro, Fades, Caucasian.</Text> </Text>
+  
+  
+  
+    </ScrollView>
+
+    );
+
+
+  }
 
 
   return (
@@ -259,258 +503,15 @@ for (const service of currentBasket) {
       <Text className = "text-base " style = {styles.PoppinsLight}>Active Now </Text>
       </View>
       </View>
-
-        </View>
-
-      <View style={styles.clickers}>
-        <TouchableOpacity onPress={handleServicesPress}>
-          <Text
-          className = "text-xl mx-10"
-            style={[
-              styles.PoppinsMed,
-              servicesPressed? styles.underline : null,
-  
-            ]}
-          >
-            Services
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleInfoPress}>
-          <Text
-          className = "text-xl mx-10"
-            style={[
-              styles.PoppinsMed,
-              infoPressed  ? styles.underline : null,
-        
-            ]}
-          >
-            Information
-          </Text>
-        </TouchableOpacity>
       </View>
 
-      {infoPressed ? (
-      <ScrollView className = "ml-5">
-        <View className = "flex flex-row items-center justify-center self-start mb-1 mt-2">
-        <Icon style = {styles.pinIcon} type="entypo" name="pin" color="black" size={20} />
-        <Text style = {styles.PoppinsMed} className = "text-lg "> Pinned Message:</Text>
-        </View>
-        <View >
-          <Text style = {styles.Pinnedtext}>{pinmsg}</Text>
-        </View>
-        <View className = "flex flex-row items-center justify-center self-start mt-2">
-        {mobile ? (
-          <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
-        <Icon type='font-awesome-5' name="car-alt" color="black" size={22} />
-        <Text style={mobileActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight} className="text-sm"> (Mobile)</Text>
-          </View>
-      ) : null}
-        {shop ? (
-          <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1 ">
-          <Icon type="entypo" name="shop" color="black" size={22} />
-          <Text style={shopActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight} className="text-sm"> (In Shop)</Text>
-          </View>
-      ) : null}
-
-        {home ? (
-          <View className = "flex flex-row items-center justify-center self-start mb-1 mt-1 mr-1">
-          <Icon type="ionicon" name="home" color="black" size={22} />
-          <Text style={homeActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight} className="text-sm"> (Home/Studio)</Text> 
-          </View>
-      ) : null}
-      </View>
-      <Text style={styles.PoppinsLight} className="text-sm text-gray-600">*This user is not taking walkins. (bookings only)</Text>
-
-
-
-      {walkins ? (
-        <Text style = {styles.PoppinsReg} className = "text-sm mt-1 ">HELLO </Text>
-      ) : null}
-        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
-        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
-        </View>
-
-        <TouchableOpacity onPress={expandLocation}>
-        <View className = "flex flex-row items-center justify-between ">
-        <View className = "flex flex-row items-center justify-center mb-2 self-start">
-        <Icon type="entypo" name="location" color="black" size={23} style ={styles.locationIcon} />
-        <Text style = {styles.PoppinsMed} className = "text-lg mt-3">Location & Hours</Text>
-        </View>
-        <Icon type="ionicon" name="expand-sharp" color="black" size={25} style ={styles.expandIcon} />
-        </View>
-        </TouchableOpacity>
-        
-
-        {showLoc? (
-        <View>
-        <MapView 
-        initialRegion={{
-          latitude: lat,
-          longitude: long,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02,
-        }} 
-        provider={PROVIDER_GOOGLE} style={styles.map} 
-        scrollEnabled={false} // Disable map panning
-        zoomEnabled={true} // Enable zooming
-        >
-          <Marker
-          coordinate={{ latitude: lat, longitude: long }}
-          markerStyle={styles.marker}
-        />
-      </MapView>
-        <Text style = {styles.PoppinsMed} className = "text-lg ">{Address}</Text>
-        <Text style = {styles.PoppinsLight} className = "text-base ">{distance} Miles away</Text>
-        <Text style={styles.PoppinsLight} className="text-lg">Updated Hours:</Text>
-
-        <Text style={styles.PoppinsMed} className="text-l">Monday: <Text style={styles.PoppinsReg}>{updatedhours.monstart && updatedhours.monend ? `${updatedhours.monstart}-${updatedhours.monend}` : null}</Text></Text>
-        <Text style={styles.PoppinsMed} className="text-l">Tuesday: <Text style={styles.PoppinsReg}>{updatedhours.tuestart && updatedhours.tueend ? `${updatedhours.tuestart}-${updatedhours.tueend}` : null}</Text></Text>
-        <Text style={styles.PoppinsMed} className="text-l">Wednesday: <Text style={styles.PoppinsReg}>{updatedhours.wedstart && updatedhours.wedend ? `${updatedhours.wedstart}-${updatedhours.wedend}` : null}</Text></Text>
-        <Text style={styles.PoppinsMed} className="text-l">Thursday: <Text style={styles.PoppinsReg}>{updatedhours.thustart && updatedhours.thuend ? `${updatedhours.thustart}-${updatedhours.thuend}` : null}</Text></Text>
-        <Text style={styles.PoppinsMed} className="text-l">Friday: <Text style={styles.PoppinsReg}>{updatedhours.fristart && updatedhours.friend ? `${updatedhours.fristart}-${updatedhours.friend}` : null}</Text></Text>
-        <Text style={styles.PoppinsMed} className="text-l">Saturday: <Text style={styles.PoppinsReg}>{updatedhours.satstart && updatedhours.satend ? `${updatedhours.satstart}-${updatedhours.satend}` : null}</Text></Text>
-        <Text style={styles.PoppinsMed} className="text-l">Sunday: <Text style={styles.PoppinsReg}>{updatedhours.sunstart && updatedhours.sunend ? `${updatedhours.sunstart}-${updatedhours.sunend}` : null}</Text></Text>
-
-
-
-        </View>
-        ): null}
-
-
-
-        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
-        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
-        </View>
-        
-        <TouchableOpacity onPress={expandPhotos}>
-        <View className = "flex flex-row items-center justify-between ">
-        <View className = "flex flex-row items-center justify-center mb-2 self-start">
-        <Icon type="font-awesome" name="photo" color="black" size={23} style ={styles.locationIcon} />
-        <Text style = {styles.PoppinsMed} className = "text-lg">Photos</Text>
-        </View>
-        <Icon type="ionicon" name="expand-sharp" color="black" size={25} style ={styles.expandIcon} />
-        </View>
-        </TouchableOpacity>
-        
-        {showPhotos? (
-        <View>
-
-      <View style={styles.carouselContainer}>
-        <FlatList
-          horizontal
-          data={carouselData}
-          renderItem={renderCarouselItem}
-          keyExtractor={(item) => item.id.toString()}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-
-        <Text className = "mt-2" style = {styles.PoppinsMed}>Show all</Text>
-        </View>
-
-        ):null}
-
-
-        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,}}>
-        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
-        </View>
-
-        {instagram? (
-                <TouchableOpacity onPress={openInsta}>
-                 <View className = "flex flex-row items-center justify-center self-start mt-2">
-                 <Icon style = {styles.instagramIcon} type="antdesign" name="instagram" color="black" size={28} />
-                 <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{instagram}</Text>
-                 </View>
-                 </TouchableOpacity>
-
-        ): null}
-
-      {phone? (
-        <TouchableOpacity onPress={callPhone}>
-        <View className = "flex flex-row items-center justify-center self-start mt-2">
-        
-        <Icon style = {styles.phoneIcon} type="font-awesome" name="phone" color="black" size={28} />
-       
-        <Text className = "ml-2 text-sm" style = {styles.PoppinsReg}>{phone}</Text>
-        </View>
-        </TouchableOpacity>
-
-        ): null}
-
-
-
-        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,}}>
-        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
-        </View>
-
-
-        <View className = "flex flex-row items-center justify-center self-start">
-        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Health and safety verified</Text>
-        <Icon style = {styles.verifiedIcon} type="material" name="verified" color="green" size={22} />
-        </View>
-        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully compliant with hygiene standards.</Text>
-        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">5 years experience barbering</Text>
-        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a <Text style = {styles.PoppinsMed} className = "text-s text-blue-600">£10.00</Text> Flat Rate cancellation fee</Text>
-        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">This user has a <Text style = {styles.PoppinsMed} className = "text-s text-blue-600">20%</Text> Late fee</Text>
-        <Text style = {styles.PoppinsLight} className = "text-s text-gray-600">Fully Insured</Text>
-        <Text style = {styles.PoppinsLight} className = "text-sm  ">Specialises in: <Text className = "text-sm " style = {styles.PoppinsMed}>Afro, Fades, Caucasian.</Text> </Text>
-
-
-
-      </ScrollView>
-    ) : null}
-
-{servicesPressed ? (
-  <ScrollView className="ml-5 mt-2">
-    {Object.entries(groupedServices).map(([categoryName, categoryServices], index) => (
-      <View key={categoryName}>
-        <Text style={styles.PoppinsMed} className="text-lg mt-1 mb-1">
-          {categoryName}
-        </Text>
-        {categoryServices.map((service) => (
-          <TouchableOpacity onPress={() => PressService({ name: service.name, price: service.price, duration: service.duration, description: service.description, notes: service.notes, serviceId: service.serviceId})} key={service.name}>
-            <Text style={styles.PoppinsReg} className="text-base">
-              {service.name}
-            </Text>
-            <Text style={styles.PoppinsMed} className="text-sm">
-              {service.price ? `£${service.price.toFixed(2)}` : "Price not available"}
-            </Text>
-            <Text
-              style={[styles.PoppinsLight, { maxWidth: "95%" }]}
-              numberOfLines={2}
-              ellipsizeMode="tail"
-              className="text-sm text-gray-600"
-            >
-              {service.description}
-            </Text>
-            <Text style={styles.PoppinsLight} className="text-sm text-gray-500 mb-2">
-              {service.duration ? `${service.duration}min` : null}
-            </Text>
-          </TouchableOpacity>
-        ))}
-        {index < Object.entries(groupedServices).length - 1 && (  
-        <View style={{flexDirection: 'row', alignItems: 'center',marginTop:3,marginBottom:3}}>
-        <View style={{flex: 0.95, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:3, marginBottom:1 }} />   
-        </View>
-        )}
-      </View>
-    ))}
-  </ScrollView>
-) : null}
-{showCheckout && (
-  <Button
-    titleStyle={styles.PoppinsReg}
-    onPress={pressContinue}
-    title={`Continue (£${total.toFixed(2)})`}
-    color={'black'}
-    containerStyle={{
-      width: WIDTH - 120,
-      borderRadius:10,
-      alignSelf: 'center',
-      justifyContent: 'center',
-    }}
-  />
-)}
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={initialLayout}
+        renderTabBar={renderTabBar}
+      />
     </SafeAreaView>
   );
 };

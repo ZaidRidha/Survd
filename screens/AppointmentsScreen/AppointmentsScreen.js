@@ -1,14 +1,57 @@
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, SafeAreaView, Dimensions, Text } from 'react-native';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { useNavigation } from '@react-navigation/native';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
-import React, { useState,useEffect } from 'react';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc,getDocs,query,collection,where,onSnapshot} from "firebase/firestore"; 
+import { doc, getDocs, query, collection, where, onSnapshot } from "firebase/firestore"; 
 import { database } from '../../firebaseConfig';
 
+const initialLayout = { width: Dimensions.get('window').width };
+
+const UpcomingScreen = ({appointments}) => (
+  <View style={styles.scene}>
+    {appointments.length > 0 ? (
+      appointments.map((appointment, index) => (
+        <View key={index} className="mt-3">
+          <AppointmentCard appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false} />
+        </View>
+      ))
+    ) : null}
+  </View>
+);
+
+const CompletedScreen = ({appointments}) => (
+  <View style={styles.scene}>
+    {appointments.length > 0 ? (
+      appointments.map((appointment, index) => (
+        <View key={index} className="mt-3">
+          <AppointmentCard appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false} />
+        </View>
+      ))
+    ) : null}
+  </View>
+);
+
+const CancelledScreen = ({appointments}) => (
+  <View style={styles.scene}>
+    {appointments.length > 0 ? (
+      appointments.map((appointment, index) => (
+        <View key={index} className="mt-3">
+          <AppointmentCard appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false} />
+        </View>
+      ))
+    ) : null}
+  </View>
+);
+
 const AppointmentsScreen = () => {
-  const [upcomingPressed, setUpcomingPressed] = useState(true);
-  const [completedPressed, setCompletedPressed] = useState(false);
-  const [cancelledPressed, setCancelledPressed] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'upcoming', title: 'Upcoming' },
+    { key: 'completed', title: 'Completed' },
+    { key: 'cancelled', title: 'Cancelled' },
+  ]);
   const [uid, setUid] = useState(null); // Add the state for storing uid
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
   const [completedAppointments, setCompletedAppointments] = useState([]);
@@ -16,24 +59,13 @@ const AppointmentsScreen = () => {
 
   const auth = getAuth();
   
+  const navigation = useNavigation();
 
-  const handleUpcomingPresssed = () => {
-    setUpcomingPressed(true);
-    setCompletedPressed(false);
-    setCancelledPressed(false);
-  };
-
-  const handleCompletedPresssed = () => {
-    setUpcomingPressed(false);
-    setCompletedPressed(true);
-    setCancelledPressed(false);
-  };
-
-  const handleCancelledPresssed = () => {
-    setUpcomingPressed(false);
-    setCompletedPressed(false);
-    setCancelledPressed(true);
-  };
+  useEffect(() => {
+    navigation.setOptions({
+      title: routes[index].title,
+    });
+  }, [index, navigation]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -60,7 +92,6 @@ const AppointmentsScreen = () => {
         querySnapshot.forEach((doc) => {
           const appointmentData = doc.data();
           const status  = appointmentData.status;
-    
   
           if (status === 'awaiting' || status === 'confirmed') {
             upcomingAppointments.push(appointmentData);
@@ -87,55 +118,34 @@ const AppointmentsScreen = () => {
     };
   }, [uid]);
 
+  const renderScene = SceneMap({
+    upcoming: () => <UpcomingScreen appointments={upcomingAppointments} />,
+    completed: () => <CompletedScreen appointments={completedAppointments} />,
+    cancelled: () => <CancelledScreen appointments={cancelledAppointments} />,
+  });
 
-
-  
-
-
-
-
+  const renderTabBar = props => (
+    <TabBar
+      {...props}
+      renderLabel={({ route }) => (
+        <Text style={styles.tabBarLabel}>{route.title}</Text>
+      )}
+      indicatorStyle={{ backgroundColor: 'black' }}
+      style={{ backgroundColor: 'white' }}
+    />
+  );
 
   return (
     <SafeAreaView style={styles.root}>
-      <View className="flex flex-row items-center justify-evenly">
-        <TouchableOpacity onPress={handleUpcomingPresssed}>
-          <Text style={[styles.PoppinsMed, upcomingPressed ? styles.underline : null]} className="text-lg">Upcoming</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleCompletedPresssed}>
-          <Text style={[styles.PoppinsMed, completedPressed ? styles.underline : null]} className="text-lg">Completed</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleCancelledPresssed}>
-          <Text style={[styles.PoppinsMed, cancelledPressed ? styles.underline : null]} className="text-lg">Cancelled</Text>
-        </TouchableOpacity>
-      </View>
-  
-      {upcomingPressed && upcomingAppointments.length > 0 ? (
-        upcomingAppointments.map((appointment, index) => (
-          <View key={index} className="mt-3">
-            <AppointmentCard appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false} />
-          </View>
-        ))
-      ) : null}
-  
-      {completedPressed && completedAppointments.length > 0 ? (
-        completedAppointments.map((appointment, index) => (
-          <View key={index} className="mt-3">
-            <AppointmentCard appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false} />
-          </View>
-        ))
-      ) : null}
-  
-      {cancelledPressed && cancelledAppointments.length > 0 ? (
-        cancelledAppointments.map((appointment, index) => (
-          <View key={index} className="mt-3">
-            <AppointmentCard appointmentData={appointment} showHide={false} promptUser={false} hideablePage={false} />
-          </View>
-        ))
-      ) : null}
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={initialLayout}
+        renderTabBar={renderTabBar}
+      />
     </SafeAreaView>
   );
-  
-
 };
 
 export default AppointmentsScreen;
@@ -145,19 +155,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  PoppinsReg: {
-    fontFamily: 'PoppinsReg',
+  scene: {
+    flex: 1,
   },
-  PoppinsLight: {
-    fontFamily: 'PoppinsLight',
-  },
-  PoppinsBold: {
-    fontFamily: 'PoppinsBold',
-  },
-  PoppinsMed: {
-    fontFamily: 'PoppinsMed',
-  },
-  underline: {
-    textDecorationLine: 'underline',
+  tabBarLabel: {
+    fontSize: 16,
+    color: 'black',
+    fontWeight: '600',
   },
 });

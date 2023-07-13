@@ -278,8 +278,8 @@ const styles = StyleSheet.create({
 
 
       animation: {
-        width: WIDTH*0.25, // Adjust the width as needed
-        height: HEIGHT*0.25, // Adjust the height as needed
+        width: WIDTH*0.3, // Adjust the width as needed
+        height: HEIGHT*0.3, // Adjust the height as needed
         alignSelf:"center",
       },
     
