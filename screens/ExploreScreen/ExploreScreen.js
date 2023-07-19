@@ -40,6 +40,7 @@ const ExploreScreen = () => {
   };
   return (
     <SafeAreaView style={styles.root}>
+      <View className = "flex flex-row items-center ">
       <SearchBar
   placeholder="Search name, username, speciality, etc."
   value={searchQuery}
@@ -47,6 +48,7 @@ const ExploreScreen = () => {
   lightTheme={false}
   round={true}
   containerStyle={{
+    width: WIDTH*0.90,
     backgroundColor: 'white',
     borderWidth: 0,
     shadowColor: 'white',
@@ -58,6 +60,8 @@ const ExploreScreen = () => {
   clearIcon={{ size: 25 }}
 
 />
+<Icon type="entypo" name="scissors" color="black" size={24} />
+</View>
 <ScrollView style={styles.inner}>
 {searchResults.length > 0 ? (
   <View className="mb-3" style = {styles.searchParts}>
