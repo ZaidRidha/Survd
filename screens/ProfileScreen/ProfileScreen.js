@@ -150,6 +150,7 @@ const ProfileScreen = () => {
     
     <View style={{ marginBottom: 10, marginTop:10, }}>
       <Button
+        onPress={signuserOut}
         title="Log Out"
         buttonStyle={{
           backgroundColor: 'white',

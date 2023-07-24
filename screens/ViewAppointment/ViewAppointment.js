@@ -221,13 +221,13 @@ const goBack = () =>{
     buttonStyle={{
       backgroundColor: 'white',
       borderWidth: 1,
-      borderColor: 'black',
+      borderColor: '#DA0D04',
       width: WIDTH * 0.45,
       marginTop: 10,
       borderRadius: 5,
     }}
     titleStyle={{
-      color: 'black',
+      color: '#DA0D04',
       fontFamily: 'PoppinsMed',
     }}
   />

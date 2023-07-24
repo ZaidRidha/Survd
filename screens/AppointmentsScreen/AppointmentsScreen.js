@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, Dimensions, Text } from 'react-native';
+import { StyleSheet, View, SafeAreaView, Dimensions, Text,ScrollView } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useNavigation } from '@react-navigation/native';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
@@ -10,7 +10,7 @@ import { database } from '../../firebaseConfig';
 const initialLayout = { width: Dimensions.get('window').width };
 
 const UpcomingScreen = ({appointments}) => (
-  <View style={styles.scene}>
+  <ScrollView style={styles.scene}>
     {appointments.length > 0 ? (
       appointments.map((appointment, index) => (
         <View key={index} className="mt-3">
@@ -18,11 +18,11 @@ const UpcomingScreen = ({appointments}) => (
         </View>
       ))
     ) : null}
-  </View>
+  </ScrollView>
 );
 
 const CompletedScreen = ({appointments}) => (
-  <View style={styles.scene}>
+  <ScrollView style={styles.scene}>
     {appointments.length > 0 ? (
       appointments.map((appointment, index) => (
         <View key={index} className="mt-3">
@@ -30,11 +30,11 @@ const CompletedScreen = ({appointments}) => (
         </View>
       ))
     ) : null}
-  </View>
+  </ScrollView>
 );
 
 const CancelledScreen = ({appointments}) => (
-  <View style={styles.scene}>
+  <ScrollView style={styles.scene}>
     {appointments.length > 0 ? (
       appointments.map((appointment, index) => (
         <View key={index} className="mt-3">
@@ -42,7 +42,7 @@ const CancelledScreen = ({appointments}) => (
         </View>
       ))
     ) : null}
-  </View>
+  </ScrollView>
 );
 
 const AppointmentsScreen = () => {
