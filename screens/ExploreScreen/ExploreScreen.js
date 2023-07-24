@@ -24,7 +24,13 @@ const ExploreScreen = () => {
       const q = query(collection(database, 'barbers'));
       const querySnapshot = await getDocs(q);
   
-      const data = querySnapshot.docs.map((doc) => doc.data().name);
+      const data = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          name: data.name,
+          username: data.username,
+        };
+      });
   
       const fuse = new Fuse(data, {
         keys: ['name'],
@@ -38,6 +44,9 @@ const ExploreScreen = () => {
       console.error('Error searching Firestore:', error);
     }
   };
+
+
+  console.log(searchResults);
   return (
     <SafeAreaView style={styles.root}>
       <View className = "flex flex-row items-center ">
@@ -60,7 +69,7 @@ const ExploreScreen = () => {
   clearIcon={{ size: 25 }}
 
 />
-<Icon type="entypo" name="scissors" color="black" size={24} />
+<Icon type="material-community" name="tune-variant" color="black" size={24} />
 </View>
 <ScrollView style={styles.inner}>
 {searchResults.length > 0 ? (
@@ -70,12 +79,15 @@ const ExploreScreen = () => {
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
         <View className = "mb-2"> 
-        <View className = "flex flex-row ml-2 "> 
-         <Icon type="entypo" name="scissors" color="black" size={24} />
+        <View className = "flex flex-row ml-2 items-center "> 
+        <Image source={require('../../assets/images/bizlogo.jpg')} style={styles.image} />
         <Text style={styles.PoppinsMed} className="text-xl">
-          {item}
+          {item.name}
         </Text>
         </View>
+        <Text style={styles.PoppinsLight} className="ml-2 mt-1 text-sm text-gray-600">
+          {item.username}
+        </Text>
         <View style={{flexDirection: 'row', alignItems: 'center',marginLeft:5,}}>
         <View style={{width:WIDTH * 0.90, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
@@ -151,6 +163,18 @@ const styles = StyleSheet.create({
     width: WIDTH*0.95,
     padding:5,
   },
+
+  image: {
+    aspectRatio: 1,
+    width: '10%',
+    height: '10%',
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 100,
+    marginRight:5,
+  },
+
 
 
 

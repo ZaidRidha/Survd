@@ -119,6 +119,8 @@ const PressService = () => {
     navigation.goBack();
   };
 
+  console.log(groupedExtras);
+
   return (
     <View style = {styles.root}>
       <View className = "self-start ml-1">
