@@ -11,14 +11,8 @@ const ExploreScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
-  const dismissExplorePage = () => {
-    setIsExplorePageVisible(false);
-  };
-
 
   const performSearch = async (text) => {
-
-    
     try {
       setSearchQuery(text);
       const q = query(collection(database, 'barbers'));
@@ -33,7 +27,7 @@ const ExploreScreen = () => {
       });
   
       const fuse = new Fuse(data, {
-        keys: ['name'],
+        keys: text.startsWith('@') ? ['username'] : ['name'],
         threshold: 0.3, // Adjust the threshold as needed
       });
   
@@ -44,9 +38,9 @@ const ExploreScreen = () => {
       console.error('Error searching Firestore:', error);
     }
   };
+  
 
 
-  console.log(searchResults);
   return (
     <SafeAreaView style={styles.root}>
       <View className = "flex flex-row items-center ">
@@ -81,13 +75,16 @@ const ExploreScreen = () => {
         <View className = "mb-2"> 
         <View className = "flex flex-row ml-2 items-center "> 
         <Image source={require('../../assets/images/bizlogo.jpg')} style={styles.image} />
-        <Text style={styles.PoppinsMed} className="text-xl">
+        <View>
+        <Text style={styles.PoppinsMed} className="text-lg">
           {item.name}
         </Text>
-        </View>
-        <Text style={styles.PoppinsLight} className="ml-2 mt-1 text-sm text-gray-600">
+        <Text style={styles.PoppinsLight} className=" text-sm text-gray-600">
           {item.username}
         </Text>
+        </View>
+        </View>
+
         <View style={{flexDirection: 'row', alignItems: 'center',marginLeft:5,}}>
         <View style={{width:WIDTH * 0.90, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>

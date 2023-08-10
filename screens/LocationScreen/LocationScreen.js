@@ -1,23 +1,39 @@
-import { View, Text, TouchableOpacity, StyleSheet, Pressable, SafeAreaView, Dimensions} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Pressable, SafeAreaView, Dimensions,ActivityIndicator} from 'react-native';
 import React, {useEffect,useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Header } from '@rneui/themed';
 import { Icon, Button } from '@rneui/themed';
 import useFont from '../../useFont';
 import { selectCurrentLoc, selectCurrentAddress } from '../../slices/locSlice';
+import { doc,getDocs,query,collection,where,onSnapshot,updateDoc,getDoc} from "firebase/firestore"; 
+import { database } from '../../firebaseConfig';
 import { useSelector } from 'react-redux';
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { reverseGeocodeAsync } from 'expo-location';
+import * as Location from 'expo-location';
 
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
 const LocationScreen = () => {
   useFont();
+  const navigation = useNavigation();
+  const auth = getAuth();
 
   const [postcode, setPostcode] = useState('');
+  const [uid, setUid] = useState(null); // Add the state for storing uid
 
-  useEffect(() => {
+  const [currentLat, setcurrentLat,] = useState(null);
+  const [currentLong, setcurrentLong,] = useState(null);
+  const [address, setAddress] = useState(null);
+
+  const handleMapPress = () => {
+    navigation.navigate("FullMapScreen");
+  };
+
+
+/*   useEffect(() => {
     const getPostcodeFromLocation = async (latitude, longitude) => {
       try {
         const location = {
@@ -39,17 +55,55 @@ const LocationScreen = () => {
     // Call the function with the currentLoc values
     getPostcodeFromLocation(currentLoc.lat, currentLoc.lng);
   }, [currentLoc]);
+ */
 
 
+  
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUid(user.uid);
+      } else {
+        setUid(null);
+      }
+    });
 
-  const navigation = useNavigation();
+    return () => unsubscribe(); // Cleanup the event listener on unmount
+  }, []);
+ 
 
-  const currentLoc = useSelector(selectCurrentLoc);
-  const currentAddress = useSelector(selectCurrentAddress);
-  const lat = currentLoc.lat;
-  const long = currentLoc.lng;
-  console.log(currentAddress);
-  console.log(currentLoc);
+  useEffect(() => {
+    const fetchUserLocationAndReverseGeocode = async () => {
+      const userDocRef = doc(database, 'users', uid);
+      const userDoc = await getDoc(userDocRef);
+  
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+  
+        // Check if userData exists and contains latitude and longitude
+        if (userData && 'latitude' in userData && 'longitude' in userData) {
+          const { longitude, latitude } = userData;
+          
+  
+          setcurrentLat(latitude);
+          setcurrentLong(longitude);
+
+          let result = await Location.reverseGeocodeAsync({ latitude, longitude });
+          setAddress(result);
+
+  
+          // Reverse geocoding
+
+        }
+      } else {
+        console.log("No such user!");
+      }
+    };
+  
+    fetchUserLocationAndReverseGeocode();
+  }, [uid, database,  setcurrentLat, setcurrentLong, setAddress]);
+
+
 
 
   const goBack = () => {
@@ -65,14 +119,15 @@ const LocationScreen = () => {
       </TouchableOpacity>
       </View>
 
-      <View className = "p-2 rounded self-center w-full mb-2">
+      <View style = {styles.topButton} className = "p-2  self-center mb-5">
       <View className = "flex flex-row  items-center justify-between">
       <View className = "flex flex-row items-center">
       <Icon type="font-awesome" name="location-arrow" color="black" size={31} />
       <View>
       <Text style = {styles.poppinsMed} className = " text-base ml-4 ">Current Location</Text>
-      <Text style = {styles.poppinsMed} className = " text-base ml-4 ">{currentAddress}</Text>
-      <Text style = {styles.poppinsMed} className = " text-base ml-4 ">{postcode}</Text>
+      <Text style = {styles.poppinsMed} className = " text-base ml-4 ">{address ? address[0].name : 'Loading...'}</Text>
+      <Text style = {styles.poppinsMed} className = " text-base ml-4 ">{address ? address[0].postalCode : 'Loading...'} </Text>
+
       </View>
       </View>
       <Icon type="antdesign" name="right" color="black" size={21} />
@@ -80,27 +135,28 @@ const LocationScreen = () => {
       </View>
 
 
-      <MapView 
-        initialRegion={{
-          latitude:lat,
-          longitude:long,
-          latitudeDelta: 0.004,
-          longitudeDelta: 0.004,
-        }} 
-        provider={PROVIDER_GOOGLE}
-        style={styles.map} 
-        >
-          <Marker
-          coordinate={{ latitude: lat, longitude: long }}
-
-        />
-
-          <Marker
-          coordinate={{ latitude: 51.3812, longitude: -0.2452 }}
-          >
-        <Icon type="entypo" name="scissors" color="black" size={38} style ={styles.locationIcon} />
-        </Marker>
-      </MapView>
+      {currentLat && currentLong ?
+  <MapView 
+    initialRegion={{
+      latitude: currentLat,
+      longitude: currentLong,
+      latitudeDelta: 0.004,
+      longitudeDelta: 0.004,
+    }} 
+    provider={PROVIDER_GOOGLE}
+    style={styles.map} 
+    onPress={handleMapPress}
+  >
+    <Marker
+      coordinate={{ latitude: currentLat, longitude: currentLong }}
+    />
+    <Marker
+      coordinate={{ latitude: 51.3812, longitude: -0.2452 }}
+    >
+      <Icon type="entypo" name="scissors" color="black" size={38} style ={styles.locationIcon} />
+    </Marker>
+  </MapView> 
+: <ActivityIndicator size="large" color="#0000ff" />}
 
       </View>
 
@@ -122,14 +178,22 @@ const styles = StyleSheet.create({
     fontFamily: 'PoppinsMed',
   },
 
+  topButton:{
+    borderWidth:2,
+    width: WIDTH * 0.95,
+    borderRadius:10,
+    borderColor: "black",
+
+  },
+
   map:{
-    width: WIDTH,
+    width: WIDTH * 0.9,
     alignSelf:"center",
-    height:HEIGHT,
+    height:HEIGHT * 0.6,
     marginBottom:5,
     borderColor:"black",
-    borderWidth:1,
-
+    borderWidth:2,
+    borderRadius:5,
 
   },
 

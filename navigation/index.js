@@ -22,6 +22,8 @@ import ConfirmationScreen from '../screens/ConfirmationScreen/ConfirmationScreen
 import AppointmentsScreen from '../screens/AppointmentsScreen/AppointmentsScreen';
 import ViewAppointment from '../screens/ViewAppointment/ViewAppointment';
 import BusinessOnBoarding from '../screens/BusinessOnboarding/BusinessOnboarding';
+import FullMapScreen from '../screens/FullMapScreen/FullMapScreen';
+import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen'
 
 
 
@@ -211,6 +213,11 @@ const Navigation = () => {
             headerBackTitle: ' ',
             headerTitle: ' ',
             headerTintColor: '#000000',
+            headerStyle: {
+              shadowOpacity: 0, // This will remove the border (shadow) in iOS
+              elevation: 0, // This will remove the border (shadow) in Android
+            },
+      
 
             headerRight: () => (
               <View className = "flex flex-row items-center">
@@ -315,6 +322,36 @@ const Navigation = () => {
             component={BusinessOnBoarding}
             options={{
               headerShown:false,
+
+            }}
+          />
+
+          <Stack.Screen
+            name="FullMapScreen"
+            component={FullMapScreen}
+            options={{
+        
+
+            }}
+          />
+
+            <Stack.Screen
+            name="NotificationsScreen"
+            component={NotificationsScreen}
+            options={{
+
+              headerShown: true,
+
+              headerBackTitleVisible: true,
+              headerBackTitle: ' ',
+              headerTitle: ' ',
+              headerTintColor: '#000000',
+
+              headerStyle: {
+                shadowOpacity: 0, // This will remove the border (shadow) in iOS
+                elevation: 0, // This will remove the border (shadow) in Android
+              },
+        
 
             }}
           />

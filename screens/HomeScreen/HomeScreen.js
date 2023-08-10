@@ -8,7 +8,7 @@ import { useNavigation, useScrollToTop,} from '@react-navigation/native';
 import BarberCard from '../../components/BarberCard/BarberCard';
 import { SearchBar } from '@rneui/themed';
 import { getDistance } from 'geolib';
-import { doc,getDocs,query,collection,where,onSnapshot,updateDoc} from "firebase/firestore"; 
+import { doc,getDocs,query,collection,where,onSnapshot,updateDoc,getDoc} from "firebase/firestore"; 
 import { database } from '../../firebaseConfig';
 import { useDispatch } from 'react-redux';
 import { setLoc,setAddress as setReduxAddress } from '../../slices/locSlice';
@@ -166,36 +166,30 @@ const HomeScreen = () => {
 
 
   useEffect(() => {
-
-    (async () => {
-
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+    const fetchUserLocationAndReverseGeocode = async () => {
+      const userDocRef = doc(database, 'users', uid); // Get the document reference
+      const userDoc = await getDoc(userDocRef); // Retrieve the document data
+  
+      if (userDoc.exists) {
+        const { longitude, latitude } = userDoc.data(); // Destructure longitude and latitude from the document data
+        setLocation({ longitude, latitude });
+        setcurrentLat(latitude);
+        setcurrentLong(longitude);
+        console.log(`Longitude: ${longitude}, Latitude: ${latitude}`); // Log the coordinates
+  
+        // Reverse geocoding
+        let currentAddress = await Location.reverseGeocodeAsync({ latitude, longitude });
+        setAddress(currentAddress);
         
-        return;
+
+        
+      } else {
+        console.log("No such user!");
       }
-
-      let currentLocation = await Location.getCurrentPositionAsync({});
-      setLocation(currentLocation);
-      setcurrentLat(currentLocation.coords.latitude);
-      setcurrentLong(currentLocation.coords.longitude);
-
-      //redux
-
-      
-
-
-      let currentAddress = await Location.reverseGeocodeAsync(currentLocation.coords)
-
-      setAddress(currentAddress);
-      dispatch(setReduxAddress(currentAddress[0].name));
-
-      dispatch(setLoc({ lat: currentLocation.coords.latitude, lng: currentLocation.coords.longitude }));
-
-      
-    })();
-  }, [setLocation, setcurrentLat, setcurrentLong, setAddress]);
+    };
+  
+    fetchUserLocationAndReverseGeocode();
+  }, [uid, database, setLocation, setcurrentLat, setcurrentLong, setAddress]); // Depend on uid, database, setLocation, setcurrentLat, setcurrentLong, and setAddress
 
 
   useEffect(() => {
@@ -247,6 +241,10 @@ const HomeScreen = () => {
   const openLocation = () => {
     navigation.navigate("Location");
   }
+  const openNotifications = () => {
+    navigation.navigate("NotificationsScreen");
+  }
+
 
 
 
@@ -261,7 +259,9 @@ const HomeScreen = () => {
          <Icon type="entypo" name="chevron-down" color="black" size={18} />
          </View>
          </TouchableOpacity>
-         <Icon style = {styles.bellIcon} type="material-community" name="bell" color="black" size={24} />
+         <TouchableOpacity onPress={openNotifications}>
+         <Icon style = {styles.bellIcon} type="material-community" name="bell" color="black" size={28} />
+         </TouchableOpacity>
          </View>
 
 
