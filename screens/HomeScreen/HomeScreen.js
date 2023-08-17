@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,FlatList,TouchableOpacity,RefreshControl,Dimensions,SafeAreaView,Keyboard,TouchableWithoutFeedback} from 'react-native'
+import { View, Text,StyleSheet,FlatList,TouchableOpacity,RefreshControl,Dimensions,SafeAreaView,Keyboard,TouchableWithoutFeedback,Image} from 'react-native'
 import React from 'react'
 import { useState,useEffect,useRef} from 'react'
 import { Icon } from '@rneui/themed';
@@ -47,20 +47,30 @@ const HomeScreen = () => {
   };
 
 
+  const navigateFilter = () => {
+
+    navigation.navigate("FilterScreen");
+  };
+
+
 
 
   const performSearch = async (text) => {
-
-    
     try {
       setSearchQuery(text);
       const q = query(collection(database, 'barbers'));
       const querySnapshot = await getDocs(q);
   
-      const data = querySnapshot.docs.map((doc) => doc.data().name);
+      const data = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          name: data.name,
+          username: data.username,
+        };
+      });
   
       const fuse = new Fuse(data, {
-        keys: ['name'],
+        keys: text.startsWith('@') ? ['username'] : ['name'],
         threshold: 0.3, // Adjust the threshold as needed
       });
   
@@ -71,7 +81,6 @@ const HomeScreen = () => {
       console.error('Error searching Firestore:', error);
     }
   };
-
   
 
   const dispatch = useDispatch();
@@ -120,7 +129,7 @@ const HomeScreen = () => {
           if (status === 'completed') {
             const appointmentRef = doc.ref;
             updateDoc(appointmentRef, { hidden: true });
-          } else if (currentDate > appointmentEndTime) {
+          } else if (currentDate > appointmentEndTime && status !== 'cancelled') {
             const appointmentRef = doc.ref;
             updateDoc(appointmentRef, { hidden: true, status: 'completed' });
           }
@@ -163,33 +172,54 @@ const HomeScreen = () => {
   
 
 
-
-
   useEffect(() => {
     const fetchUserLocationAndReverseGeocode = async () => {
-      const userDocRef = doc(database, 'users', uid); // Get the document reference
-      const userDoc = await getDoc(userDocRef); // Retrieve the document data
+      // Check if the user is logged in by verifying uid
+      if (uid) {
+        const userDocRef = doc(database, 'users', uid); // Get the document reference
+        const userDoc = await getDoc(userDocRef); // Retrieve the document data
   
-      if (userDoc.exists) {
-        const { longitude, latitude } = userDoc.data(); // Destructure longitude and latitude from the document data
-        setLocation({ longitude, latitude });
-        setcurrentLat(latitude);
-        setcurrentLong(longitude);
-        console.log(`Longitude: ${longitude}, Latitude: ${latitude}`); // Log the coordinates
+        if (userDoc.exists) {
+          const { longitude, latitude } = userDoc.data(); // Destructure longitude and latitude from the document data
+          setLocation({ longitude, latitude });
+          setcurrentLat(latitude);
+          setcurrentLong(longitude);
+          console.log(`Longitude: ${longitude}, Latitude: ${latitude}`); // Log the coordinates
   
-        // Reverse geocoding
-        let currentAddress = await Location.reverseGeocodeAsync({ latitude, longitude });
-        setAddress(currentAddress);
-        
-
-        
+          // Reverse geocoding
+          let currentAddress = await Location.reverseGeocodeAsync({ latitude, longitude });
+          setAddress(currentAddress);
+        } else {
+          console.log("No such user!");
+        }
       } else {
-        console.log("No such user!");
+        // If user is not logged in, get their current location instead
+        try {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            console.error('Permission to access location was denied');
+            return;
+          }
+  
+          let currentLocation = await Location.getCurrentPositionAsync({});
+          const { longitude, latitude } = currentLocation.coords;
+          setLocation({ longitude, latitude });
+          setcurrentLat(latitude);
+          setcurrentLong(longitude);
+          console.log(`Longitude: ${longitude}, Latitude: ${latitude}`); // Log the coordinates
+  
+          // Reverse geocoding
+          let currentAddress = await Location.reverseGeocodeAsync({ latitude, longitude });
+          setAddress(currentAddress);
+        } catch (error) {
+          console.error("Error fetching current location:", error);
+        }
       }
     };
   
     fetchUserLocationAndReverseGeocode();
-  }, [uid, database, setLocation, setcurrentLat, setcurrentLong, setAddress]); // Depend on uid, database, setLocation, setcurrentLat, setcurrentLong, and setAddress
+  }, [uid, database, setLocation, setcurrentLat, setcurrentLong, setAddress]);
+  
 
 
   useEffect(() => {
@@ -265,13 +295,15 @@ const HomeScreen = () => {
          </View>
 
 
-  <SearchBar
+         <View className = "flex flex-row items-center ">
+      <SearchBar
   placeholder="Search name, username, speciality, etc."
   value={searchQuery}
   onChangeText={performSearch}
   lightTheme={false}
   round={true}
   containerStyle={{
+    width: WIDTH*0.90,
     backgroundColor: 'white',
     borderWidth: 0,
     shadowColor: 'white',
@@ -281,14 +313,12 @@ const HomeScreen = () => {
   inputContainerStyle={{ backgroundColor: '#EEEEEE' }}
   inputStyle={{ fontSize: 14, color: 'black' }}
   clearIcon={{ size: 25 }}
-  searchIcon={searchResults.length > 0 ? (
-    <TouchableOpacity onPress={emptySearchBar}>
-    <Icon type="ionicon" name="arrow-back" color="black" size={28} />
-      </TouchableOpacity>
-  ) : (
-    <Icon type="ionicon" name="search" color="gray" size={16} />
-  )}
+
 />
+<TouchableOpacity onPress={navigateFilter}>
+<Icon type="material-community" name="tune-variant" color="black" size={24} />
+</TouchableOpacity>
+</View>
 
 
 
@@ -300,15 +330,18 @@ const HomeScreen = () => {
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
         <View className = "mb-2"> 
-        <View className = "flex flex-row ml-2 "> 
-
-        <View className = "mr-2"> 
-        <Icon type="entypo" name="scissors" color="black" size={24} />
-        </View>
-        <Text style={styles.fgreg} className="text-xl">
-          {item}
+        <View className = "flex flex-row ml-2 items-center "> 
+        <Image source={require('../../assets/images/bizlogo.jpg')} style={styles.image} />
+        <View>
+        <Text style={styles.PoppinsMed} className="text-lg">
+          {item.name}
+        </Text>
+        <Text style={styles.PoppinsLight} className=" text-sm text-gray-600">
+          {item.username}
         </Text>
         </View>
+        </View>
+
         <View style={{flexDirection: 'row', alignItems: 'center',marginLeft:5,}}>
         <View style={{width:WIDTH * 0.90, height: 1, backgroundColor: 'lightgray', alignSelf: "center", justifyContent: "center", marginTop:5, marginBottom:5 }} />   
         </View>
@@ -316,7 +349,6 @@ const HomeScreen = () => {
       )}
     />
         
-
   </View>
 ) : null}
 
@@ -374,6 +406,18 @@ const styles = StyleSheet.create({
   },
 
   bellIcon:{
+    marginRight:5,
+  },
+  
+
+  image: {
+    aspectRatio: 1,
+    width: '10%',
+    height: '10%',
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 100,
     marginRight:5,
   },
 

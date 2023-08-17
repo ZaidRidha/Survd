@@ -22,17 +22,20 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 const LoginScreen = () => {
     
   useFont();
-  const [currUid, setCurrUid] = useState(null);
+
+
+/*   const [currUid, setCurrUid] = useState(null);
 
   useEffect(() => { 
-    onAuthStateChanged(authentication, (user) => {  //firebase checking if user is changed first. 
+    onAuthStateChanged(authentication, (user) => {  //firebase getting current user
       if (user) {
         setCurrUid(user.uid); //gets the user id and sets it
       } 
     }); 
   }, []);
+ */
 
-  useEffect(() => {
+/*   useEffect(() => {
 
     const checkAndNavigate = async () =>{  //once user is checked, then check if they have completed registration, if they have sign them in. 
       console.log(currUid);
@@ -49,7 +52,7 @@ const LoginScreen = () => {
     checkAndNavigate();
 
     
-  }, [currUid]);
+  }, [currUid]); */
 
 
 

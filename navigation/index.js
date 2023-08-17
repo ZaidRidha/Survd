@@ -23,6 +23,7 @@ import AppointmentsScreen from '../screens/AppointmentsScreen/AppointmentsScreen
 import ViewAppointment from '../screens/ViewAppointment/ViewAppointment';
 import BusinessOnBoarding from '../screens/BusinessOnboarding/BusinessOnboarding';
 import FullMapScreen from '../screens/FullMapScreen/FullMapScreen';
+import FilterScreen from '../screens/FilterScreen/FilterScreen';
 import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen'
 
 
@@ -164,6 +165,11 @@ const Navigation = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen 
+          name = "home"
+          component = {BottomTabNavigator}
+           />
+
+<Stack.Screen 
         name = "Login" 
         component = {LoginScreen}/>
         <Stack.Screen 
@@ -173,10 +179,6 @@ const Navigation = () => {
         headerShown: true,
         headerBackTitleVisible: false,
         headerTintColor: '#000000'}} />
-        <Stack.Screen 
-          name = "home"
-          component = {BottomTabNavigator}
-           />
         <Stack.Screen 
           name = "Phone"
           component = {PhoneScreen}
@@ -311,6 +313,15 @@ const Navigation = () => {
               <Stack.Screen
               name="SelectPaymentScreen"
               component={SelectPaymentScreen}
+              options={{
+                presentation: "modal",
+              
+              }}
+            />
+
+              <Stack.Screen
+              name="FilterScreen"
+              component={FilterScreen}
               options={{
                 presentation: "modal",
               

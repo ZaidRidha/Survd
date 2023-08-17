@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-native-clipboard/clipboard": "^1.11.2",
     "@react-native-community/checkbox": "^0.5.14",
+    "@react-native-community/slider": "^4.4.2",
     "@react-native-firebase/app": "^16.7.0",
     "@react-native-firebase/auth": "^16.7.0",
     "@react-navigation/bottom-tabs": "^6.5.3",
