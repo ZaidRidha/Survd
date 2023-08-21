@@ -149,36 +149,71 @@ const BarberCard = ({cardData}) => {
     <Text className = "text-sm text-gray-700  " style = {styles.figlight}>{username}</Text>
 
     <View className="flex flex-row items-center">
-  {mobile && (
+    {mobile && mobileActive && (
+  <Icon
+    type="ionicon"
+    name="car-outline"
+    color={walkins ? "purple" : "green"}
+    size={18}
+  />
+)}
+{shop && shopActive && (
+  <>
+    {mobileActive && <Text style={{ fontSize: 14 }}> / </Text>}
+    <Icon
+      type="material"
+      name="storefront"
+      color={walkins ? "purple" : "green"}
+      size={16}
+    />
+  </>
+)}
+
+{home && homeActive && (
+  <>
+    {(mobileActive || shopActive) && <Text style={{ fontSize: 14 }}> / </Text>}
+    <Icon
+      type="antdesign"
+      name="home"
+      color={walkins ? "purple" : "green"}
+      size={16}
+    />
+  </>
+)}
+
+{mobile && !mobileActive && (
+  <>
+    {(shopActive || homeActive) && <Text style={{ fontSize: 14 }}> / </Text>}
     <Icon
       type="ionicon"
       name="car-outline"
-      color={mobileActive && walkins ? "purple" : mobileActive ? "green" : "black"}
+      color="black"
       size={18}
     />
-  )}
-  {shop && (
-    <>
-      {mobile && <Text style={{ fontSize: 14 }}> / </Text>}
-      <Icon
-        type="material"
-        name="storefront"
-        color={shopActive && walkins ? "purple" : shopActive ? "green" : "black"}
-        size={16}
-      />
-    </>
-  )}
-  {home && (
-    <>
-      {(mobile || shop) && <Text style={{ fontSize: 14 }}> / </Text>}
-      <Icon
-        type="antdesign"
-        name="home"
-        color={homeActive && walkins ? "purple" : homeActive ? "green" : "black"}
-        size={16}
-      />
-    </>
-  )}
+  </>
+)}
+{shop && !shopActive && (
+  <>
+    {(mobileActive || homeActive || (mobile && !mobileActive)) && <Text style={{ fontSize: 14 }}> / </Text>}
+    <Icon
+      type="material"
+      name="storefront"
+      color="black"
+      size={16}
+    />
+  </>
+)}
+{home && !homeActive && (
+  <>
+    {(mobileActive || shopActive || (mobile && !mobileActive) || (shop && !shopActive)) && <Text style={{ fontSize: 14 }}> / </Text>}
+    <Icon
+      type="antdesign"
+      name="home"
+      color="black"
+      size={16}
+    />
+  </>
+)}
 </View>
 
     </View>
