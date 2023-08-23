@@ -1,8 +1,8 @@
 // babel.config.js
-module.exports = function (api) {
+module.exports = function toExport(api) {
   api.cache(true);
   return {
-    presets: ["babel-preset-expo"],
-    plugins: ["nativewind/babel"],
+    presets: ['babel-preset-expo'],
+    plugins: ['nativewind/babel'],
   };
 };
