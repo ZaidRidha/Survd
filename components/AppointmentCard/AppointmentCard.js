@@ -1,40 +1,31 @@
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Icon } from '@rneui/themed';
-import { StyleSheet, Text, View, Dimensions,TouchableWithoutFeedback,Alert} from 'react-native';
-import { useNavigation,useRoute  } from '@react-navigation/native';
+import { StyleSheet, Text, View, Dimensions, TouchableWithoutFeedback, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { updateDoc, doc } from 'firebase/firestore';
 import { database } from '../../firebaseConfig';
-import { collection, addDoc, setDoc,updateDoc,doc} from "firebase/firestore"; 
-
 
 const WIDTH = Dimensions.get('window').width;
 
-const AppointmentCard = ({appointmentData,showHide,hideablePage,promptUser}) => {
+const AppointmentCard = ({ appointmentData, showHide, hideablePage, promptUser }) => {
   const barberName = 'John Doe';
   const date = 'June 10, 2023';
   const time = '10:00 AM';
   const navigation = useNavigation();
   const [hideCard, setHideCard] = useState(appointmentData.hidden);
-  const appointmentID = appointmentData.appointmentID;
+  const { appointmentID } = appointmentData;
   const appointmentStatus = appointmentData.status;
-
 
   useEffect(() => {
     setHideCard(appointmentData.hidden); // Update hideCard state when appointmentData changes
   }, [appointmentData]);
 
-
-
   const handleIconPress = async () => {
     if (promptUser) {
-      Alert.alert(
-        'Delete ',
-        'Are you sure you want to hide appointment?',
-        [
-          { text: 'No', onPress: () => {} },
-          { text: 'Yes', onPress: hideAppointmentCard },
-
-        ]
-      );
+      Alert.alert('Delete ', 'Are you sure you want to hide appointment?', [
+        { text: 'No', onPress: () => {} },
+        { text: 'Yes', onPress: hideAppointmentCard },
+      ]);
     } else {
       hideAppointmentCard();
     }
@@ -44,7 +35,7 @@ const AppointmentCard = ({appointmentData,showHide,hideablePage,promptUser}) => 
     setHideCard(true);
     const appRef = doc(database, 'appointments', appointmentID);
     await updateDoc(appRef, {
-      hidden: true
+      hidden: true,
     });
   };
 
@@ -52,11 +43,7 @@ const AppointmentCard = ({appointmentData,showHide,hideablePage,promptUser}) => 
     return null; // Render null if isVisible is false
   }
 
-
-
-
-  const handleNavigate = () =>{
-
+  const handleNavigate = () => {
     navigation.navigate('ViewAppointment', {
       barberName: appointmentData.barberName,
       date: appointmentData.date,
@@ -68,31 +55,54 @@ const AppointmentCard = ({appointmentData,showHide,hideablePage,promptUser}) => 
       postcode: appointmentData.postCode,
       address: appointmentData.address,
       status: appointmentData.status,
-
     });
-
-  }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={handleNavigate}>
-    <View style={styles.container}>
-      <View className = "flex flex-row  justify-between">
-      <Text style={styles.barberName}>{appointmentData.barberName}</Text>
-      {showHide? <Icon type="antdesign" name="close" color="black" size={18} onPress={handleIconPress} />: null}
+      <View style={styles.container}>
+        <View className="flex flex-row  justify-between">
+          <Text style={styles.barberName}>{appointmentData.barberName}</Text>
+          {showHide ? (
+            <Icon
+              type="antdesign"
+              name="close"
+              color="black"
+              size={18}
+              onPress={handleIconPress}
+            />
+          ) : null}
+        </View>
+        <View className="flex flex-row items-centre justify-between">
+          <Text style={styles.dateTime}>
+            {appointmentData.date} at {appointmentData.time}
+          </Text>
+          <View>
+            {appointmentStatus === 'completed' ? (
+              <Icon
+                type="material"
+                name="verified"
+                color="green"
+                size={18}
+              />
+            ) : appointmentStatus === 'awaiting' ? (
+              <Icon
+                type="font-awesome"
+                name="hourglass-1"
+                color="darkblue"
+                size={18}
+              />
+            ) : appointmentStatus === 'cancelled' ? (
+              <Icon
+                type="material"
+                name="cancel"
+                color="darkred"
+                size={18}
+              />
+            ) : null}
+          </View>
+        </View>
       </View>
-      <View className = "flex flex-row items-centre justify-between">
-      <Text style={styles.dateTime}>{appointmentData.date} at {appointmentData.time}</Text>
-      <View>
-      {appointmentStatus === "completed" ? (
-  <Icon type="material" name="verified" color="green" size={18} />
-) : appointmentStatus === "awaiting" ? (
-  <Icon type="font-awesome" name="hourglass-1" color="darkblue" size={18} />
-) : appointmentStatus === "cancelled" ? (
-  <Icon type="material" name="cancel" color="darkred" size={18} />
-) : null}
-      </View>
-      </View>
-    </View>
     </TouchableWithoutFeedback>
   );
 };
@@ -100,11 +110,9 @@ const AppointmentCard = ({appointmentData,showHide,hideablePage,promptUser}) => 
 export default AppointmentCard;
 
 const styles = StyleSheet.create({
-
-
   container: {
-    alignSelf:"center",
-    width: WIDTH*0.9,
+    alignSelf: 'center',
+    width: WIDTH * 0.9,
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
