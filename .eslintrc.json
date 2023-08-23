@@ -1,70 +1,58 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true,
-        "react-native/react-native": true
-    },
-    "extends": [
-        "plugin:react/recommended",
-        "airbnb",
-        "airbnb/hooks",
-        "prettier"
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "commonjs": true,
+    "react-native/react-native": true
+  },
+  "extends": ["plugin:react/recommended", "airbnb", "airbnb/hooks", "prettier", "plugin:prettier/recommended"],
+  "plugins": ["react", "react-native", "prettier"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "import/prefer-default-export": ["off"],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": ["function-expression", "arrow-function"]
+      }
     ],
-    "plugins": [
-        "react",
-        "react-native"
+    // allow .js files to contain JSX, *you can also add typescript extensions too*
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".js", ".jsx"]
+      }
     ],
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
-    "rules": {
-        "react/function-component-definition": [
-            2,
-            {
-                "namedComponents": "arrow-function",
-                "unnamedComponents": [
-                    "function-expression",
-                    "arrow-function"
-                ]
-            }
-        ],
-        // allow .js files to contain JSX, *you can also add typescript extensions too*
-        "react/jsx-filename-extension": [
-            1,
-            {
-                "extensions": [
-                    ".js",
-                    ".jsx"
-                ]
-            }
-        ],
-        "no-underscore-dangle": "off",
-        "semi": [
-            "error",
-            "always"
-        ],
-        "max-len": [
-            "error",
-            {
-                "code": 120
-            }
-        ],
-        "react/no-array-index-key": "error",
-        "react/display-name": "error",
-        "react/self-closing-comp": [
-            "error",
-            {
-                "component": true,
-                "html": true
-            }
-        ],
-        "prettier/prettier": [
-            "error",
-            {
-                "endOfLine": "auto"
-            }
-        ],
-        "import/no-cycle": "error"
-    }
+    "no-underscore-dangle": "off",
+    "semi": ["error", "always"],
+    "max-len": [
+      "error",
+      {
+        "code": 120
+      }
+    ],
+    "react/no-array-index-key": "error",
+    "react/display-name": "error",
+    "react/self-closing-comp": [
+      "error",
+      {
+        "component": true,
+        "html": true
+      }
+    ],
+    "import/extensions": [0],
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "parser": "flow"
+      }
+    ],
+    "no-console": 1,
+    "import/no-cycle": "error"
+  }
 }
