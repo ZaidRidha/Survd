@@ -71,6 +71,11 @@ Run the project with ```expo start```.
 
 ## 3. Contributing: Pushing your code to GitHub
 
+### Before you begin
+1. Pull Changes from main: Before creating a new branch for your feature or bug fix, make sure to pull the latest changes from the main branch to your local repository. This helps ensure your feature branch is up-to-date and minimizes the chances of conflicts.
+
+2. Resolve any conflicts locally: Resolve the conflicts before submiting your changes. make sure you don't break existing code unintentionally.
+
 ### Branching Strategy
 1. Create a New Branch: For each new feature, functionality, or bug fix, create a new branch from the main branch. Use the following naming convention: feature/the-name-of-the-functionality.
 
