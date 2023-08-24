@@ -1,4 +1,13 @@
-import { StyleSheet, Text, View, Dimensions, FlatList, Image, SafeAreaView, TouchableWithoutFeedback} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  FlatList,
+  Image,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState, useRef } from 'react';
 import { Icon } from '@rneui/themed';
@@ -19,7 +28,10 @@ const ImageScreen = () => {
 
   const renderImageItem = ({ item }) => (
     <View style={styles.imageContainer}>
-      <Image source={item.image} style={styles.image} />
+      <Image
+        source={item.image}
+        style={styles.image}
+      />
     </View>
   );
 
@@ -47,11 +59,18 @@ const ImageScreen = () => {
 
   return (
     <SafeAreaView style={styles.root}>
-      <TouchableWithoutFeedback onPress={goBack} >
-      <View className="items-center flex flex-row">
-        <Icon  type="entypo" name="chevron-left" color="white" size={42} />
-        <Text className="text-white self-center"> Photos ({currentIndex + 1}/{carouselData.length})</Text>
-      </View>
+      <TouchableWithoutFeedback onPress={goBack}>
+        <View className="items-center flex flex-row">
+          <Icon
+            type="entypo"
+            name="chevron-left"
+            color="white"
+            size={42}
+          />
+          <Text className="text-white self-center">
+            Photos ({currentIndex + 1}/{carouselData.length})
+          </Text>
+        </View>
       </TouchableWithoutFeedback>
       <FlatList
         ref={flatListRef}
@@ -84,8 +103,6 @@ const styles = StyleSheet.create({
     width: WIDTH,
     height: 320, // Adjust the height according to your image requirements
   },
-
-
 });
 
 export default ImageScreen;

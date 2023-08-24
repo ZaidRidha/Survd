@@ -1,20 +1,15 @@
-import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableWithoutFeedback,ScrollView,KeyboardAvoidingView,TextInput,Keyboard} from 'react-native'
-import React, { useState,startTransition } from 'react'
+import { StyleSheet, Text, TouchableWithoutFeedback, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
+import React, { useState } from 'react';
+import { Icon } from '@rneui/themed';
+import { useNavigation } from '@react-navigation/native';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import CustomButton from '../../components/CustomButton';
 
-import { Icon, } from '@rneui/themed';
-
-import useFont from '../../useFont'
-import { useNavigation } from '@react-navigation/native';
-import { authentication } from '../../firebaseConfig';
-import { createUserWithEmailAndPassword} from "firebase/auth";
-import { database } from '../../firebaseConfig';
-import { doc, setDoc } from "firebase/firestore"; 
-
-
+import useFont from '../../useFont';
+import { authentication, database } from '../../firebaseConfig';
 
 const SignUpScreen = () => {
-
   const navigation = useNavigation();
 
   useFont();
@@ -24,44 +19,39 @@ const SignUpScreen = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [isError, setIsError] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  
-
-
 
   const handleRegister = async () => {
     if (password !== passwordRepeat) {
-       setIsError(true);
-       setErrorMessage("Passwords do not match, Please try again.");
-       return;
-      } else {
-       setIsError(false);
-     }
+      setIsError(true);
+      setErrorMessage('Passwords do not match, Please try again.');
+      return;
+    }
+    setIsError(false);
 
     try {
-       const { user } = await createUserWithEmailAndPassword(authentication,email,password);
-       await setDoc(doc(database,"users",user.uid), {
-        email: email
-       });
-       alert(`email ${user.email} created.`);
-       navigation.replace("Phone");
-      
-     } catch (error) {
-      let errorMessage = "An unknown error occurred";
+      const { user } = await createUserWithEmailAndPassword(authentication, email, password);
+      await setDoc(doc(database, 'users', user.uid), {
+        email,
+      });
+      alert(`email ${user.email} created.`);
+      navigation.replace('Phone');
+    } catch (error) {
+      let errorMessage = 'An unknown error occurred';
       switch (error.code) {
-        case "auth/internal-error":
-          errorMessage = "The email address is already in use by another account.";
+        case 'auth/internal-error':
+          errorMessage = 'The email address is already in use by another account.';
           break;
-        case "auth/invalid-email":
-          errorMessage = "The email address is invalid.";
+        case 'auth/invalid-email':
+          errorMessage = 'The email address is invalid.';
           break;
-        case "auth/weak-password":
-          errorMessage = "The password is too weak.";
+        case 'auth/weak-password':
+          errorMessage = 'The password is too weak.';
           break;
-        case "auth/user-not-found":
-          errorMessage = "The user with that email address was not found.";
+        case 'auth/user-not-found':
+          errorMessage = 'The user with that email address was not found.';
           break;
-        case "auth/wrong-password":
-          errorMessage = "The password is incorrect.";
+        case 'auth/wrong-password':
+          errorMessage = 'The password is incorrect.';
           break;
         default:
           errorMessage = error.message;
@@ -72,124 +62,129 @@ const SignUpScreen = () => {
         setIsError(false);
       }, 3000);
     }
-}
-
-
-
-  
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    <KeyboardAvoidingView behavior="padding" enabled style={styles.root}>
-    <Text style = {styles.inputtext}>Email*</Text>
-    <TextInput
-    placeholder='Email'
-    style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
-    onFocus={() => setIsFocused(true)}
-    onBlur={() => setIsFocused(false)}
-    onChangeText={(text) => setEmail(text)}
-    />
-    <Text style = {styles.inputtext}>Password*</Text>
-    <TextInput
-    placeholder='Password'
-    style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
-    onFocus={() => setIsFocused(true)}
-    onBlur={() => setIsFocused(false)}
-    onChangeText={(text) => setPassword(text)}
-    secureTextEntry = {true}
-    />
-    <Text style = {styles.inputtext}>Confirm Password*</Text>
-    <TextInput
-    placeholder='Confirm Password'
-    style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
-    onFocus={() => setIsFocused(true)}
-    onBlur={() => setIsFocused(false)}
-    onChangeText={(text) => setPasswordRepeat(text)}
-    secureTextEntry = {true}
-    />
-    <CustomButton 
-    text = "Continue"
-    type = "signup"
-    onPress={handleRegister}
-    />
-    <Text style = {styles.text}>By registering, you confirm that you accept our <Text style = {styles.linktext} >Terms of Use</Text> and <Text style = {styles.linktext} >Privacy Policy.*</Text></Text>
-    {isError ? <Text style = {styles.errorText}><Icon type="ionicon" name="information-circle" color="red" size={17} /> {errorMessage}</Text> : null}
-    </KeyboardAvoidingView>
+      <KeyboardAvoidingView
+        behavior="padding"
+        enabled
+        style={styles.root}>
+        <Text style={styles.inputtext}>Email*</Text>
+        <TextInput
+          placeholder="Email"
+          style={[isFocused ? styles.inputFocused : isError ? styles.inputError : styles.input]}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <Text style={styles.inputtext}>Password*</Text>
+        <TextInput
+          placeholder="Password"
+          style={[isFocused ? styles.inputFocused : isError ? styles.inputError : styles.input]}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry
+        />
+        <Text style={styles.inputtext}>Confirm Password*</Text>
+        <TextInput
+          placeholder="Confirm Password"
+          style={[isFocused ? styles.inputFocused : isError ? styles.inputError : styles.input]}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onChangeText={(text) => setPasswordRepeat(text)}
+          secureTextEntry
+        />
+        <CustomButton
+          text="Continue"
+          type="signup"
+          onPress={handleRegister}
+        />
+        <Text style={styles.text}>
+          By registering, you confirm that you accept our <Text style={styles.linktext}>Terms of Use</Text> and
+          <Text style={styles.linktext}>Privacy Policy.*</Text>
+        </Text>
+        {isError ? (
+          <Text style={styles.errorText}>
+            <Icon
+              type="ionicon"
+              name="information-circle"
+              color="red"
+              size={17}
+            />
+            {errorMessage}
+          </Text>
+        ) : null}
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
-    
-    
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-  root:{
+  root: {
     alignItems: 'center',
-    flexDirection: 'column', 
-    padding :25,
-    flex:1,
+    flexDirection: 'column',
+    padding: 25,
+    flex: 1,
     backgroundColor: '#FFFFFF',
   },
 
-  bsubview:{
-    padding:20,
+  bsubview: {
+    padding: 20,
   },
 
-  inputtext:{
-    fontFamily: "PoppinsReg",
+  inputtext: {
+    fontFamily: 'PoppinsReg',
     alignSelf: 'flex-start',
-    marginTop:10,
+    marginTop: 10,
   },
 
-  confirmtext:{
-    fontFamily: "PoppinsLight",
+  confirmtext: {
+    fontFamily: 'PoppinsLight',
     alignSelf: 'flex-start',
   },
 
-
-  text:{
+  text: {
     // marginRight: 500
-    fontFamily: "PoppinsLight",
-    marginTop:10,
-    
+    fontFamily: 'PoppinsLight',
+    marginTop: 10,
   },
 
-  linktext:{
+  linktext: {
     color: '#67718f',
-
   },
 
-  errorText:{
-    marginTop:25,
-    fontFamily: "PoppinsLight",
+  errorText: {
+    marginTop: 25,
+    fontFamily: 'PoppinsLight',
     color: '#db0000',
-    alignItems: 'center'
-
+    alignItems: 'center',
   },
 
   font1: {
-    fontFamily: "PoppinsLight"
+    fontFamily: 'PoppinsLight',
   },
 
   font2: {
-    fontFamily: "FigtreeBold"
+    fontFamily: 'FigtreeBold',
   },
 
-  backtext:{
+  backtext: {
     alignSelf: 'flex-start',
-    fontFamily: "PoppinsLight",
+    fontFamily: 'PoppinsLight',
     color: '#67718f',
     marginTop: 15,
-
   },
-  input:{
+  input: {
     width: '100%',
     padding: 10,
     borderWidth: 1,
     borderColor: 'gray',
     marginVertical: 10,
-    fontSize:14,
-    borderRadius:5,
-    fontFamily: "PoppinsReg"
+    fontSize: 14,
+    borderRadius: 5,
+    fontFamily: 'PoppinsReg',
   },
 
   inputFocused: {
@@ -199,9 +194,9 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     marginVertical: 10,
     backgroundColor: '#F0F0F0',
-    fontSize:14,
-    borderRadius:5,
-    fontFamily: "PoppinsReg"
+    fontSize: 14,
+    borderRadius: 5,
+    fontFamily: 'PoppinsReg',
   },
 
   inputError: {
@@ -210,14 +205,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'red',
     marginVertical: 10,
-    fontSize:14,
-    borderRadius:5,
-    fontFamily: "PoppinsReg"
+    fontSize: 14,
+    borderRadius: 5,
+    fontFamily: 'PoppinsReg',
   },
+});
 
-
-
-})
-
-
-export default SignUpScreen
+export default SignUpScreen;

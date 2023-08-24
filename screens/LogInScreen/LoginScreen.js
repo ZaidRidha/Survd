@@ -1,30 +1,32 @@
-import {View, Image, useWindowDimensions, StyleSheet,Text, TouchableOpacity,TextInput,ActivityIndicator,TouchableWithoutFeedback,Keyboard} from 'react-native'
-import React, { useState,useEffect } from 'react'
-import { Button } from '@rneui/themed';
-import logo from '../../assets/images/boxlogo.png'
+import {
+  View,
+  Image,
+  useWindowDimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
+import React, { useState } from 'react';
+import { Button, Icon } from '@rneui/themed';
 
-import CustomButton from '../../components/CustomButton';
-import useFont from '../../useFont'
 import { useNavigation } from '@react-navigation/native';
-import { Icon, } from '@rneui/themed';
+
 import { LinearGradient } from 'expo-linear-gradient';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import useFont from '../../useFont';
+import CustomButton from '../../components/CustomButton';
+import logo from '../../assets/images/boxlogo.png';
 import { authentication } from '../../firebaseConfig';
-import { signInWithEmailAndPassword,onAuthStateChanged} from "firebase/auth";
-import { database } from '../../firebaseConfig';
-import { doc,getDoc } from "firebase/firestore"; 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
-
-
-
-
 
 const LoginScreen = () => {
-    
   useFont();
 
-
-/*   const [currUid, setCurrUid] = useState(null);
+  /*   const [currUid, setCurrUid] = useState(null);
 
   useEffect(() => { 
     onAuthStateChanged(authentication, (user) => {  //firebase getting current user
@@ -35,7 +37,7 @@ const LoginScreen = () => {
   }, []);
  */
 
-/*   useEffect(() => {
+  /*   useEffect(() => {
 
     const checkAndNavigate = async () =>{  //once user is checked, then check if they have completed registration, if they have sign them in. 
       console.log(currUid);
@@ -54,192 +56,193 @@ const LoginScreen = () => {
     
   }, [currUid]); */
 
-
-
-
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {height} = useWindowDimensions();
+  const { height } = useWindowDimensions();
   const navigation = useNavigation();
   const [isError, setIserror] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [loading, setLoading] = useState(false);
 
-
-  const handleLogin = async () => { //firebase login. 
-     try {
-        setLoading(true);
-        const user = await signInWithEmailAndPassword(authentication, email, password)
-     } catch (error) {
-         console.log(error);
-        setIserror(true);
-        setTimeout(() => {
-          setIserror(false);
-       }, 4000);
-     }
-     setLoading(false);
-}
+  const handleLogin = async () => {
+    // firebase login.
+    try {
+      setLoading(true);
+      const user = await signInWithEmailAndPassword(authentication, email, password);
+    } catch (error) {
+      console.log(error);
+      setIserror(true);
+      setTimeout(() => {
+        setIserror(false);
+      }, 4000);
+    }
+    setLoading(false);
+  };
 
   const onForgotPasswordPressed = () => {
-    console.warn("Forgot Password");
-  }
+    console.warn('Forgot Password');
+  };
 
-  
   const onLogininstagramPressed = () => {
-    console.warn("Login IG");
-  }
-  
+    console.warn('Login IG');
+  };
+
   const onLoginGuestPressed = () => {
-    console.warn("Login as Guest");
-  }
+    console.warn('Login as Guest');
+  };
 
   const onSignupPressed = () => {
-    console.warn("Signup");
-    navigation.navigate('Register')
-  }
-
-  
+    console.warn('Signup');
+    navigation.navigate('Register');
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    <KeyboardAwareScrollView contentContainerStyle = {styles.root}>
-    <Image className = "mt-5" source={logo} style = {styles.logo}></Image>
-    {loading && <ActivityIndicator size="large" color="#999999" />}
+      <KeyboardAwareScrollView contentContainerStyle={styles.root}>
+        <Image
+          className="mt-5"
+          source={logo}
+          style={styles.logo}
+        />
+        {loading && (
+          <ActivityIndicator
+            size="large"
+            color="#999999"
+          />
+        )}
 
-    <Text style = {styles.text}>Email</Text>
-    <TextInput
-    placeholder='Email'
-    style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
-    onFocus={() => setIsFocused(true)}
-    onBlur={() => setIsFocused(false)}
-    onChangeText={(text) => setEmail(text)}
-    />
-      
-    <Text style = {styles.text}>Password</Text>
-    <TextInput
-    placeholder='Password'
-    style={[isFocused ? styles.inputFocused : (isError ? styles.inputError : styles.input)]}
-    secureTextEntry = {true}
-    onFocus={() => setIsFocused(true)}
-    onBlur={() => setIsFocused(false)}
-    onChangeText={(text) => setPassword(text)}
-    />
-    
+        <Text style={styles.text}>Email</Text>
+        <TextInput
+          placeholder="Email"
+          style={[isFocused ? styles.inputFocused : isError ? styles.inputError : styles.input]}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onChangeText={(text) => setEmail(text)}
+        />
 
-    <Text style = {styles.forgottext}>Forgot Password?</Text>
-    {isError ? <Text style = {styles.errortext}>Invalid email/password combination!</Text> : null}
+        <Text style={styles.text}>Password</Text>
+        <TextInput
+          placeholder="Password"
+          style={[isFocused ? styles.inputFocused : isError ? styles.inputError : styles.input]}
+          secureTextEntry
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          onChangeText={(text) => setPassword(text)}
+        />
 
+        <Text style={styles.forgottext}>Forgot Password?</Text>
+        {isError ? <Text style={styles.errortext}>Invalid email/password combination!</Text> : null}
 
-    <CustomButton 
-    text = "Login"
-    onPress = {handleLogin}
-    />
+        <CustomButton
+          text="Login"
+          onPress={handleLogin}
+        />
 
-<View style={{flexDirection: 'row', alignItems: 'center',marginTop:5,marginBottom:5}}>
-  <View style={{flex: 0.35, height: 1, backgroundColor: 'lightgray'}} />
-    <View>
-    <Text style={{width: 40, textAlign: 'center', color: 'gray'}}>Or</Text>
-  </View>
-  <View style={{flex: 0.35, height: 1, backgroundColor: 'lightgray'}} />
-  </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5, marginBottom: 5 }}>
+          <View style={{ flex: 0.35, height: 1, backgroundColor: 'lightgray' }} />
+          <View>
+            <Text style={{ width: 40, textAlign: 'center', color: 'gray' }}>Or</Text>
+          </View>
+          <View style={{ flex: 0.35, height: 1, backgroundColor: 'lightgray' }} />
+        </View>
 
+        <Button
+          ViewComponent={LinearGradient}
+          linearGradientProps={{
+            colors: ['#feda75', '#fa7e1e', '#d62976', '#962fbf', '#4f5bd5'],
+            start: { x: 0, y: 0.5 },
+            end: { x: 0.8, y: 1 },
+          }}
+          icon={
+            <Icon
+              style={styles.icon}
+              type="antdesign"
+              name="instagram"
+              color="white"
+              size={25}
+            />
+          }
+          title="Continue With Instagram"
+          containerStyle={{ width: '100%', borderRadius: 8, marginBottom: 15 }}
+          titleStyle={{ fontFamily: 'FigtreeBold', fontSize: 14 }}
+          onPress={onLogininstagramPressed}
+        />
 
-  <Button
-  ViewComponent={LinearGradient}
-  linearGradientProps={{
-    colors: ['#feda75', '#fa7e1e', '#d62976', '#962fbf', '#4f5bd5'],
-    start: { x: 0, y: 0.5 },
-    end: { x: 0.8, y: 1 },
-  }}
-  icon={<Icon style = {styles.icon} type="antdesign" name="instagram" color="white" size={25} />}
-  title="Continue With Instagram"
-  containerStyle={{ width: '100%',borderRadius: 8, marginBottom:15 }}
-  titleStyle={{ fontFamily: 'FigtreeBold', fontSize: 14,}}
-  onPress={onLogininstagramPressed}
-  />
-
-
-    <View style = {styles.footer}>
-    <TouchableOpacity onPress={onSignupPressed}>
-    <Text style = {{alignItems:'center',fontFamily:'FigtreeLight'}}>Don't have an account? Signup</Text>
-
-
-    </TouchableOpacity>
-    </View>
-    </KeyboardAwareScrollView>
+        <View style={styles.footer}>
+          <TouchableOpacity onPress={onSignupPressed}>
+            <Text style={{ alignItems: 'center', fontFamily: 'FigtreeLight' }}>Don't have an account? Signup</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
-
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-  root:{
+  root: {
     // alignItems: 'center',
-    padding :25,
-    flexDirection: 'column', 
+    padding: 25,
+    flexDirection: 'column',
     alignItems: 'center',
-    flex:1,
+    flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  logo:{
-    width:'70%',
+  logo: {
+    width: '70%',
     maxwidth: 300,
     maxheight: 300,
     marginBottom: 20,
   },
 
-  text:{
+  text: {
     // marginRight: 500
     alignSelf: 'flex-start',
-    fontFamily: "PoppinsReg",
+    fontFamily: 'PoppinsReg',
     fontSize: 14,
   },
 
   font1: {
-    fontFamily: "PoppinsReg"
+    fontFamily: 'PoppinsReg',
   },
 
   font2: {
-    fontFamily: "PoppinsReg"
+    fontFamily: 'PoppinsReg',
   },
 
-  footer: {
-  },
+  footer: {},
 
   errortext: {
-    fontFamily: "PoppinsLight",
-    color: "red",
-    alignItems:'center',
+    fontFamily: 'PoppinsLight',
+    color: 'red',
+    alignItems: 'center',
     marginBottom: 10,
-
   },
 
-  forgottext:{
-    fontFamily:"PoppinsLight",
+  forgottext: {
+    fontFamily: 'PoppinsLight',
     alignSelf: 'flex-start',
     marginTop: 5,
     marginBottom: 20,
   },
 
   icon: {
-    marginRight: 5
+    marginRight: 5,
   },
 
   btn: {
-    width:'100%',
+    width: '100%',
     borderRadius: 40,
   },
 
-  input:{
+  input: {
     width: '100%',
     padding: 10,
     borderWidth: 1,
     borderColor: 'gray',
     marginVertical: 10,
-    fontSize:14,
-    borderRadius:5,
-    fontFamily: "PoppinsReg"
+    fontSize: 14,
+    borderRadius: 5,
+    fontFamily: 'PoppinsReg',
   },
 
   inputFocused: {
@@ -249,9 +252,9 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     marginVertical: 10,
     backgroundColor: '#F0F0F0',
-    fontSize:14,
-    borderRadius:5,
-    fontFamily: "PoppinsReg"
+    fontSize: 14,
+    borderRadius: 5,
+    fontFamily: 'PoppinsReg',
   },
 
   inputError: {
@@ -260,21 +263,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'red',
     marginVertical: 10,
-    fontSize:14,
-    borderRadius:5,
-    fontFamily: "PoppinsReg"
+    fontSize: 14,
+    borderRadius: 5,
+    fontFamily: 'PoppinsReg',
   },
 
   logo: {
-    width:250,
-    height:250
-  }
-
- 
-
-  
-
-})
+    width: 250,
+    height: 250,
+  },
+});
 
 const subviewStyles = StyleSheet.create({
   container: {
@@ -287,4 +285,4 @@ const subviewStyles = StyleSheet.create({
   },
 });
 
-export default LoginScreen
+export default LoginScreen;
