@@ -7,13 +7,11 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import * as Location from 'expo-location';
 import { database } from '../../firebaseConfig';
-import useFont from '../../useFont';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
 
 const LocationScreen = () => {
-  useFont();
   const navigation = useNavigation();
   const auth = getAuth();
 
