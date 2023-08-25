@@ -1,14 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    'screens/PhoneScreen/PhoneScreen.js',
-    'screens/ProfileScreen/ProfileScreen.js',
-    'screens/HomeScreen/HomeScreen.js',
-    'screens/FilterScreen/FilterScreen.js',
-    'components/BarberCard/BarberCard.js',
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
+    content: [
+        './screens/**/*.{js,jsx,ts,tsx}',
+        './components/**/*.{js,jsx,ts,tsx}',
+        './navigation/**/*.{js,jsx,ts,tsx}',
+    ],
+    theme: {
+        extend: {},
+    },
+    plugins: [],
 };
