@@ -376,7 +376,7 @@ const HomeScreen = () => {
           <Text
             style={styles.fgreg}
             className="text-xl mb-2 ml-5">
-            Active barbers near you:
+            Services Near You:
           </Text>
           <FlatList
             ref={scrollRef}

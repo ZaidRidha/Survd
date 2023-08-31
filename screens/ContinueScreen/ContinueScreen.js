@@ -563,14 +563,14 @@ const ContinueScreen = () => {
                   <Text
                     className="text-gray-600 text-sm"
                     style={styles.poppinsReg}>
-                    Duration:
+                    Duration: {''} 
                     {service[0].duration +
                       (service[0].extras
                         ? service[0].extras.reduce(
                             (total, extra) => (extra.duration !== undefined ? total + extra.duration : total),
                             0
                           )
-                        : 0)}
+                        : 0)} {''} 
                     minutes
                   </Text>
                 )}

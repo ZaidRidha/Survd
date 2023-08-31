@@ -714,22 +714,22 @@ const PressProfile = () => {
         <Text
           style={styles.PoppinsLight}
           className="text-s text-gray-600">
-          This user has a
+          This user has a {''} 
           <Text
             style={styles.PoppinsMed}
             className="text-s text-blue-600">
-            £10.00
+            £10.00 {''} 
           </Text>
           Flat Rate cancellation fee
         </Text>
         <Text
           style={styles.PoppinsLight}
           className="text-s text-gray-600">
-          This user has a
+          This user has a {''}
           <Text
             style={styles.PoppinsMed}
             className="text-s text-blue-600">
-            20%
+            20% {''} 
           </Text>
           Late fee
         </Text>
@@ -741,7 +741,7 @@ const PressProfile = () => {
         <Text
           style={styles.PoppinsLight}
           className="text-sm  ">
-          Specialises in:
+          Specialises in: {''}
           <Text
             className="text-sm "
             style={styles.PoppinsMed}>

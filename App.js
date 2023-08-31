@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, LogBox } from 'react-native';
 
 import { Provider } from 'react-redux';
 import AnimatedSplash from 'react-native-animated-splash-screen';
@@ -12,7 +12,7 @@ import logo from './assets/images/UpdatedLogo.jpg';
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const fontsLoaded = useCustomFonts();
-  // LogBox.ignoreAllLogs(true);
+  //LogBox.ignoreAllLogs(true);
 
   useEffect(() => {
     setTimeout(() => {
