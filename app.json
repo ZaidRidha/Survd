@@ -14,26 +14,33 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.zaid.barberapp",
       "config": {
         "googleMapsApiKey": "AIzaSyCjYfUwiN9N0SvFY_wT2OkUBne4MjO-CvQ"
-    }
+      }
     },
     "android": {
       "config": {
         "googleMaps": {
-            "apiKey": "AIzaSyCjYfUwiN9N0SvFY_wT2OkUBne4MjO-CvQ"
+          "apiKey": "AIzaSyCjYfUwiN9N0SvFY_wT2OkUBne4MjO-CvQ"
         }
-    }
-
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
   }
 }
