@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Text,
-  ScrollView,
-  Linking,
-  TouchableOpacity,
-  SafeAreaView,
-  FlatList,
-} from 'react-native';
+import { View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Icon, Button } from '@rneui/themed';
@@ -563,14 +553,14 @@ const ContinueScreen = () => {
                   <Text
                     className="text-gray-600 text-sm"
                     style={styles.poppinsReg}>
-                    Duration: {''} 
+                    Duration:
                     {service[0].duration +
                       (service[0].extras
                         ? service[0].extras.reduce(
                             (total, extra) => (extra.duration !== undefined ? total + extra.duration : total),
                             0
                           )
-                        : 0)} {''} 
+                        : 0)}
                     minutes
                   </Text>
                 )}
