@@ -13,6 +13,7 @@ import ProfileSectionHeader from './ProfileSectionHeader';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const { currentUser } = authentication;
 
   useEffect(() => {
     onAuthStateChanged(authentication, (user) => {
@@ -68,7 +69,7 @@ const ProfileScreen = () => {
 
           <ProfileSectionHeader text="Account Settings" />
           <ProfileSectionLink
-            text="Verify your phone number"
+            text={currentUser.phoneNumber ? 'Update your phone number' : 'Verify your phone number'}
             onPress={navigatePhoneVerification}
           />
           <ProfileSectionLink
