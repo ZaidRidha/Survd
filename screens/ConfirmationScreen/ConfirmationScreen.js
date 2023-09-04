@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, Dimensions, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Dimensions,  } from 'react-native';
 import React from 'react';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useNavigation, useRoute, CommonActions } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;

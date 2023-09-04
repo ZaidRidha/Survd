@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   RefreshControl,
   Dimensions,
-  SafeAreaView,
   Image,
 } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
@@ -23,6 +22,7 @@ import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
 import BarberCard from '../../components/BarberCard/BarberCard';
 import useFont from '../../useFont';
 import { database } from '../../firebaseConfig';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const WIDTH = Dimensions.get('window').width;
 // const HEIGHT = Dimensions.get('window').height;

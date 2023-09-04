@@ -1,10 +1,11 @@
-import { StyleSheet, View, SafeAreaView, TouchableOpacity, FlatList, Animated } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, FlatList, Animated } from 'react-native';
 import React, { useState, useRef } from 'react';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import OnboardingItem from '../../components/OnboardingItem';
 import Onboardingpaginator from '../../components/Onboardingpaginator';
 import OnboardingButton from '../../components/OnboardingButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BusinessOnboarding = () => {
   const navigation = useNavigation();

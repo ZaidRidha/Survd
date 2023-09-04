@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  SafeAreaView,
   Linking,
   FlatList,
   Dimensions,
@@ -20,6 +19,7 @@ import { useSelector } from 'react-redux';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { selectCurrentBasket, selectCurrentVendor } from '../../slices/locSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { database } from '../../firebaseConfig';
 import useFont from '../../useFont';

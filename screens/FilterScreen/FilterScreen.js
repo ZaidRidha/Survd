@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions,} from 'react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Slider from '@react-native-community/slider';
 

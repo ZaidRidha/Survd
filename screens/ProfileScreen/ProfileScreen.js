@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Button, Icon } from '@rneui/themed';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import LoginScreen from '../LogInScreen';
 import { authentication } from '../../firebaseConfig';
