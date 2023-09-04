@@ -1,15 +1,12 @@
-import { StyleSheet, View, TouchableOpacity, FlatList, Animated } from 'react-native';
+import { StyleSheet, View, FlatList, Animated } from 'react-native';
 import React, { useState, useRef } from 'react';
-import { Icon } from '@rneui/themed';
-import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import OnboardingItem from '../../components/OnboardingItem';
 import Onboardingpaginator from '../../components/Onboardingpaginator';
 import OnboardingButton from '../../components/OnboardingButton';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import BackNavigation from '../../components/BackNavigation/BackNavigation';
 
 const BusinessOnboarding = () => {
-  const navigation = useNavigation();
-
   const scrollX = useRef(new Animated.Value(0)).current;
   const [currentIndex, setcurrentIndex] = useState(0);
   const slidesRef = useRef(null);
@@ -17,10 +14,6 @@ const BusinessOnboarding = () => {
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     setcurrentIndex(viewableItems[0].index);
   }).current;
-
-  const goBack = () => {
-    navigation.goBack();
-  };
 
   const scrollTo = () => {
     if (currentIndex < slides.length - 1) {
@@ -67,14 +60,7 @@ const BusinessOnboarding = () => {
   return (
     <SafeAreaView style={styles.root}>
       <View className="self-start">
-        <TouchableOpacity onPress={goBack}>
-          <Icon
-            type="entypo"
-            name="chevron-left"
-            color="black"
-            size={38}
-          />
-        </TouchableOpacity>
+        <BackNavigation />
       </View>
 
       <View style={{ flex: 4 }}>

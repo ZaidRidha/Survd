@@ -53,7 +53,8 @@ const PhoneScreen = () => {
         return;
       }
       const phoneProvider = new PhoneAuthProvider(authentication);
-      phoneProvider.verifyPhoneNumber({ phoneNumber }, recaptchaVerifier.current).then(setVerificationId);
+      const res = await phoneProvider.verifyPhoneNumber({ phoneNumber }, recaptchaVerifier.current);
+      setVerificationId(res);
     } catch (error) {
       console.log(error);
     }
@@ -61,7 +62,6 @@ const PhoneScreen = () => {
 
   const confirmCode = async () => {
     try {
-      console.log(authentication.currentUser);
       const credential = PhoneAuthProvider.credential(verificationId, value);
       const currUser = authentication.currentUser;
       updatePhoneNumber(currUser, credential);
@@ -71,13 +71,16 @@ const PhoneScreen = () => {
         phoneNumber,
       });
 
-      alert('Login successful');
-      navigation.replace('home');
+      alert('Phone verification successful');
+      navigation.goBack();
     } catch (error) {
       console.error(error);
       alert(error.message);
     }
   };
+  const isValidPhoneNumber = !!phoneNumber?.split(' ')[1];
+  const isValidCode = value.length < CELL_COUNT;
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <KeyboardAvoidingView
@@ -105,6 +108,7 @@ const PhoneScreen = () => {
         <Button
           title="Send Confirmation"
           buttonStyle={{ backgroundColor: 'rgba(39, 39, 39, 1)' }}
+          disabled={!isValidPhoneNumber}
           containerStyle={{
             width: '80%',
             marginHorizontal: 50,
@@ -131,19 +135,20 @@ const PhoneScreen = () => {
           rootStyle={styles.codeFieldRoot}
           keyboardType="number-pad"
           textContentType="oneTimeCode"
-          renderCell={({ index, symbol, isFocused }) => (
+          renderCell={({ index, symbol, isFocused: focused }) => (
             <View
               // Make sure that you pass onLayout={getCellOnLayoutHandler(index)} prop to root component of "Cell"
               onLayout={getCellOnLayoutHandler(index)}
               key={index}
-              style={[styles.cellRoot, isFocused && styles.focusCell]}>
-              <Text style={styles.cellText}>{symbol || (isFocused ? <Cursor /> : null)}</Text>
+              style={[styles.cellRoot, focused && styles.focusCell]}>
+              <Text style={styles.cellText}>{symbol || (focused ? <Cursor /> : null)}</Text>
             </View>
           )}
         />
         <Button
           title="Continue"
           onPress={confirmCode}
+          disabled={isValidCode}
           buttonStyle={{ backgroundColor: 'rgba(39, 39, 39, 1)' }}
           containerStyle={{
             width: '80%',
@@ -163,13 +168,16 @@ const PhoneScreen = () => {
 
         <CountryPicker
           show={showCountryPicker}
-          styles={countryPickerStyles.touchFlag}
-          searchMessage="Some search message here"
+          style={countryPickerStyles}
+          enableModalAvoiding
+          onBackdropPress={() => {
+            setLoading(false);
+            setShowCountryPicker(false);
+          }}
           pickerButtonOnPress={(item) => {
             setCountryCode(item.dial_code);
             setLoading(false);
             setShowCountryPicker(false);
-            console.log(item.flag);
           }}
         />
       </KeyboardAvoidingView>
@@ -255,9 +263,8 @@ const styles = StyleSheet.create({
 });
 
 const countryPickerStyles = StyleSheet.create({
-  touchFlag: {
-    width: 30,
-    height: 20,
+  modal: {
+    height: 340,
   },
 });
 export default PhoneScreen;

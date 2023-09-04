@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Button, Icon } from '@rneui/themed';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
@@ -8,9 +8,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import LoginScreen from '../LogInScreen';
 import { authentication } from '../../firebaseConfig';
+import ProfileSectionLink from './ProfileSectionLink';
+import ProfileSectionHeader from './ProfileSectionHeader';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
+  const { currentUser } = authentication;
 
   useEffect(() => {
     onAuthStateChanged(authentication, (user) => {
@@ -32,11 +35,16 @@ const ProfileScreen = () => {
       })
       .catch((error) => {
         // An error happened.
+        console.error(error);
       });
   };
 
   const navigateBusiness = () => {
     navigation.navigate('BusinessOnboarding');
+  };
+
+  const navigatePhoneVerification = () => {
+    navigation.navigate('Phone');
   };
 
   return (
@@ -59,357 +67,66 @@ const ProfileScreen = () => {
             </Text>
           </View>
 
-          <Text
-            style={styles.PoppinsMed}
-            className="mt-5  text-xl">
-            Account Settings
-          </Text>
-          <View className="flex flex-row mt-4 items-center justify-between">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base  ">
-              Personal Information
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
+          <ProfileSectionHeader text="Account Settings" />
+          <ProfileSectionLink
+            text={currentUser.phoneNumber ? 'Update your phone number' : 'Verify your phone number'}
+            onPress={navigatePhoneVerification}
+          />
+          <ProfileSectionLink
+            text="Personal information"
+            onPress={() => {}}
+          />
+          <ProfileSectionLink
+            text="Payment methods"
+            onPress={() => {}}
+          />
+          <ProfileSectionLink
+            text="Notification Settings"
+            onPress={() => {}}
+          />
+          <ProfileSectionLink
+            text="Privacy Settings"
+            onPress={() => {}}
+          />
 
-          <View className="flex flex-row mt-4 items-center justify-between">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base  ">
-              Payment Methods
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
+          <ProfileSectionHeader text="Business" />
+          <ProfileSectionLink
+            text="My business"
+            onPress={navigateBusiness}
+          />
+          <ProfileSectionHeader text="Referral" />
+          <ProfileSectionLink
+            text="Refer a vendor/user"
+            onPress={() => {}}
+          />
 
-          <View className="flex flex-row mt-4 items-center justify-between">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base  ">
-              Notification Settings
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
+          <ProfileSectionHeader text="Support" />
+          <ProfileSectionLink
+            text="How to use"
+            onPress={() => {}}
+          />
+          <ProfileSectionLink
+            text="Health & Safety"
+            onPress={() => {}}
+          />
+          <ProfileSectionLink
+            text="Get Help"
+            onPress={() => {}}
+          />
+          <ProfileSectionLink
+            text="Contact us"
+            onPress={() => {}}
+          />
 
-          <View className="flex flex-row mt-4 items-center justify-between">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base  ">
-              Privacy Settings
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
-
-          <Text
-            style={styles.PoppinsMed}
-            className="mt-5  text-xl">
-            Business
-          </Text>
-          <TouchableOpacity onPress={navigateBusiness}>
-            <View className="flex flex-row mt-4 items-center justify-between">
-              <Text
-                style={styles.PoppinsReg}
-                className="self-center text-base  ">
-                My Business
-              </Text>
-              <Icon
-                type="antdesign"
-                name="right"
-                color="black"
-                size={24}
-              />
-            </View>
-          </TouchableOpacity>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
-
-          <Text
-            style={styles.PoppinsMed}
-            className="mt-5 text-xl">
-            Referral
-          </Text>
-          <View className="flex flex-row mt-4 items-center justify-between">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base  ">
-              Refer a vendor/user
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
-
-          <Text
-            style={styles.PoppinsMed}
-            className="mt-5  text-xl">
-            Support
-          </Text>
-
-          <View className="flex flex-row mt-4 items-center justify-between">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base  ">
-              How to use
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
-
-          <View className="flex flex-row mt-4 items-center justify-between">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base ">
-              Health & Safety
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
-
-          <View className="flex flex-row mt-4 items-center justify-between">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base ">
-              Get Help
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
-
-          <View className="flex flex-row mt-4 items-center justify-between">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base ">
-              Contact Us
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
-
-          <Text
-            style={styles.PoppinsMed}
-            className="mt-5  text-xl">
-            Legal
-          </Text>
-
-          <View className="flex flex-row mt-4 items-center justify-between">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base  ">
-              Terms of service
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-                marginBottom: 5,
-              }}
-            />
-          </View>
-
-          <View className="flex flex-row mt-4 items-center justify-between ">
-            <Text
-              style={styles.PoppinsReg}
-              className="self-center text-base  ">
-              Privacy Policy
-            </Text>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={24}
-            />
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View
-              style={{
-                flex: 1,
-                height: 1,
-                backgroundColor: 'lightgray',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                marginTop: 5,
-              }}
-            />
-          </View>
+          <ProfileSectionHeader text="Legal" />
+          <ProfileSectionLink
+            text="Terms of service"
+            onPress={() => {}}
+          />
+          <ProfileSectionLink
+            text="Privacy Policy"
+            onPress={() => {}}
+          />
 
           <View style={{ marginBottom: 10, marginTop: 10 }}>
             <Button
@@ -443,18 +160,6 @@ const styles = StyleSheet.create({
 
   inner: {
     padding: 10,
-  },
-
-  PoppinsReg: {
-    fontFamily: 'PoppinsReg',
-  },
-
-  PoppinsLight: {
-    fontFamily: 'PoppinsLight',
-  },
-
-  PoppinsBold: {
-    fontFamily: 'PoppinsBold',
   },
 
   PoppinsMed: {

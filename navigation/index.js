@@ -24,6 +24,7 @@ import BusinessOnBoarding from '../screens/BusinessOnboarding/BusinessOnboarding
 import FullMapScreen from '../screens/FullMapScreen/FullMapScreen';
 import FilterScreen from '../screens/FilterScreen/FilterScreen';
 import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
+import BackNavigation from '../components/BackNavigation/BackNavigation';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -172,7 +173,7 @@ const Navigation = () => {
           options={{
             headerShown: true,
             headerTintColor: '#000000',
-            headerLeft: null,
+            headerLeft: BackNavigation,
             title: 'Verification',
           }}
         />
