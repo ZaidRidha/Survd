@@ -36,28 +36,28 @@ const SignUpScreen = () => {
       alert(`email ${user.email} created.`);
       navigation.replace('Phone');
     } catch (error) {
-      let errorMessage = 'An unknown error occurred';
+      let newErrorMessage = 'An unknown error occurred';
       switch (error.code) {
         case 'auth/internal-error':
-          errorMessage = 'The email address is already in use by another account.';
+          newErrorMessage = 'The email address is already in use by another account.';
           break;
         case 'auth/invalid-email':
-          errorMessage = 'The email address is invalid.';
+          newErrorMessage = 'The email address is invalid.';
           break;
         case 'auth/weak-password':
-          errorMessage = 'The password is too weak.';
+          newErrorMessage = 'The password is too weak.';
           break;
         case 'auth/user-not-found':
-          errorMessage = 'The user with that email address was not found.';
+          newErrorMessage = 'The user with that email address was not found.';
           break;
         case 'auth/wrong-password':
-          errorMessage = 'The password is incorrect.';
+          newErrorMessage = 'The password is incorrect.';
           break;
         default:
-          errorMessage = error.message;
+          newErrorMessage = error.message;
       }
       setIsError(true);
-      setErrorMessage(errorMessage);
+      setErrorMessage(newErrorMessage);
       setTimeout(() => {
         setIsError(false);
       }, 3000);
