@@ -147,7 +147,7 @@ const PaymentScreen = () => {
             <Text
               style={styles.poppinsReg}
               className="text-lg">
-              Ismail's Barbershop
+              {""} Ismail's Barbershop
             </Text>
           </View>
         </TouchableOpacity>
@@ -183,7 +183,7 @@ const PaymentScreen = () => {
           <Text
             style={styles.poppinsReg}
             className="text-lg">
-            {formattedDate}, {selectedTimeslot}
+            {""} {formattedDate}, {selectedTimeslot}
           </Text>
         </View>
 

@@ -106,11 +106,15 @@ const BarberCard = ({ cardData }) => {
         style={styles.headerContainer}
         className>
         <View className="flex flex-row items-center justify-between">
+
+          <View  style={[{ width: 200 }]} className = "flex flex-row items-center">
           <Text
             className="text-lg"
-            style={[styles.poppinsMed, { width: 200 }]}>
-            {name}
+            style={[styles.poppinsMed]}>
+            {name} {""}
           </Text>
+          {/* <Icon type="entypo" name="scissors" color="black" size={18} /> */}
+          </View>
 
           <View>
             <View className="flex flex-row items-center">
@@ -306,7 +310,7 @@ const BarberCard = ({ cardData }) => {
                 <Text
                   className="text-sm text-blue-600"
                   style={styles.figreg}>
-                  14:00
+                  {""} 14:00
                 </Text>
               </>
             )}
@@ -323,7 +327,7 @@ const BarberCard = ({ cardData }) => {
             <Text
               className="text-sm"
               style={styles.figlight}>
-              5.0
+              {""} 5.0 {""}
               <Text
                 className="text-sm"
                 style={styles.figreg}>
@@ -337,26 +341,26 @@ const BarberCard = ({ cardData }) => {
           <Text
             className="text-sm"
             style={styles.figreg}>
+              <Text
+              className="text-sm text-gray-700"
+              style={styles.poppinsMed}>
+              Barber ·
+            </Text>
             <Text
               className="text-sm text-purple-800"
               style={styles.figreg}>
-              After Hours
+              {""} After Hours {""}
             </Text>
             <Text
               className="text-sm text-gray-500"
               style={styles.figreg}>
               · Fades
             </Text>
-            <Text
-              className="text-sm text-gray-500"
-              style={styles.figreg}>
-              · Afro
-            </Text>
           </Text>
           <Text
             className="text-sm "
             style={styles.figreg}>
-            ££ ·
+            ££ · {""}
             <Text
               className="text-sm text-gray-500"
               style={styles.figreg}>

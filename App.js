@@ -12,7 +12,7 @@ import logo from './assets/images/UpdatedLogo.jpg';
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const fontsLoaded = useCustomFonts();
-  //LogBox.ignoreAllLogs(true);
+  LogBox.ignoreAllLogs(true);
 
   useEffect(() => {
     setTimeout(() => {
