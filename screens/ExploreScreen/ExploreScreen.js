@@ -5,7 +5,7 @@ import { getDocs, query, collection } from 'firebase/firestore';
 import { useNavigation, useScrollToTop } from '@react-navigation/native';
 import Fuse from 'fuse.js';
 import { database } from '../../firebaseConfig';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const WIDTH = Dimensions.get('window').width;
