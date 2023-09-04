@@ -1,10 +1,12 @@
-import { View, Text, ScrollView, Image, SafeAreaView, StyleSheet, Dimensions, FlatList,TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, StyleSheet, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { SearchBar, Card, Icon } from '@rneui/themed';
 import { getDocs, query, collection } from 'firebase/firestore';
 import { useNavigation, useScrollToTop } from '@react-navigation/native';
 import Fuse from 'fuse.js';
 import { database } from '../../firebaseConfig';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -46,6 +48,7 @@ const ExploreScreen = () => {
   };
 
   return (
+
     <SafeAreaView style={styles.root}>
       <View className="flex flex-row items-center ">
         <SearchBar
@@ -213,6 +216,7 @@ const ExploreScreen = () => {
         ) : null}
       </ScrollView>
     </SafeAreaView>
+
   );
 };
 

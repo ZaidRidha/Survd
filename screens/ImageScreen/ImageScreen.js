@@ -5,12 +5,12 @@ import {
   Dimensions,
   FlatList,
   Image,
-  SafeAreaView,
   TouchableWithoutFeedback,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState, useRef } from 'react';
 import { Icon } from '@rneui/themed';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const WIDTH = Dimensions.get('window').width;
 

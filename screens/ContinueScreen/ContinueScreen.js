@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, SafeAreaView, FlatList } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Icon, Button } from '@rneui/themed';
@@ -10,6 +10,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import Toast from 'react-native-root-toast';
 import * as Clipboard from 'expo-clipboard';
 import { database } from '../../firebaseConfig';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { selectCurrentBasket, removeFromBasket } from '../../slices/locSlice';
 
 const WIDTH = Dimensions.get('window').width;

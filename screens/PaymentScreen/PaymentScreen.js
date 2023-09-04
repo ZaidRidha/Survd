@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   TouchableOpacity,
   Linking,
   ScrollView,
@@ -20,6 +19,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { database } from '../../firebaseConfig';
 import { selectCurrentBasket } from '../../slices/locSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PaymentScreen = () => {
   const auth = getAuth();

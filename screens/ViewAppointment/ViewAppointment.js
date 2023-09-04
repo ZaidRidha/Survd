@@ -2,7 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   Dimensions,
   TouchableWithoutFeedback,
   ScrollView,
@@ -12,6 +11,7 @@ import React, { useState } from 'react';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
