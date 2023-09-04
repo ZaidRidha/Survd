@@ -553,7 +553,7 @@ const ContinueScreen = () => {
                   <Text
                     className="text-gray-600 text-sm"
                     style={styles.poppinsReg}>
-                    Duration:
+                    Duration: {""}
                     {service[0].duration +
                       (service[0].extras
                         ? service[0].extras.reduce(
@@ -561,7 +561,7 @@ const ContinueScreen = () => {
                             0
                           )
                         : 0)}
-                    minutes
+                    {""} Minutes
                   </Text>
                 )}
               </View>

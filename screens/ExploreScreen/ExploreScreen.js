@@ -1,8 +1,8 @@
-import { View, Text, ScrollView, Image, SafeAreaView, StyleSheet, Dimensions, FlatList } from 'react-native';
+import { View, Text, ScrollView, Image, SafeAreaView, StyleSheet, Dimensions, FlatList,TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { SearchBar, Card, Icon } from '@rneui/themed';
 import { getDocs, query, collection } from 'firebase/firestore';
-
+import { useNavigation, useScrollToTop } from '@react-navigation/native';
 import Fuse from 'fuse.js';
 import { database } from '../../firebaseConfig';
 
@@ -11,6 +11,12 @@ const WIDTH = Dimensions.get('window').width;
 const ExploreScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const navigation = useNavigation();
+
+  const navigateFilter = () => {
+    navigation.navigate('FilterScreen');
+  };
+
 
   const performSearch = async (text) => {
     try {
@@ -60,12 +66,14 @@ const ExploreScreen = () => {
           inputStyle={{ fontSize: 14, color: 'black' }}
           clearIcon={{ size: 25 }}
         />
-        <Icon
-          type="material-community"
-          name="tune-variant"
-          color="black"
-          size={24}
-        />
+        <TouchableOpacity onPress={navigateFilter}>
+          <Icon
+            type="material-community"
+            name="tune-variant"
+            color="black"
+            size={24}
+          />
+        </TouchableOpacity>
       </View>
       <ScrollView style={styles.inner}>
         {searchResults.length > 0 ? (
@@ -135,10 +143,70 @@ const ExploreScreen = () => {
               <Card containerStyle={styles.cardContainer}>
                 <Card.Image
                   style={styles.cardImage}
-                  source={require('../../assets/images/CategoryIcon.png')}
+                  source={require('../../assets/images/hairstylistplaceholder.jpg')}
+
                 />
                 <Card.Divider />
-                <Card.Title>Barber</Card.Title>
+                <Card.Title>Hairstylist</Card.Title>
+              </Card>
+            </View>
+            <View className="flex flex-row items-center my-5">
+              <Card containerStyle={styles.cardContainer}>
+                <Card.Image
+                  style={styles.cardImage}
+                  source={require('../../assets/images/nailsplaceholder.png')}
+                />
+                <Card.Divider />
+                <Card.Title>Nails</Card.Title>
+              </Card>
+
+              <Card containerStyle={styles.cardContainer}>
+                <Card.Image
+                  style={styles.cardImage}
+                  source={require('../../assets/images/makeupplaceholder.jpg')}
+                />
+                <Card.Divider />
+                <Card.Title>Makeup</Card.Title>
+              </Card>
+            </View>
+
+            <View className="flex flex-row items-center my-5">
+              <Card containerStyle={styles.cardContainer}>
+                <Card.Image
+                  style={styles.cardImage}
+                  source={require('../../assets/images/massageplaceholder.jpg')}
+                />
+                <Card.Divider />
+                <Card.Title>Massage</Card.Title>
+              </Card>
+
+              <Card containerStyle={styles.cardContainer}>
+                <Card.Image
+                  style={styles.cardImage}
+                  source={require('../../assets/images/laundryplaceholder.jpg')}
+                />
+                <Card.Divider />
+                <Card.Title>Laundry</Card.Title>
+              </Card>
+            </View>
+
+            <View className="flex flex-row items-center my-5">
+              <Card containerStyle={styles.cardContainer}>
+                <Card.Image
+                  style={styles.cardImage}
+                  source={require('../../assets/images/cleaningplaceholder.jpg')}
+                />
+                <Card.Divider />
+                <Card.Title>Cleaning Services</Card.Title>
+              </Card>
+
+              <Card containerStyle={styles.cardContainer}>
+                <Card.Image
+                  style={styles.cardImage}
+                  source={require('../../assets/images/tattooplaceholder.jpg')}
+                />
+                <Card.Divider />
+                <Card.Title>Tattoos</Card.Title>
               </Card>
             </View>
           </>
@@ -201,6 +269,7 @@ const styles = StyleSheet.create({
   },
 
   cardImage: {
+
     width: WIDTH * 0.4,
   },
 
