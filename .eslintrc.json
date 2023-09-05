@@ -12,6 +12,8 @@
     "sourceType": "module"
   },
   "rules": {
+    "import/no-unresolved": "error",
+    "react/jsx-curly-brace-presence": 0,
     "react/prop-types": 0,
     "unused-imports/no-unused-imports": "error",
     "no-use-before-define": "off",
@@ -53,5 +55,22 @@
     ],
     "no-console": 1,
     "import/no-cycle": "error"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
+      },
+      "alias": {
+        "map": [
+          ["assets", "./assets"],
+          ["components", "./components"],
+          ["navigation", "./navigation"],
+          ["screens", "./screens"],
+          ["slices", "./slices"]
+        ],
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
+      }
+    }
   }
 }

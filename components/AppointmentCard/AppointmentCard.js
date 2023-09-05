@@ -3,6 +3,7 @@ import { Icon } from '@rneui/themed';
 import { StyleSheet, Text, View, Dimensions, TouchableWithoutFeedback, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { updateDoc, doc } from 'firebase/firestore';
+import { SCREENS } from 'navigation/navigationPaths';
 import { database } from '../../firebaseConfig';
 
 const WIDTH = Dimensions.get('window').width;
@@ -44,7 +45,7 @@ const AppointmentCard = ({ appointmentData, showHide, hideablePage, promptUser }
   }
 
   const handleNavigate = () => {
-    navigation.navigate('ViewAppointment', {
+    navigation.navigate(SCREENS.VIEW_APPOINTMENT, {
       barberName: appointmentData.barberName,
       date: appointmentData.date,
       duration: appointmentData.duration,

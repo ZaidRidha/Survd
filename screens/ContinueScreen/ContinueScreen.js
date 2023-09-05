@@ -9,8 +9,9 @@ import { getDocs, query, collection, onSnapshot, deleteDoc } from 'firebase/fire
 import CalendarPicker from 'react-native-calendar-picker';
 import Toast from 'react-native-root-toast';
 import * as Clipboard from 'expo-clipboard';
-import { database } from '../../firebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { SCREENS } from 'navigation/navigationPaths';
+import { database } from '../../firebaseConfig';
 import { selectCurrentBasket, removeFromBasket } from '../../slices/locSlice';
 
 const WIDTH = Dimensions.get('window').width;
@@ -279,7 +280,7 @@ const ContinueScreen = () => {
         setDisplayError(false);
       }, 3000); // 3000 milliseconds = 3 seconds
     } else {
-      navigation.navigate('PaymentScreen', {
+      navigation.navigate(SCREENS.PAYMENT_SCREEN, {
         selectedTimeslot,
         address,
         postCode,
@@ -554,7 +555,7 @@ const ContinueScreen = () => {
                   <Text
                     className="text-gray-600 text-sm"
                     style={styles.poppinsReg}>
-                    Duration: {""}
+                    Duration: {''}
                     {service[0].duration +
                       (service[0].extras
                         ? service[0].extras.reduce(
@@ -562,7 +563,7 @@ const ContinueScreen = () => {
                             0
                           )
                         : 0)}
-                    {""} Minutes
+                    {''} Minutes
                   </Text>
                 )}
               </View>

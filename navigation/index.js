@@ -1,9 +1,10 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Icon } from '@rneui/themed';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SCREENS } from 'navigation/navigationPaths';
+import PressProfileHeaderRight from 'screens/PressProfile/PressProfileHeaderRight';
 import LoginScreen from '../screens/LogInScreen/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
@@ -25,6 +26,14 @@ import FullMapScreen from '../screens/FullMapScreen/FullMapScreen';
 import FilterScreen from '../screens/FilterScreen/FilterScreen';
 import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
 import BackNavigation from '../components/BackNavigation/BackNavigation';
+import {
+  ACTIVE_COLOR,
+  AppointmentsTabIcon,
+  ExploreTabIcon,
+  HomeTabIcon,
+  INACTIVE_COLOR,
+  ProfileTabIcon,
+} from './navigationIcons';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,103 +51,43 @@ const BottomTabNavigator = () => {
         },
       }}>
       <Tab.Screen
-        name="Home"
-        component={HomeScreen}
+        name={SCREENS.HOME}
+        component={TAB_SCREENS.home.component}
         options={{
-          tabBarActiveTintColor: 'black',
-          tabBarInactiveTintColor: 'gray',
+          tabBarActiveTintColor: ACTIVE_COLOR,
+          tabBarInactiveTintColor: INACTIVE_COLOR,
           unmountOnBlur: true,
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <Icon
-                type="antdesign"
-                name="home"
-                size={34}
-                color="black"
-              />
-            ) : (
-              <Icon
-                type="antdesign"
-                name="home"
-                size={30}
-                color="gray"
-              />
-            ),
+          tabBarIcon: TAB_SCREENS.home.tabIcon,
         }}
       />
 
       <Tab.Screen
-        name="Explore"
-        component={ExploreScreen}
+        name={SCREENS.EXPLORE}
+        component={TAB_SCREENS.explore.component}
         options={{
-          tabBarActiveTintColor: 'black',
-          tabBarInactiveTintColor: 'gray',
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <Icon
-                type="entypo"
-                name="magnifying-glass"
-                size={34}
-                color="black"
-              />
-            ) : (
-              <Icon
-                type="entypo"
-                name="magnifying-glass"
-                size={30}
-                color="gray"
-              />
-            ),
+          tabBarActiveTintColor: ACTIVE_COLOR,
+          tabBarInactiveTintColor: INACTIVE_COLOR,
+          tabBarIcon: TAB_SCREENS.explore.tabIcon,
         }}
       />
 
       <Tab.Screen
-        name="Appointments"
-        component={AppointmentsScreen}
+        name={SCREENS.APPOINTMENTS}
+        component={TAB_SCREENS.appointments.component}
         options={{
-          tabBarActiveTintColor: 'black',
-          tabBarInactiveTintColor: 'gray',
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <Icon
-                type="antdesign"
-                name="calendar"
-                size={34}
-                color="black"
-              />
-            ) : (
-              <Icon
-                type="antdesign"
-                name="calendar"
-                size={30}
-                color="gray"
-              />
-            ),
+          tabBarActiveTintColor: ACTIVE_COLOR,
+          tabBarInactiveTintColor: INACTIVE_COLOR,
+          tabBarIcon: TAB_SCREENS.appointments.tabIcon,
         }}
       />
 
       <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name={SCREENS.PROFILE}
+        component={TAB_SCREENS.profile.component}
         options={{
-          tabBarActiveTintColor: 'black',
-          tabBarInactiveTintColor: 'gray',
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <Icon
-                type="antdesign"
-                name="user"
-                size={34}
-                color="black"
-              />
-            ) : (
-              <Icon
-                type="antdesign"
-                name="user"
-                size={30}
-                color="gray"
-              />
-            ),
+          tabBarActiveTintColor: ACTIVE_COLOR,
+          tabBarInactiveTintColor: INACTIVE_COLOR,
+          tabBarIcon: TAB_SCREENS.profile.tabIcon,
         }}
       />
     </Tab.Navigator>
@@ -150,16 +99,16 @@ const Navigation = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
-          name="home"
+          name={SCREENS.HOME}
           component={BottomTabNavigator}
         />
 
         <Stack.Screen
-          name="Login"
+          name={SCREENS.LOGIN}
           component={LoginScreen}
         />
         <Stack.Screen
-          name="Register"
+          name={SCREENS.REGISTER}
           component={SignUpScreen}
           options={{
             headerShown: true,
@@ -168,7 +117,7 @@ const Navigation = () => {
           }}
         />
         <Stack.Screen
-          name="Phone"
+          name={SCREENS.PHONE}
           component={PhoneScreen}
           options={{
             headerShown: true,
@@ -178,7 +127,7 @@ const Navigation = () => {
           }}
         />
         <Stack.Screen
-          name="Location"
+          name={SCREENS.LOCATION}
           component={LocationScreen}
           options={{
             headerShown: true,
@@ -194,11 +143,10 @@ const Navigation = () => {
         />
 
         <Stack.Screen
-          name="PressProfile"
+          name={SCREENS.PRESS_PROFILE}
           component={PressProfile}
           options={{
             headerShown: true,
-
             headerBackTitleVisible: true,
             headerBackTitle: ' ',
             headerTitle: ' ',
@@ -208,30 +156,12 @@ const Navigation = () => {
               elevation: 0, // This will remove the border (shadow) in Android
             },
 
-            headerRight: () => (
-              <View className="flex flex-row items-center">
-                <Icon
-                  style={styles.icon}
-                  type="octiicon"
-                  name="report"
-                  size={35}
-                  color="black"
-                />
-
-                <Icon
-                  style={styles.icon}
-                  type="material-community"
-                  name="message-outline"
-                  size={32}
-                  color="black"
-                />
-              </View>
-            ),
+            headerRight: PressProfileHeaderRight,
           }}
         />
 
         <Stack.Screen
-          name="PressService"
+          name={SCREENS.PRESS_SERVICE}
           component={PressService}
           options={{
             headerShown: false,
@@ -244,7 +174,7 @@ const Navigation = () => {
         />
 
         <Stack.Screen
-          name="ContinueScreen"
+          name={SCREENS.CONTINUE_SCREEN}
           component={ContinueScreen}
           options={{
             headerShown: true,
@@ -257,14 +187,14 @@ const Navigation = () => {
         />
 
         <Stack.Screen
-          name="ImageScreen"
+          name={SCREENS.IMAGE_SCREEN}
           component={ImageScreen}
           options={{
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="PaymentScreen"
+          name={SCREENS.PAYMENT_SCREEN}
           component={PaymentScreen}
           options={{
             headerShown: true,
@@ -277,7 +207,7 @@ const Navigation = () => {
         />
 
         <Stack.Screen
-          name="ConfirmationScreen"
+          name={SCREENS.CONFIRMATION_SCREEN}
           component={ConfirmationScreen}
           options={{
             headerShown: false,
@@ -285,13 +215,13 @@ const Navigation = () => {
         />
 
         <Stack.Screen
-          name="ViewAppointment"
+          name={SCREENS.VIEW_APPOINTMENT}
           component={ViewAppointment}
           options={{}}
         />
 
         <Stack.Screen
-          name="SelectPaymentScreen"
+          name={SCREENS.SELECT_PAYMENT_SCREEN}
           component={SelectPaymentScreen}
           options={{
             presentation: 'modal',
@@ -299,7 +229,7 @@ const Navigation = () => {
         />
 
         <Stack.Screen
-          name="FilterScreen"
+          name={SCREENS.FILTER_SCREEN}
           component={FilterScreen}
           options={{
             presentation: 'modal',
@@ -307,7 +237,7 @@ const Navigation = () => {
         />
 
         <Stack.Screen
-          name="BusinessOnboarding"
+          name={SCREENS.BUSINESS_ONBOARDING}
           component={BusinessOnBoarding}
           options={{
             headerShown: false,
@@ -315,13 +245,13 @@ const Navigation = () => {
         />
 
         <Stack.Screen
-          name="FullMapScreen"
+          name={SCREENS.FULL_MAP_SCREEN}
           component={FullMapScreen}
           options={{}}
         />
 
         <Stack.Screen
-          name="NotificationsScreen"
+          name={SCREENS.NOTIFICATIONS_SCREEN}
           component={NotificationsScreen}
           options={{
             headerShown: true,
@@ -340,10 +270,23 @@ const Navigation = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  msgIcon: {
-    marginRight: 5,
-  },
-});
-
 export default Navigation;
+
+const TAB_SCREENS = {
+  home: {
+    component: HomeScreen,
+    tabIcon: HomeTabIcon,
+  },
+  explore: {
+    component: ExploreScreen,
+    tabIcon: ExploreTabIcon,
+  },
+  appointments: {
+    component: AppointmentsScreen,
+    tabIcon: AppointmentsTabIcon,
+  },
+  profile: {
+    component: ProfileScreen,
+    tabIcon: ProfileTabIcon,
+  },
+};

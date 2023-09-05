@@ -4,6 +4,7 @@ import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import { SCREENS } from 'navigation/navigationPaths';
 import CustomButton from '../../components/CustomButton';
 
 import useFont from '../../useFont';
@@ -34,7 +35,7 @@ const SignUpScreen = () => {
         email,
       });
       alert(`email ${user.email} created.`);
-      navigation.replace('Phone');
+      navigation.replace(SCREENS.PHONE);
     } catch (error) {
       let newErrorMessage = 'An unknown error occurred';
       switch (error.code) {
