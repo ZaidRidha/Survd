@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, Dimensions,  } from 'react-native';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import React from 'react';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useNavigation, useRoute, CommonActions } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { SCREENS } from 'navigation/navigationPaths';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -18,7 +19,7 @@ const ConfirmationScreen = () => {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: 'home' }],
+        routes: [{ name: SCREENS.HOME }],
       })
     );
   };

@@ -18,8 +18,9 @@ import { getDocs, collection, onSnapshot } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { selectCurrentBasket, selectCurrentVendor } from '../../slices/locSlice';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { SCREENS } from 'navigation/navigationPaths';
+import { selectCurrentBasket, selectCurrentVendor } from '../../slices/locSlice';
 
 import { database } from '../../firebaseConfig';
 import useFont from '../../useFont';
@@ -97,7 +98,7 @@ const PressProfile = () => {
 
   const pressContinue = () => {
     if (currentBasket.length > 0) {
-      navigation.navigate('ContinueScreen', {
+      navigation.navigate(SCREENS.CONTINUE_SCREEN, {
         lat,
         long,
         barberID: docId,
@@ -115,7 +116,7 @@ const PressProfile = () => {
   const navigateToImageScreen = (index) => {
     const currindex = index;
 
-    navigation.navigate('ImageScreen', {
+    navigation.navigate(SCREENS.IMAGE_SCREEN, {
       carouselData,
       index: currindex,
     });
@@ -206,7 +207,7 @@ const PressProfile = () => {
   const [servicesPressed, setServicesPressed] = useState(true);
 
   const PressService = ({ name, price, duration, description, notes, serviceId }) => {
-    navigation.navigate('PressService', {
+    navigation.navigate(SCREENS.PRESS_SERVICE, {
       name,
       price,
       description,
@@ -363,7 +364,7 @@ const PressProfile = () => {
               <Text
                 style={mobileActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight}
                 className="text-sm">
-                {""} (Mobile)
+                {''} (Mobile)
               </Text>
             </View>
           ) : null}
@@ -378,7 +379,7 @@ const PressProfile = () => {
               <Text
                 style={shopActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight}
                 className="text-sm">
-                {""} (In Shop)
+                {''} (In Shop)
               </Text>
             </View>
           ) : null}
@@ -394,7 +395,7 @@ const PressProfile = () => {
               <Text
                 style={homeActive ? { ...styles.PoppinsLight, color: 'green' } : styles.PoppinsLight}
                 className="text-sm">
-                {""} (Home/Studio)
+                {''} (Home/Studio)
               </Text>
             </View>
           ) : null}
@@ -490,7 +491,7 @@ const PressProfile = () => {
             <Text
               style={styles.PoppinsMed}
               className="text-l">
-              Monday: {""}
+              Monday: {''}
               <Text style={styles.PoppinsReg}>
                 {updatedhours.monstart && updatedhours.monend
                   ? `${updatedhours.monstart}-${updatedhours.monend}`
@@ -500,7 +501,7 @@ const PressProfile = () => {
             <Text
               style={styles.PoppinsMed}
               className="text-l">
-              Tuesday: {""}
+              Tuesday: {''}
               <Text style={styles.PoppinsReg}>
                 {updatedhours.tuestart && updatedhours.tueend
                   ? `${updatedhours.tuestart}-${updatedhours.tueend}`
@@ -510,7 +511,7 @@ const PressProfile = () => {
             <Text
               style={styles.PoppinsMed}
               className="text-l">
-              Wednesday: {""}
+              Wednesday: {''}
               <Text style={styles.PoppinsReg}>
                 {updatedhours.wedstart && updatedhours.wedend
                   ? `${updatedhours.wedstart}-${updatedhours.wedend}`
@@ -520,7 +521,7 @@ const PressProfile = () => {
             <Text
               style={styles.PoppinsMed}
               className="text-l">
-              Thursday: {""}
+              Thursday: {''}
               <Text style={styles.PoppinsReg}>
                 {updatedhours.thustart && updatedhours.thuend
                   ? `${updatedhours.thustart}-${updatedhours.thuend}`
@@ -530,7 +531,7 @@ const PressProfile = () => {
             <Text
               style={styles.PoppinsMed}
               className="text-l">
-              Friday: {""}
+              Friday: {''}
               <Text style={styles.PoppinsReg}>
                 {updatedhours.fristart && updatedhours.friend
                   ? `${updatedhours.fristart}-${updatedhours.friend}`
@@ -540,7 +541,7 @@ const PressProfile = () => {
             <Text
               style={styles.PoppinsMed}
               className="text-l">
-              Saturday: {""}
+              Saturday: {''}
               <Text style={styles.PoppinsReg}>
                 {updatedhours.satstart && updatedhours.satend
                   ? `${updatedhours.satstart}-${updatedhours.satend}`
@@ -550,7 +551,7 @@ const PressProfile = () => {
             <Text
               style={styles.PoppinsMed}
               className="text-l">
-              Sunday: {""}
+              Sunday: {''}
               <Text style={styles.PoppinsReg}>
                 {updatedhours.sunstart && updatedhours.sunend
                   ? `${updatedhours.sunstart}-${updatedhours.sunend}`
@@ -714,22 +715,22 @@ const PressProfile = () => {
         <Text
           style={styles.PoppinsLight}
           className="text-s text-gray-600">
-          This user has a {""}
+          This user has a {''}
           <Text
             style={styles.PoppinsMed}
             className="text-s text-blue-600">
-            £10.00 {""}
+            £10.00 {''}
           </Text>
           Flat Rate cancellation fee
         </Text>
         <Text
           style={styles.PoppinsLight}
           className="text-s text-gray-600">
-          This user has a {""}
+          This user has a {''}
           <Text
             style={styles.PoppinsMed}
             className="text-s text-blue-600">
-            20% {""}
+            20% {''}
           </Text>
           Late fee
         </Text>

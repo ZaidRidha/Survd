@@ -6,6 +6,7 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SCREENS } from 'navigation/navigationPaths';
 import LoginScreen from '../LogInScreen';
 import { authentication } from '../../firebaseConfig';
 import ProfileSectionLink from './ProfileSectionLink';
@@ -40,11 +41,11 @@ const ProfileScreen = () => {
   };
 
   const navigateBusiness = () => {
-    navigation.navigate('BusinessOnboarding');
+    navigation.navigate(SCREENS.BUSINESS_ONBOARDING);
   };
 
   const navigatePhoneVerification = () => {
-    navigation.navigate('Phone');
+    navigation.navigate(SCREENS.PHONE);
   };
 
   return (

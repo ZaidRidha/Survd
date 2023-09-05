@@ -1,13 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  RefreshControl,
-  Dimensions,
-  Image,
-} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, Dimensions, Image } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { Icon, SearchBar } from '@rneui/themed';
 import * as Location from 'expo-location';
@@ -18,11 +9,12 @@ import { doc, getDocs, query, collection, where, onSnapshot, updateDoc, getDoc }
 import { useDispatch } from 'react-redux';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Fuse from 'fuse.js';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { SCREENS } from 'navigation/navigationPaths';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
 import BarberCard from '../../components/BarberCard/BarberCard';
 import useFont from '../../useFont';
 import { database } from '../../firebaseConfig';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const WIDTH = Dimensions.get('window').width;
 // const HEIGHT = Dimensions.get('window').height;
@@ -51,7 +43,7 @@ const HomeScreen = () => {
   };
 
   const navigateFilter = () => {
-    navigation.navigate('FilterScreen');
+    navigation.navigate(SCREENS.FILTER_SCREEN);
   };
 
   const performSearch = async (text) => {
@@ -256,10 +248,10 @@ const HomeScreen = () => {
     }
   };
   const openLocation = () => {
-    navigation.navigate('Location');
+    navigation.navigate(SCREENS.LOCATION);
   };
   const openNotifications = () => {
-    navigation.navigate('NotificationsScreen');
+    navigation.navigate(SCREENS.NOTIFICATIONS_SCREEN);
   };
 
   return (

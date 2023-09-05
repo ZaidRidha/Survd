@@ -2,11 +2,11 @@ import { View, Text, ScrollView, Image, StyleSheet, Dimensions, FlatList, Toucha
 import React, { useState } from 'react';
 import { SearchBar, Card, Icon } from '@rneui/themed';
 import { getDocs, query, collection } from 'firebase/firestore';
-import { useNavigation, useScrollToTop } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Fuse from 'fuse.js';
-import { database } from '../../firebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { SCREENS } from 'navigation/navigationPaths';
+import { database } from '../../firebaseConfig';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -16,9 +16,8 @@ const ExploreScreen = () => {
   const navigation = useNavigation();
 
   const navigateFilter = () => {
-    navigation.navigate('FilterScreen');
+    navigation.navigate(SCREENS.FILTER_SCREEN);
   };
-
 
   const performSearch = async (text) => {
     try {
@@ -48,7 +47,6 @@ const ExploreScreen = () => {
   };
 
   return (
-
     <SafeAreaView style={styles.root}>
       <View className="flex flex-row items-center ">
         <SearchBar
@@ -147,7 +145,6 @@ const ExploreScreen = () => {
                 <Card.Image
                   style={styles.cardImage}
                   source={require('../../assets/images/hairstylistplaceholder.jpg')}
-
                 />
                 <Card.Divider />
                 <Card.Title>Hairstylist</Card.Title>
@@ -216,7 +213,6 @@ const ExploreScreen = () => {
         ) : null}
       </ScrollView>
     </SafeAreaView>
-
   );
 };
 
@@ -273,7 +269,6 @@ const styles = StyleSheet.create({
   },
 
   cardImage: {
-
     width: WIDTH * 0.4,
   },
 

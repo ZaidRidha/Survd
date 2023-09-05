@@ -17,9 +17,10 @@ import Toast from 'react-native-root-toast';
 import moment from 'moment';
 import { collection, addDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { SCREENS } from 'navigation/navigationPaths';
 import { database } from '../../firebaseConfig';
 import { selectCurrentBasket } from '../../slices/locSlice';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PaymentScreen = () => {
   const auth = getAuth();
@@ -75,7 +76,7 @@ const PaymentScreen = () => {
           index: 0,
           routes: [
             {
-              name: 'ConfirmationScreen',
+              name: SCREENS.CONFIRMATION_SCREEN,
               params: {
                 address,
                 postCode,
@@ -101,7 +102,7 @@ const PaymentScreen = () => {
   };
 
   const selectPayment = () => {
-    navigation.navigate('SelectPaymentScreen');
+    navigation.navigate(SCREENS.SELECT_PAYMENT_SCREEN);
   };
 
   const handleLocationPress = async () => {
@@ -147,7 +148,7 @@ const PaymentScreen = () => {
             <Text
               style={styles.poppinsReg}
               className="text-lg">
-              {""} Ismail's Barbershop
+              {''} Ismail's Barbershop
             </Text>
           </View>
         </TouchableOpacity>
@@ -183,7 +184,7 @@ const PaymentScreen = () => {
           <Text
             style={styles.poppinsReg}
             className="text-lg">
-            {""} {formattedDate}, {selectedTimeslot}
+            {''} {formattedDate}, {selectedTimeslot}
           </Text>
         </View>
 

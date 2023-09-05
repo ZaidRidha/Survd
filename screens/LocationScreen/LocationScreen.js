@@ -7,6 +7,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import * as Location from 'expo-location';
+import { SCREENS } from 'navigation/navigationPaths';
 import { database } from '../../firebaseConfig';
 
 const WIDTH = Dimensions.get('window').width;
@@ -24,7 +25,7 @@ const LocationScreen = () => {
   const [address, setAddress] = useState(null);
 
   const handleMapPress = () => {
-    navigation.navigate('FullMapScreen');
+    navigation.navigate(SCREENS.FULL_MAP_SCREEN);
   };
 
   /*   useEffect(() => {

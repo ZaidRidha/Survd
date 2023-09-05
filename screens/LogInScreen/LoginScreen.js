@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { SCREENS } from 'navigation/navigationPaths';
 import useFont from '../../useFont';
 import CustomButton from '../../components/CustomButton';
 import logo from '../../assets/images/boxlogo.png';
@@ -93,7 +94,7 @@ const LoginScreen = () => {
 
   const onSignupPressed = () => {
     console.warn('Signup');
-    navigation.navigate('Register');
+    navigation.navigate(SCREENS.REGISTER);
   };
 
   return (

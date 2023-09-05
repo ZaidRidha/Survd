@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image, FlatList, Pressable, Dimensions } from '
 import React, { useState, useRef, useEffect } from 'react';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
+import { SCREENS } from 'navigation/navigationPaths';
 
 const HEIGHT = 270;
 const WIDTH = Dimensions.get('window').width;
@@ -67,7 +68,7 @@ const BarberCard = ({ cardData }) => {
   ];
 
   const openProfile = () => {
-    navigation.navigate('PressProfile', {
+    navigation.navigate(SCREENS.PRESS_PROFILE, {
       name,
       username,
       lat,
@@ -106,14 +107,15 @@ const BarberCard = ({ cardData }) => {
         style={styles.headerContainer}
         className>
         <View className="flex flex-row items-center justify-between">
-
-          <View  style={[{ width: 200 }]} className = "flex flex-row items-center">
-          <Text
-            className="text-lg"
-            style={[styles.poppinsMed]}>
-            {name} {""}
-          </Text>
-          {/* <Icon type="entypo" name="scissors" color="black" size={18} /> */}
+          <View
+            style={[{ width: 200 }]}
+            className="flex flex-row items-center">
+            <Text
+              className="text-lg"
+              style={[styles.poppinsMed]}>
+              {name} {''}
+            </Text>
+            {/* <Icon type="entypo" name="scissors" color="black" size={18} /> */}
           </View>
 
           <View>
@@ -310,7 +312,7 @@ const BarberCard = ({ cardData }) => {
                 <Text
                   className="text-sm text-blue-600"
                   style={styles.figreg}>
-                  {""} 14:00
+                  {''} 14:00
                 </Text>
               </>
             )}
@@ -327,7 +329,7 @@ const BarberCard = ({ cardData }) => {
             <Text
               className="text-sm"
               style={styles.figlight}>
-              {""} 5.0 {""}
+              {''} 5.0 {''}
               <Text
                 className="text-sm"
                 style={styles.figreg}>
@@ -341,7 +343,7 @@ const BarberCard = ({ cardData }) => {
           <Text
             className="text-sm"
             style={styles.figreg}>
-              <Text
+            <Text
               className="text-sm text-gray-700"
               style={styles.poppinsMed}>
               Barber ·
@@ -349,7 +351,7 @@ const BarberCard = ({ cardData }) => {
             <Text
               className="text-sm text-purple-800"
               style={styles.figreg}>
-              {""} After Hours {""}
+              {''} After Hours {''}
             </Text>
             <Text
               className="text-sm text-gray-500"
@@ -360,7 +362,7 @@ const BarberCard = ({ cardData }) => {
           <Text
             className="text-sm "
             style={styles.figreg}>
-            ££ · {""}
+            ££ · {''}
             <Text
               className="text-sm text-gray-500"
               style={styles.figreg}>
