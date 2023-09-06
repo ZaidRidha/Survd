@@ -100,17 +100,16 @@ const LoginScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <KeyboardAwareScrollView contentContainerStyle={styles.root}>
-        <Image
-          className="mt-5"
-          source={logo}
-          style={styles.logo}
-        />
-        {loading && (
-          <ActivityIndicator
-            size="large"
-            color="#999999"
-          />
-        )}
+        <View style={{ alignItems: 'center', marginVertical: 40 }}>
+          <Text style={{ ...styles.PoppinsMed, fontSize: 28, textAlign: 'center' }}>
+            You're not currently logged in!
+          </Text>
+          <Text
+            style={{ ...styles.PoppinsMed, fontSize: 18, textAlign: 'center' }}
+            className="text-lg">
+            Login to use all the app's features.
+          </Text>
+        </View>
 
         <Text style={styles.text}>Email</Text>
         <TextInput
@@ -133,6 +132,15 @@ const LoginScreen = () => {
 
         <Text style={styles.forgottext}>Forgot Password?</Text>
         {isError ? <Text style={styles.errortext}>Invalid email/password combination!</Text> : null}
+
+        {loading && (
+          <View className='p-5'>
+          <ActivityIndicator
+            size="large"
+            color="#999999"
+          />
+          </View>
+        )}
 
         <CustomButton
           text="Login"
@@ -243,6 +251,14 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize: 14,
     borderRadius: 5,
+    fontFamily: 'PoppinsReg',
+  },
+
+  PoppinsMed: {
+    fontFamily: 'PoppinsMed',
+  },
+
+  PoppinsReg: {
     fontFamily: 'PoppinsReg',
   },
 

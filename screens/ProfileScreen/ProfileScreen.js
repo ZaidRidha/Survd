@@ -8,24 +8,54 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SCREENS } from 'navigation/navigationPaths';
 import LoginScreen from '../LogInScreen';
-import { authentication } from '../../firebaseConfig';
+import { authentication, database } from '../../firebaseConfig';
 import ProfileSectionLink from './ProfileSectionLink';
 import ProfileSectionHeader from './ProfileSectionHeader';
+import { getDoc, doc, onSnapshot } from 'firebase/firestore';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const { currentUser } = authentication;
+  const [name, setName] = useState(null);
 
   useEffect(() => {
-    onAuthStateChanged(authentication, (user) => {
-      // firebase getting current user
+    const unsubscribeAuth = onAuthStateChanged(authentication, (user) => {
       if (user) {
         console.log(user.uid);
         setIsSignedOut(false);
+
+        const userRef = doc(database, 'users', user.uid);
+
+        // Setting up the real-time listener for the user's name
+        const unsubscribeSnapshot = onSnapshot(
+          userRef,
+          (docSnapshot) => {
+            if (docSnapshot.exists()) {
+              const userData = docSnapshot.data();
+              const userName = userData.name;
+              setName(userName);
+              console.log(userName);
+            } else {
+              console.log('No such user document!');
+            }
+          },
+          (error) => {
+            console.error('Error fetching user data:', error);
+          }
+        );
+
+        // Cleanup the snapshot listener when the component is unmounted
+        return () => {
+          unsubscribeSnapshot();
+        };
       }
     });
-  }, []);
 
+    // Cleanup the auth state change listener when the component is unmounted
+    return () => {
+      unsubscribeAuth();
+    };
+  }, []);
   const [isSignedOut, setIsSignedOut] = useState(true);
 
   const signuserOut = () => {
@@ -44,8 +74,12 @@ const ProfileScreen = () => {
     navigation.navigate(SCREENS.BUSINESS_ONBOARDING);
   };
 
+  const navigatePersonal = () => {
+    navigation.navigate(SCREENS.PERSONAL_SCREEN);
+  };
+
   const navigatePhoneVerification = () => {
-    navigation.navigate(SCREENS.PHONE);
+    navigation.navigate(SCREENS.PHONE, { showBack: true });
   };
 
   return (
@@ -64,7 +98,7 @@ const ProfileScreen = () => {
             <Text
               style={styles.PoppinsMed}
               className="ml-2 text-3xl">
-              Zaid Ridha
+              {name}
             </Text>
           </View>
 
@@ -75,13 +109,13 @@ const ProfileScreen = () => {
           />
           <ProfileSectionLink
             text="Personal information"
-            onPress={() => {}}
+            onPress={navigatePersonal}
           />
-          <ProfileSectionLink
+          {/*           <ProfileSectionLink
             text="Payment methods"
             onPress={() => {}}
-          />
-          <ProfileSectionLink
+          /> */}
+          {/*           <ProfileSectionLink
             text="Notification Settings"
             onPress={() => {}}
           />
@@ -89,13 +123,13 @@ const ProfileScreen = () => {
             text="Privacy Settings"
             onPress={() => {}}
           />
-
+ */}
           <ProfileSectionHeader text="Business" />
           <ProfileSectionLink
             text="My business"
             onPress={navigateBusiness}
           />
-          <ProfileSectionHeader text="Referral" />
+          {/* <ProfileSectionHeader text="Referral" />
           <ProfileSectionLink
             text="Refer a vendor/user"
             onPress={() => {}}
@@ -127,7 +161,7 @@ const ProfileScreen = () => {
           <ProfileSectionLink
             text="Privacy Policy"
             onPress={() => {}}
-          />
+          /> */}
 
           <View style={{ marginBottom: 10, marginTop: 10 }}>
             <Button
