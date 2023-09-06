@@ -19,4 +19,6 @@ export const SCREENS = {
   BUSINESS_ONBOARDING: 'BusinessOnboarding',
   FULL_MAP_SCREEN: 'FullMapScreen',
   NOTIFICATIONS_SCREEN: 'NotificationsScreen',
+  NAME_SCREEN: 'NameScreen',
+  PERSONAL_SCREEN: 'PersonalScreen',
 };

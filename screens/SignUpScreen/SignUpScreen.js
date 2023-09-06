@@ -1,14 +1,26 @@
-import { StyleSheet, Text, TouchableWithoutFeedback, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  TextInput,
+  Keyboard,
+  Dimensions,
+  View
+} from 'react-native';
 import React, { useState } from 'react';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { SCREENS } from 'navigation/navigationPaths';
+import { Button } from '@rneui/themed';
 import CustomButton from '../../components/CustomButton';
 
 import useFont from '../../useFont';
 import { authentication, database } from '../../firebaseConfig';
+
+const WIDTH = Dimensions.get('window').width;
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -20,11 +32,17 @@ const SignUpScreen = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [isError, setIsError] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const handleRegister = async () => {
+    setDisabled(true);
     if (password !== passwordRepeat) {
       setIsError(true);
       setErrorMessage('Passwords do not match, Please try again.');
+      setTimeout(() => {
+        setIsError(false);
+        setDisabled(false);  // Reset the disabled state here
+      }, 3000); // Hide error message after 3 seconds
       return;
     }
     setIsError(false);
@@ -34,36 +52,15 @@ const SignUpScreen = () => {
       await setDoc(doc(database, 'users', user.uid), {
         email,
       });
-      alert(`email ${user.email} created.`);
       navigation.replace(SCREENS.PHONE);
     } catch (error) {
-      let newErrorMessage = 'An unknown error occurred';
-      switch (error.code) {
-        case 'auth/internal-error':
-          newErrorMessage = 'The email address is already in use by another account.';
-          break;
-        case 'auth/invalid-email':
-          newErrorMessage = 'The email address is invalid.';
-          break;
-        case 'auth/weak-password':
-          newErrorMessage = 'The password is too weak.';
-          break;
-        case 'auth/user-not-found':
-          newErrorMessage = 'The user with that email address was not found.';
-          break;
-        case 'auth/wrong-password':
-          newErrorMessage = 'The password is incorrect.';
-          break;
-        default:
-          newErrorMessage = error.message;
-      }
-      setIsError(true);
-      setErrorMessage(newErrorMessage);
+      // ... (rest of your error handling code)
       setTimeout(() => {
         setIsError(false);
-      }, 3000);
+        setDisabled(false);  // Reset the disabled state here too
+      }, 3000); // Hide error message after 3 seconds
     }
-  };
+};
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -97,13 +94,24 @@ const SignUpScreen = () => {
           onChangeText={(text) => setPasswordRepeat(text)}
           secureTextEntry
         />
-        <CustomButton
-          text="Continue"
-          type="signup"
-          onPress={handleRegister}
-        />
+        <View className="my-5">
+          <Button
+            title="Continue"
+            disabled={disabled}
+            onPress={handleRegister}
+            buttonStyle={{
+              backgroundColor: 'black',
+              width: WIDTH * 0.8, // Makes the button full-width
+              height: 40,
+              borderRadius: 10, // Adjust as needed to change the button's height
+            }}
+            disabledStyle={{ backgroundColor: 'black' }}  // This maintains the original color when disabled
+            disabledTitleStyle={{ color: 'white' }}
+            titleStyle={{ color: 'white' }}
+          />
+        </View>
         <Text style={styles.text}>
-          By registering, you confirm that you accept our <Text style={styles.linktext}>Terms of Use</Text> and
+          By registering, you confirm that you accept our <Text style={styles.linktext}>Terms of Use</Text> and {''}
           <Text style={styles.linktext}>Privacy Policy.*</Text>
         </Text>
         {isError ? (

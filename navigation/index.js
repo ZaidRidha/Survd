@@ -24,8 +24,10 @@ import ViewAppointment from '../screens/ViewAppointment/ViewAppointment';
 import BusinessOnBoarding from '../screens/BusinessOnboarding/BusinessOnboarding';
 import FullMapScreen from '../screens/FullMapScreen/FullMapScreen';
 import FilterScreen from '../screens/FilterScreen/FilterScreen';
+import NameScreen from 'screens/NameScreen/NameScreen';
 import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
 import BackNavigation from '../components/BackNavigation/BackNavigation';
+import PersonalScreen from 'screens/PersonalScreen/PersonalScreen';
 import {
   ACTIVE_COLOR,
   AppointmentsTabIcon,
@@ -119,12 +121,7 @@ const Navigation = () => {
         <Stack.Screen
           name={SCREENS.PHONE}
           component={PhoneScreen}
-          options={{
-            headerShown: true,
-            headerTintColor: '#000000',
-            headerLeft: BackNavigation,
-            title: 'Verification',
-          }}
+          options={{}}
         />
         <Stack.Screen
           name={SCREENS.LOCATION}
@@ -247,6 +244,18 @@ const Navigation = () => {
         <Stack.Screen
           name={SCREENS.FULL_MAP_SCREEN}
           component={FullMapScreen}
+          options={{}}
+        />
+
+        <Stack.Screen
+          name={SCREENS.NAME_SCREEN}
+          component={NameScreen}
+          options={{}}
+        />
+
+        <Stack.Screen
+          name={SCREENS.PERSONAL_SCREEN}
+          component={PersonalScreen}
           options={{}}
         />
 
