@@ -80,7 +80,11 @@ const PhoneScreen = () => {
       });
 
       //alert('Phone verification successful');
-      navigation.navigate(SCREENS.NAME_SCREEN);
+      if (showBack) {
+        navigation.navigate(SCREENS.HOME); // Navigate to the HOME screen if showBack is true
+      } else {
+        navigation.navigate(SCREENS.NAME_SCREEN, { showBack: false }); // Navigate to the NAME_SCREEN if showBack is false
+      }
     } catch (error) {
       console.error(error);
       alert(error.message);

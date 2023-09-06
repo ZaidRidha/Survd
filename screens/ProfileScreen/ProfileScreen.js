@@ -74,6 +74,10 @@ const ProfileScreen = () => {
     navigation.navigate(SCREENS.BUSINESS_ONBOARDING);
   };
 
+  const navigatePayment = () => {
+    navigation.navigate(SCREENS.SELECT_PAYMENT_SCREEN);
+  };
+
   const navigatePersonal = () => {
     navigation.navigate(SCREENS.PERSONAL_SCREEN);
   };
@@ -104,17 +108,13 @@ const ProfileScreen = () => {
 
           <ProfileSectionHeader text="Account Settings" />
           <ProfileSectionLink
-            text={currentUser.phoneNumber ? 'Update your phone number' : 'Verify your phone number'}
-            onPress={navigatePhoneVerification}
-          />
-          <ProfileSectionLink
             text="Personal information"
             onPress={navigatePersonal}
           />
-          {/*           <ProfileSectionLink
+          <ProfileSectionLink
             text="Payment methods"
-            onPress={() => {}}
-          /> */}
+            onPress={navigatePayment}
+          />
           {/*           <ProfileSectionLink
             text="Notification Settings"
             onPress={() => {}}

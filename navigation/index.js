@@ -25,9 +25,11 @@ import BusinessOnBoarding from '../screens/BusinessOnboarding/BusinessOnboarding
 import FullMapScreen from '../screens/FullMapScreen/FullMapScreen';
 import FilterScreen from '../screens/FilterScreen/FilterScreen';
 import NameScreen from 'screens/NameScreen/NameScreen';
+import ResetPassword from 'screens/ResetPassword/ResetPassword';
 import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
 import BackNavigation from '../components/BackNavigation/BackNavigation';
 import PersonalScreen from 'screens/PersonalScreen/PersonalScreen';
+import EmailScreen from 'screens/EmailScreen/EmailScreen';
 import {
   ACTIVE_COLOR,
   AppointmentsTabIcon,
@@ -254,9 +256,26 @@ const Navigation = () => {
         />
 
         <Stack.Screen
+          name={SCREENS.RESET_PASSWORD}
+          component={ResetPassword}
+        />
+
+        <Stack.Screen
+          name={SCREENS.EMAIL_SCREEN}
+          component={EmailScreen}
+        />
+
+        <Stack.Screen
           name={SCREENS.PERSONAL_SCREEN}
           component={PersonalScreen}
-          options={{}}
+          options={{
+            headerShown: true,
+            headerBackTitleVisible: true,
+            headerTransparent: true,
+            headerBackTitle: ' ',
+            headerTitle: ' ',
+            headerTintColor: '#000000',
+          }}
         />
 
         <Stack.Screen
