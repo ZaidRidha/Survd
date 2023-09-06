@@ -9,65 +9,59 @@ import {
   Dimensions,
 } from 'react-native';
 import React, { useState } from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { SCREENS } from 'navigation/navigationPaths';
-import { authentication, database } from '../../firebaseConfig';
-import { updateDoc, doc } from 'firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { authentication } from '../../firebaseConfig';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
 
 const WIDTH = Dimensions.get('window').width;
 
-const NameScreen = () => {
+const ResetPasswordScreen = () => {
   const navigation = useNavigation();
-  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [error, setError] = useState('');
-  const route = useRoute();
-  const showBack = route.params?.showBack || false;
+  const [successMessage, setSuccessMessage] = useState('');
 
   const pressButton = async () => {
-    if (!name.trim()) {
-      setError("Name can't be empty");
+    if (!email.trim()) {
+      setError("Email can't be empty");
       setTimeout(() => setError(''), 3000);
       return;
     }
 
-    const user = authentication.currentUser;
-    if (user) {
-      try {
-        const userRef = doc(database, 'users', user.uid);
-        await updateDoc(userRef, { name: name });
-      } catch (error) {
-        console.error("Error updating user's name: ", error);
-      }
+    try {
+      await sendPasswordResetEmail(authentication, email);
+      setSuccessMessage('Password reset email sent!');
+      setTimeout(() => setSuccessMessage(''), 5000);
+    } catch (err) {
+      setError(err.message);
+      setTimeout(() => setError(''), 3000);
     }
-    navigation.navigate(SCREENS.HOME);
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {showBack && (
-        <View style={styles.backNavigationContainer}>
-          <BackNavigation />
-        </View>
-      )}
-
+      <View style={styles.backNavigationContainer}>
+        <BackNavigation />
+      </View>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.root}>
-          <Text style={styles.headerText}>Name</Text>
+          <Text style={styles.headerText}>Reset Password</Text>
           <TextInput
             style={styles.input}
-            placeholder="Full Name"
+            placeholder="Email"
             onChangeText={(text) => {
-              setName(text);
+              setEmail(text);
               setError('');
             }}
-            value={name}
+            value={email}
             placeholderTextColor="grey"
           />
           {error && <Text style={styles.errorText}>{error}</Text>}
+          {successMessage && <Text style={styles.successText}>{successMessage}</Text>}
           <TouchableWithoutFeedback onPress={pressButton}>
             <View style={styles.continueButton}>
-              <Text style={styles.buttonText}>Continue</Text>
+              <Text style={styles.buttonText}>Send Reset Email</Text>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -101,9 +95,12 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     backgroundColor: 'black',
+    width: WIDTH * 0.75,
+    height: 45,
     borderRadius: 10,
-    paddingVertical: 10,
-    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 20,
   },
   buttonText: {
     color: 'white',
@@ -116,9 +113,14 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 10,
   },
+  successText: {
+    fontFamily: 'PoppinsMed',
+    color: 'green',
+    marginBottom: 10,
+  },
   backNavigationContainer: {
     alignSelf: 'flex-start',
   },
 });
 
-export default NameScreen;
+export default ResetPasswordScreen;

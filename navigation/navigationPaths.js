@@ -21,4 +21,7 @@ export const SCREENS = {
   NOTIFICATIONS_SCREEN: 'NotificationsScreen',
   NAME_SCREEN: 'NameScreen',
   PERSONAL_SCREEN: 'PersonalScreen',
+  RESET_PASSWORD: 'ResetPassword',
+  EMAIL_SCREEN: 'EmailScreen',
+
 };

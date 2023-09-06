@@ -70,6 +70,7 @@ const LoginScreen = () => {
     try {
       setLoading(true);
       const user = await signInWithEmailAndPassword(authentication, email, password);
+      navigation.navigate(SCREENS.HOME);
     } catch (error) {
       console.log(error);
       setIserror(true);
@@ -96,6 +97,11 @@ const LoginScreen = () => {
     console.warn('Signup');
     navigation.navigate(SCREENS.REGISTER);
   };
+
+  const navigateForgot = () => {
+    navigation.navigate(SCREENS.RESET_PASSWORD);
+  };
+
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -130,7 +136,8 @@ const LoginScreen = () => {
           onChangeText={(text) => setPassword(text)}
         />
 
-        <Text style={styles.forgottext}>Forgot Password?</Text>
+        <Text onPress = {navigateForgot} style={styles.forgottext}>Forgot Password?</Text>
+
         {isError ? <Text style={styles.errortext}>Invalid email/password combination!</Text> : null}
 
         {loading && (

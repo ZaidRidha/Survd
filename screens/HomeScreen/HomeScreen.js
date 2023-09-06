@@ -152,6 +152,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchUserLocationAndReverseGeocode = async () => {
       // Check if the user is logged in by verifying uid
+      console.log(uid);
       if (uid) {
         const userDocRef = doc(database, 'users', uid); // Get the document reference
         const userDoc = await getDoc(userDocRef); // Retrieve the document data
@@ -165,6 +166,7 @@ const HomeScreen = () => {
 
           // Reverse geocoding
           const currentAddress = await Location.reverseGeocodeAsync({ latitude, longitude });
+          console.log("hello" + currentAddress);
           setAddress(currentAddress);
         } else {
           console.log('No such user!');
@@ -177,13 +179,12 @@ const HomeScreen = () => {
             console.error('Permission to access location was denied');
             return;
           }
-
           const currentLocation = await Location.getCurrentPositionAsync({});
           const { longitude, latitude } = currentLocation.coords;
           setLocation({ longitude, latitude });
           setcurrentLat(latitude);
           setcurrentLong(longitude);
-          console.log(`Longitude: ${longitude}, Latitude: ${latitude}`); // Log the coordinates
+          //console.log(`Longitude: ${longitude}, Latitude: ${latitude}`); // Log the coordinates
 
           // Reverse geocoding
           const currentAddress = await Location.reverseGeocodeAsync({ latitude, longitude });
