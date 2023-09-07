@@ -14,7 +14,7 @@ import { SCREENS } from 'navigation/navigationPaths';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
 import BarberCard from '../../components/BarberCard/BarberCard';
 import useFont from '../../useFont';
-import { database } from '../../firebaseConfig';
+import { database, authentication } from '../../firebaseConfig';
 
 const WIDTH = Dimensions.get('window').width;
 // const HEIGHT = Dimensions.get('window').height;
@@ -92,6 +92,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const updateAppointments = () => {
+      
       const appointmentsRef = collection(database, 'appointments');
       const q = query(appointmentsRef, where('userID', '==', uid));
 
@@ -152,9 +153,11 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchUserLocationAndReverseGeocode = async () => {
       // Check if the user is logged in by verifying uid
-      console.log(uid);
-      if (uid) {
-        const userDocRef = doc(database, 'users', uid); // Get the document reference
+      const currentUser = authentication.currentUser;
+      if (currentUser) {
+        const userID = currentUser.uid;
+        console.log(userID);
+        const userDocRef = doc(database, 'users', userID); // Get the document reference
         const userDoc = await getDoc(userDocRef); // Retrieve the document data
 
         if (userDoc.exists) {
@@ -166,7 +169,7 @@ const HomeScreen = () => {
 
           // Reverse geocoding
           const currentAddress = await Location.reverseGeocodeAsync({ latitude, longitude });
-          console.log("hello" + currentAddress);
+          console.log('hello' + currentAddress);
           setAddress(currentAddress);
         } else {
           console.log('No such user!');
@@ -196,7 +199,7 @@ const HomeScreen = () => {
     };
 
     fetchUserLocationAndReverseGeocode();
-  }, [uid, database, setLocation, setcurrentLat, setcurrentLong, setAddress]);
+  }, []);
 
   useEffect(() => {
     (async () => {
