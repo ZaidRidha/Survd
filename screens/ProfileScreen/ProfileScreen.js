@@ -4,7 +4,7 @@ import { Button, Icon } from '@rneui/themed';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SCREENS } from 'navigation/navigationPaths';
 import LoginScreen from '../LogInScreen';
@@ -87,35 +87,36 @@ const ProfileScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
-      {isSignedOut ? (
-        <LoginScreen />
-      ) : (
-        <ScrollView style={styles.inner}>
-          <View className="flex flex-row items-center">
-            <Icon
-              type="ant-design"
-              name="user"
-              color="black"
-              size={38}
-            />
-            <Text
-              style={styles.PoppinsMed}
-              className="ml-2 text-3xl">
-              {name}
-            </Text>
-          </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.root}>
+        {isSignedOut ? (
+          <LoginScreen />
+        ) : (
+          <ScrollView style={styles.inner}>
+            <View className="flex flex-row items-center">
+              <Icon
+                type="ant-design"
+                name="user"
+                color="black"
+                size={38}
+              />
+              <Text
+                style={styles.PoppinsMed}
+                className="ml-2 text-3xl">
+                {name}
+              </Text>
+            </View>
 
-          <ProfileSectionHeader text="Account Settings" />
-          <ProfileSectionLink
-            text="Personal information"
-            onPress={navigatePersonal}
-          />
-          <ProfileSectionLink
-            text="Payment methods"
-            onPress={navigatePayment}
-          />
-          {/*           <ProfileSectionLink
+            <ProfileSectionHeader text="Account Settings" />
+            <ProfileSectionLink
+              text="Personal information"
+              onPress={navigatePersonal}
+            />
+            <ProfileSectionLink
+              text="Payment methods"
+              onPress={navigatePayment}
+            />
+            {/*           <ProfileSectionLink
             text="Notification Settings"
             onPress={() => {}}
           />
@@ -124,12 +125,12 @@ const ProfileScreen = () => {
             onPress={() => {}}
           />
  */}
-          <ProfileSectionHeader text="Business" />
-          <ProfileSectionLink
-            text="My business"
-            onPress={navigateBusiness}
-          />
-          {/* <ProfileSectionHeader text="Referral" />
+            <ProfileSectionHeader text="Business" />
+            <ProfileSectionLink
+              text="My business"
+              onPress={navigateBusiness}
+            />
+            {/* <ProfileSectionHeader text="Referral" />
           <ProfileSectionLink
             text="Refer a vendor/user"
             onPress={() => {}}
@@ -163,27 +164,28 @@ const ProfileScreen = () => {
             onPress={() => {}}
           /> */}
 
-          <View style={{ marginBottom: 10, marginTop: 10 }}>
-            <Button
-              onPress={signuserOut}
-              title="Log Out"
-              buttonStyle={{
-                backgroundColor: 'white',
-                borderWidth: 1,
-                borderColor: 'black',
-                width: '100%',
-                marginTop: 10,
-                borderRadius: 5,
-              }}
-              titleStyle={{
-                color: 'black',
-                fontFamily: 'PoppinsMed',
-              }}
-            />
-          </View>
-        </ScrollView>
-      )}
-    </SafeAreaView>
+            <View style={{ marginBottom: 10, marginTop: 10 }}>
+              <Button
+                onPress={signuserOut}
+                title="Log Out"
+                buttonStyle={{
+                  backgroundColor: 'white',
+                  borderWidth: 1,
+                  borderColor: 'black',
+                  width: '100%',
+                  marginTop: 10,
+                  borderRadius: 5,
+                }}
+                titleStyle={{
+                  color: 'black',
+                  fontFamily: 'PoppinsMed',
+                }}
+              />
+            </View>
+          </ScrollView>
+        )}
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

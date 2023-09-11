@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
   Dimensions,
@@ -12,6 +11,7 @@ import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { authentication } from '../../firebaseConfig';
+import { SafeAreaView,SafeAreaProvider } from 'react-native-safe-area-context';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
 
 const WIDTH = Dimensions.get('window').width;
@@ -40,6 +40,7 @@ const ResetPasswordScreen = () => {
   };
 
   return (
+    <SafeAreaProvider>
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.backNavigationContainer}>
         <BackNavigation />
@@ -67,6 +68,7 @@ const ResetPasswordScreen = () => {
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

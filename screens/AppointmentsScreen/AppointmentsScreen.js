@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View,  Dimensions, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Dimensions, Text, ScrollView } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { query, collection, where, onSnapshot } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
 import { database } from '../../firebaseConfig';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
@@ -150,15 +150,17 @@ const AppointmentsScreen = () => {
   );
 
   return (
-    <SafeAreaView style={styles.root}>
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={initialLayout}
-        renderTabBar={renderTabBar}
-      />
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.root}>
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={initialLayout}
+          renderTabBar={renderTabBar}
+        />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

@@ -1,18 +1,10 @@
-import {
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  SafeAreaView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Dimensions,
-} from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableWithoutFeedback, Keyboard, Dimensions } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SCREENS } from 'navigation/navigationPaths';
 import { authentication, database } from '../../firebaseConfig';
 import { updateDoc, doc } from 'firebase/firestore';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
 
 const WIDTH = Dimensions.get('window').width;
@@ -44,35 +36,37 @@ const NameScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      {showBack && (
-        <View style={styles.backNavigationContainer}>
-          <BackNavigation />
-        </View>
-      )}
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeArea}>
+        {showBack && (
+          <View style={styles.backNavigationContainer}>
+            <BackNavigation />
+          </View>
+        )}
 
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.root}>
-          <Text style={styles.headerText}>Name</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Full Name"
-            onChangeText={(text) => {
-              setName(text);
-              setError('');
-            }}
-            value={name}
-            placeholderTextColor="grey"
-          />
-          {error && <Text style={styles.errorText}>{error}</Text>}
-          <TouchableWithoutFeedback onPress={pressButton}>
-            <View style={styles.continueButton}>
-              <Text style={styles.buttonText}>Continue</Text>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
-    </SafeAreaView>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.root}>
+            <Text style={styles.headerText}>Name</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Full Name"
+              onChangeText={(text) => {
+                setName(text);
+                setError('');
+              }}
+              value={name}
+              placeholderTextColor="grey"
+            />
+            {error && <Text style={styles.errorText}>{error}</Text>}
+            <TouchableWithoutFeedback onPress={pressButton}>
+              <View style={styles.continueButton}>
+                <Text style={styles.buttonText}>Continue</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

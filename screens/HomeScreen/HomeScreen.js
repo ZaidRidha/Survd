@@ -9,7 +9,7 @@ import { doc, getDocs, query, collection, where, onSnapshot, updateDoc, getDoc }
 import { useDispatch } from 'react-redux';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Fuse from 'fuse.js';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
 import BarberCard from '../../components/BarberCard/BarberCard';
@@ -92,7 +92,6 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const updateAppointments = () => {
-      
       const appointmentsRef = collection(database, 'appointments');
       const q = query(appointmentsRef, where('userID', '==', uid));
 
@@ -259,138 +258,140 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
-      <View className="flex flex-row items-center justify-between ">
-        <TouchableOpacity onPress={openLocation}>
-          <View className="flex flex-row items-center ml-5 ">
-            <Text style={styles.loctext}>Location · {address ? address[0].name : 'Loading...'} </Text>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.root}>
+        <View className="flex flex-row items-center justify-between ">
+          <TouchableOpacity onPress={openLocation}>
+            <View className="flex flex-row items-center ml-5 ">
+              <Text style={styles.loctext}>Location · {address ? address[0].name : 'Loading...'} </Text>
+              <Icon
+                type="entypo"
+                name="chevron-down"
+                color="black"
+                size={18}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={openNotifications}>
             <Icon
-              type="entypo"
-              name="chevron-down"
+              style={styles.bellIcon}
+              type="material-community"
+              name="bell"
               color="black"
-              size={18}
+              size={28}
             />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={openNotifications}>
-          <Icon
-            style={styles.bellIcon}
-            type="material-community"
-            name="bell"
-            color="black"
-            size={28}
-          />
-        </TouchableOpacity>
-      </View>
+          </TouchableOpacity>
+        </View>
 
-      <View className="flex flex-row items-center ">
-        <SearchBar
-          placeholder="Search name, username, speciality, etc."
-          value={searchQuery}
-          onChangeText={performSearch}
-          lightTheme={false}
-          round
-          containerStyle={{
-            width: WIDTH * 0.9,
-            backgroundColor: 'white',
-            borderWidth: 0,
-            shadowColor: 'white',
-            borderBottomColor: 'transparent',
-            borderTopColor: 'transparent',
-          }}
-          inputContainerStyle={{ backgroundColor: '#EEEEEE' }}
-          inputStyle={{ fontSize: 14, color: 'black' }}
-          clearIcon={{ size: 25 }}
-        />
-        <TouchableOpacity onPress={navigateFilter}>
-          <Icon
-            type="material-community"
-            name="tune-variant"
-            color="black"
-            size={24}
+        <View className="flex flex-row items-center ">
+          <SearchBar
+            placeholder="Search name, username, speciality, etc."
+            value={searchQuery}
+            onChangeText={performSearch}
+            lightTheme={false}
+            round
+            containerStyle={{
+              width: WIDTH * 0.9,
+              backgroundColor: 'white',
+              borderWidth: 0,
+              shadowColor: 'white',
+              borderBottomColor: 'transparent',
+              borderTopColor: 'transparent',
+            }}
+            inputContainerStyle={{ backgroundColor: '#EEEEEE' }}
+            inputStyle={{ fontSize: 14, color: 'black' }}
+            clearIcon={{ size: 25 }}
           />
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity onPress={navigateFilter}>
+            <Icon
+              type="material-community"
+              name="tune-variant"
+              color="black"
+              size={24}
+            />
+          </TouchableOpacity>
+        </View>
 
-      {searchResults.length > 0 ? (
-        <View
-          className="mb-3"
-          style={styles.searchParts}>
-          <FlatList
-            data={searchResults}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View className="mb-2">
-                <View className="flex flex-row ml-2 items-center ">
-                  <Image
-                    source={require('../../assets/images/bizlogo.jpg')}
-                    style={styles.image}
-                  />
-                  <View>
-                    <Text
-                      style={styles.PoppinsMed}
-                      className="text-lg">
-                      {item.name}
-                    </Text>
-                    <Text
-                      style={styles.PoppinsLight}
-                      className=" text-sm text-gray-600">
-                      {item.username}
-                    </Text>
+        {searchResults.length > 0 ? (
+          <View
+            className="mb-3"
+            style={styles.searchParts}>
+            <FlatList
+              data={searchResults}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View className="mb-2">
+                  <View className="flex flex-row ml-2 items-center ">
+                    <Image
+                      source={require('../../assets/images/bizlogo.jpg')}
+                      style={styles.image}
+                    />
+                    <View>
+                      <Text
+                        style={styles.PoppinsMed}
+                        className="text-lg">
+                        {item.name}
+                      </Text>
+                      <Text
+                        style={styles.PoppinsLight}
+                        className=" text-sm text-gray-600">
+                        {item.username}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                    <View
+                      style={{
+                        width: WIDTH * 0.9,
+                        height: 1,
+                        backgroundColor: 'lightgray',
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        marginTop: 5,
+                        marginBottom: 5,
+                      }}
+                    />
                   </View>
                 </View>
-
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                  <View
-                    style={{
-                      width: WIDTH * 0.9,
-                      height: 1,
-                      backgroundColor: 'lightgray',
-                      alignSelf: 'center',
-                      justifyContent: 'center',
-                      marginTop: 5,
-                      marginBottom: 5,
-                    }}
-                  />
-                </View>
-              </View>
-            )}
-          />
-        </View>
-      ) : null}
-
-      {searchResults.length === 0 ? (
-        <>
-          {matchingAppointments.map((appointment, index) => (
-            <AppointmentCard
-              key={index}
-              appointmentData={appointment}
-              showHide
-              hideablePage
+              )}
             />
-          ))}
-          <Text
-            style={styles.fgreg}
-            className="text-xl mb-2 ml-5">
-            Services Near You:
-          </Text>
-          <FlatList
-            ref={scrollRef}
-            data={nearbyBarbers}
-            keyExtractor={(item) => item.docId}
-            renderItem={renderBarberCard}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
+          </View>
+        ) : null}
+
+        {searchResults.length === 0 ? (
+          <>
+            {matchingAppointments.map((appointment, index) => (
+              <AppointmentCard
+                key={index}
+                appointmentData={appointment}
+                showHide
+                hideablePage
               />
-            }
-          />
-        </>
-      ) : null}
-    </SafeAreaView>
+            ))}
+            <Text
+              style={styles.fgreg}
+              className="text-xl mb-2 ml-5">
+              Services Near You:
+            </Text>
+            <FlatList
+              ref={scrollRef}
+              data={nearbyBarbers}
+              keyExtractor={(item) => item.docId}
+              renderItem={renderBarberCard}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                />
+              }
+            />
+          </>
+        ) : null}
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

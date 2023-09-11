@@ -9,7 +9,7 @@ import { getDocs, query, collection, onSnapshot, deleteDoc } from 'firebase/fire
 import CalendarPicker from 'react-native-calendar-picker';
 import Toast from 'react-native-root-toast';
 import * as Clipboard from 'expo-clipboard';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
 import { database } from '../../firebaseConfig';
 import { selectCurrentBasket, removeFromBasket } from '../../slices/locSlice';
@@ -313,323 +313,331 @@ const ContinueScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
-      <View className="items-center justify-center mt-2">
-        <View className="">
-          <Text
-            style={styles.poppinsReg}
-            className="text-xl">
-            {vendorName}
-          </Text>
-        </View>
-      </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          className="mt-2"
-          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-          <View
-            style={{ flex: 0.95, height: 1, backgroundColor: '#F4F4F4', alignSelf: 'center', justifyContent: 'center' }}
-          />
-        </View>
-        <View className="mb-1">
-          <View className="flex flex-row items-center ml-2 mt-3">
-            <Icon
-              type="entypo"
-              name="shop"
-              color="#0F7D00"
-              size={21}
-            />
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.root}>
+        <View className="items-center justify-center mt-2">
+          <View className="">
             <Text
-              style={styles.poppinsMed}
-              className="text-lg">
-              Ismail's Barbershop
+              style={styles.poppinsReg}
+              className="text-xl">
+              {vendorName}
             </Text>
           </View>
         </View>
-
-        {!showCalendar && (
-          <View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View
+            className="mt-2"
+            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
             <View
-              style={styles.queueInfo}
-              className="ml-2 mt-3 mr-5">
-              <View className="ml-2 mt-3 mr-2">
-                <View className="flex flex-row items-center">
+              style={{
+                flex: 0.95,
+                height: 1,
+                backgroundColor: '#F4F4F4',
+                alignSelf: 'center',
+                justifyContent: 'center',
+              }}
+            />
+          </View>
+          <View className="mb-1">
+            <View className="flex flex-row items-center ml-2 mt-3">
+              <Icon
+                type="entypo"
+                name="shop"
+                color="#0F7D00"
+                size={21}
+              />
+              <Text
+                style={styles.poppinsMed}
+                className="text-lg">
+                Ismail's Barbershop
+              </Text>
+            </View>
+          </View>
+
+          {!showCalendar && (
+            <View>
+              <View
+                style={styles.queueInfo}
+                className="ml-2 mt-3 mr-5">
+                <View className="ml-2 mt-3 mr-2">
+                  <View className="flex flex-row items-center">
+                    <Icon
+                      type="material-community"
+                      name="walk"
+                      color="black"
+                      size={28}
+                    />
+                    <Text
+                      className="text-lg"
+                      style={styles.poppinsMed}>
+                      Walk in
+                    </Text>
+                  </View>
+
+                  <Text
+                    style={styles.poppinsReg}
+                    className="text-base mt-1">
+                    Be there at 17:00
+                  </Text>
+                  <Text
+                    style={styles.poppinsReg}
+                    className="text-base">
+                    Estimated waiting time:
+                    <Text className="text-blue-700"> 23 Mins</Text>
+                  </Text>
+                  <Text
+                    style={styles.poppinsReg}
+                    className="text-base mb-1">
+                    Position in queue: 2
+                  </Text>
+                  <Progress.Bar
+                    className="mb-2 ml-1"
+                    progress={barProgress}
+                    width={200}
+                    color={barColor}
+                    borderColor="black"
+                  />
+                </View>
+              </View>
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 15 }}>
+                <View style={{ flex: 0.3, height: 1, backgroundColor: 'lightgray' }} />
+                <View>
+                  <Text style={{ width: 40, textAlign: 'center', color: 'gray' }}>Or</Text>
+                </View>
+                <View style={{ flex: 0.3, height: 1, backgroundColor: 'lightgray' }} />
+              </View>
+            </View>
+          )}
+
+          {isLive ? (
+            <Button
+              onPress={handleAppButton}
+              icon={
+                showCalendar ? (
                   <Icon
                     type="material-community"
                     name="walk"
                     color="black"
                     size={28}
+                    style={{ marginRight: 3 }}
                   />
-                  <Text
-                    className="text-lg"
-                    style={styles.poppinsMed}>
-                    Walk in
-                  </Text>
-                </View>
-
-                <Text
-                  style={styles.poppinsReg}
-                  className="text-base mt-1">
-                  Be there at 17:00
-                </Text>
-                <Text
-                  style={styles.poppinsReg}
-                  className="text-base">
-                  Estimated waiting time:
-                  <Text className="text-blue-700"> 23 Mins</Text>
-                </Text>
-                <Text
-                  style={styles.poppinsReg}
-                  className="text-base mb-1">
-                  Position in queue: 2
-                </Text>
-                <Progress.Bar
-                  className="mb-2 ml-1"
-                  progress={barProgress}
-                  width={200}
-                  color={barColor}
-                  borderColor="black"
-                />
-              </View>
-            </View>
-
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 15 }}>
-              <View style={{ flex: 0.3, height: 1, backgroundColor: 'lightgray' }} />
-              <View>
-                <Text style={{ width: 40, textAlign: 'center', color: 'gray' }}>Or</Text>
-              </View>
-              <View style={{ flex: 0.3, height: 1, backgroundColor: 'lightgray' }} />
-            </View>
-          </View>
-        )}
-
-        {isLive ? (
-          <Button
-            onPress={handleAppButton}
-            icon={
-              showCalendar ? (
-                <Icon
-                  type="material-community"
-                  name="walk"
-                  color="black"
-                  size={28}
-                  style={{ marginRight: 3 }}
-                />
-              ) : (
-                <Icon
-                  type="entypo"
-                  name="calendar"
-                  color="black"
-                  style={{ marginRight: 7 }}
-                />
-              )
-            }
-            title={showCalendar ? <Text>Walk In</Text> : <Text>Schedule Appointment</Text>}
-            buttonStyle={{
-              borderColor: 'black',
-              borderWidth: 1,
-              borderRadius: 5,
-              marginBottom: 5,
-            }}
-            type="outline"
-            titleStyle={{ color: 'black', marginLeft: 10 }}
-            containerStyle={{
-              width: WIDTH - 50,
-              marginTop: 10,
-              alignSelf: 'center',
-              marginBottom: 5,
-            }}
-          />
-        ) : null}
-
-        {showCalendar ? (
-          <View className="my-5">
-            <CalendarPicker
-              monthTitleStyle={{ fontFamily: 'PoppinsMed' }}
-              yearTitleStyle={{ fontFamily: 'PoppinsMed' }}
-              onMonthChange={handleMonthChange}
-              onDateChange={handleDateChange}
-              selectedDayStyle={{ backgroundColor: 'black' }} // Change the selector color
-              selectedDayTextColor="white"
-              selectedStartDate={selectedDate}
-              todayBackgroundColor="gray"
-              minDate={today}
-              restrictMonthNavigation
-              disabledDates={disabledDates}
-              previousComponent={
-                <Icon
-                  name="chevron-left"
-                  type="material"
-                  color="black"
-                />
-              } // Render custom previous title component
-              nextComponent={
-                <Icon
-                  name="chevron-right"
-                  type="material"
-                  color="black"
-                />
+                ) : (
+                  <Icon
+                    type="entypo"
+                    name="calendar"
+                    color="black"
+                    style={{ marginRight: 7 }}
+                  />
+                )
               }
+              title={showCalendar ? <Text>Walk In</Text> : <Text>Schedule Appointment</Text>}
+              buttonStyle={{
+                borderColor: 'black',
+                borderWidth: 1,
+                borderRadius: 5,
+                marginBottom: 5,
+              }}
+              type="outline"
+              titleStyle={{ color: 'black', marginLeft: 10 }}
+              containerStyle={{
+                width: WIDTH - 50,
+                marginTop: 10,
+                alignSelf: 'center',
+                marginBottom: 5,
+              }}
             />
-            <View style={styles.slotContainer}>
-              {availableSlots.length > 0 ? (
-                <FlatList
-                  data={availableSlots}
-                  renderItem={renderTimeslot}
-                  keyExtractor={(item) => item}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                />
-              ) : (
-                <Text
-                  style={styles.poppinsMed}
-                  className="ml-2 text-red-600">
-                  Sorry, no available slots for this day :(
-                </Text>
-              )}
-            </View>
-          </View>
-        ) : null}
+          ) : null}
 
-        <View
-          className="mt-2"
-          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-          <View
-            style={{
-              flex: 0.95,
-              height: 1,
-              backgroundColor: 'lightgray',
-              alignSelf: 'center',
-              justifyContent: 'center',
-            }}
-          />
-        </View>
-
-        <View className="mt-2 ml-3">
-          <Text
-            className="text-xl"
-            style={styles.poppinsMed}>
-            Services:
-          </Text>
-          {Basket.map((service, index) => (
-            <View
-              className="flex flex-row justify-between items-center mt-2"
-              key={index}>
-              <View>
-                <Text
-                  className="text-base"
-                  style={styles.poppinsReg}>
-                  {service[0].name}
-                </Text>
-
-                {/* Render the extras if available */}
-                {service[0].extras &&
-                  service[0].extras.map((extra, extraIndex) => (
-                    <View key={extraIndex}>
-                      <View className="flex flex-row items-center">
-                        <Icon
-                          type="entypo"
-                          name="plus"
-                          color="black"
-                          size={21}
-                        />
-                        <Text
-                          className="text-base"
-                          style={styles.poppinsReg}>
-                          {extra.name}
-                        </Text>
-                      </View>
-                    </View>
-                  ))}
-                <Text
-                  className=" text-sm"
-                  style={styles.poppinsReg}>
-                  Price: £
-                  {(
-                    service[0].price +
-                    (service[0].extras ? service[0].extras.reduce((total, extra) => total + extra.price, 0) : 0)
-                  ).toFixed(2)}
-                </Text>
-
-                {service[0].duration !== undefined && (
+          {showCalendar ? (
+            <View className="my-5">
+              <CalendarPicker
+                monthTitleStyle={{ fontFamily: 'PoppinsMed' }}
+                yearTitleStyle={{ fontFamily: 'PoppinsMed' }}
+                onMonthChange={handleMonthChange}
+                onDateChange={handleDateChange}
+                selectedDayStyle={{ backgroundColor: 'black' }} // Change the selector color
+                selectedDayTextColor="white"
+                selectedStartDate={selectedDate}
+                todayBackgroundColor="gray"
+                minDate={today}
+                restrictMonthNavigation
+                disabledDates={disabledDates}
+                previousComponent={
+                  <Icon
+                    name="chevron-left"
+                    type="material"
+                    color="black"
+                  />
+                } // Render custom previous title component
+                nextComponent={
+                  <Icon
+                    name="chevron-right"
+                    type="material"
+                    color="black"
+                  />
+                }
+              />
+              <View style={styles.slotContainer}>
+                {availableSlots.length > 0 ? (
+                  <FlatList
+                    data={availableSlots}
+                    renderItem={renderTimeslot}
+                    keyExtractor={(item) => item}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                  />
+                ) : (
                   <Text
-                    className="text-gray-600 text-sm"
-                    style={styles.poppinsReg}>
-                    Duration: {''}
-                    {service[0].duration +
-                      (service[0].extras
-                        ? service[0].extras.reduce(
-                            (total, extra) => (extra.duration !== undefined ? total + extra.duration : total),
-                            0
-                          )
-                        : 0)}
-                    {''} Minutes
+                    style={styles.poppinsMed}
+                    className="ml-2 text-red-600">
+                    Sorry, no available slots for this day :(
                   </Text>
                 )}
               </View>
-              <TouchableOpacity onPress={() => handleRemoveItem(service[0].objectId)}>
-                <Icon
-                  type="font-awesome"
-                  name="trash-o"
-                  color="black"
-                  size={28}
-                  style={{ marginRight: 10 }}
-                />
-              </TouchableOpacity>
             </View>
-          ))}
-        </View>
+          ) : null}
 
-        <View
-          className="mt-2"
-          style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
           <View
-            style={{
-              flex: 0.95,
-              height: 1,
-              backgroundColor: 'lightgray',
+            className="mt-2"
+            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <View
+              style={{
+                flex: 0.95,
+                height: 1,
+                backgroundColor: 'lightgray',
+                alignSelf: 'center',
+                justifyContent: 'center',
+              }}
+            />
+          </View>
+
+          <View className="mt-2 ml-3">
+            <Text
+              className="text-xl"
+              style={styles.poppinsMed}>
+              Services:
+            </Text>
+            {Basket.map((service, index) => (
+              <View
+                className="flex flex-row justify-between items-center mt-2"
+                key={index}>
+                <View>
+                  <Text
+                    className="text-base"
+                    style={styles.poppinsReg}>
+                    {service[0].name}
+                  </Text>
+
+                  {/* Render the extras if available */}
+                  {service[0].extras &&
+                    service[0].extras.map((extra, extraIndex) => (
+                      <View key={extraIndex}>
+                        <View className="flex flex-row items-center">
+                          <Icon
+                            type="entypo"
+                            name="plus"
+                            color="black"
+                            size={21}
+                          />
+                          <Text
+                            className="text-base"
+                            style={styles.poppinsReg}>
+                            {extra.name}
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
+                  <Text
+                    className=" text-sm"
+                    style={styles.poppinsReg}>
+                    Price: £
+                    {(
+                      service[0].price +
+                      (service[0].extras ? service[0].extras.reduce((total, extra) => total + extra.price, 0) : 0)
+                    ).toFixed(2)}
+                  </Text>
+
+                  {service[0].duration !== undefined && (
+                    <Text
+                      className="text-gray-600 text-sm"
+                      style={styles.poppinsReg}>
+                      Duration: {''}
+                      {service[0].duration +
+                        (service[0].extras
+                          ? service[0].extras.reduce(
+                              (total, extra) => (extra.duration !== undefined ? total + extra.duration : total),
+                              0
+                            )
+                          : 0)}
+                      {''} Minutes
+                    </Text>
+                  )}
+                </View>
+                <TouchableOpacity onPress={() => handleRemoveItem(service[0].objectId)}>
+                  <Icon
+                    type="font-awesome"
+                    name="trash-o"
+                    color="black"
+                    size={28}
+                    style={{ marginRight: 10 }}
+                  />
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+
+          <View
+            className="mt-2"
+            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+            <View
+              style={{
+                flex: 0.95,
+                height: 1,
+                backgroundColor: 'lightgray',
+                alignSelf: 'center',
+                justifyContent: 'center',
+              }}
+            />
+          </View>
+
+          <View className="mb-6">
+            <Text
+              className="text-lg ml-3 mt-2"
+              style={styles.poppinsMed}>
+              Subtotal: £{totalServicesPrice.toFixed(2)}
+            </Text>
+
+            <Text
+              className="text-gray-500 text-base ml-3 "
+              style={styles.poppinsReg}>
+              Total Duration: {totalServicesDuration} minutes
+            </Text>
+
+            {displayError && (
+              <Text
+                style={styles.poppinsMed}
+                className="ml-3 text-red-600 mt-2">
+                Please select a timeslot from the calendar.
+              </Text>
+            )}
+          </View>
+
+          <Button
+            titleStyle={styles.PoppinsReg}
+            onPress={handleContinue}
+            title="Continue"
+            color="black"
+            containerStyle={{
+              width: WIDTH - 120,
+              borderRadius: 10,
               alignSelf: 'center',
               justifyContent: 'center',
             }}
           />
-        </View>
-
-        <View className="mb-6">
-          <Text
-            className="text-lg ml-3 mt-2"
-            style={styles.poppinsMed}>
-            Subtotal: £{totalServicesPrice.toFixed(2)}
-          </Text>
-
-          <Text
-            className="text-gray-500 text-base ml-3 "
-            style={styles.poppinsReg}>
-            Total Duration: {totalServicesDuration} minutes
-          </Text>
-
-          {displayError && (
-            <Text
-              style={styles.poppinsMed}
-              className="ml-3 text-red-600 mt-2">
-              Please select a timeslot from the calendar.
-            </Text>
-          )}
-        </View>
-
-        <Button
-          titleStyle={styles.PoppinsReg}
-          onPress={handleContinue}
-          title="Continue"
-          color="black"
-          containerStyle={{
-            width: WIDTH - 120,
-            borderRadius: 10,
-            alignSelf: 'center',
-            justifyContent: 'center',
-          }}
-        />
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

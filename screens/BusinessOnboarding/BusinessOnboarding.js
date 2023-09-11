@@ -1,6 +1,6 @@
 import { StyleSheet, View, FlatList, Animated } from 'react-native';
 import React, { useState, useRef } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import OnboardingItem from '../../components/OnboardingItem';
 import Onboardingpaginator from '../../components/Onboardingpaginator';
 import OnboardingButton from '../../components/OnboardingButton';
@@ -58,6 +58,7 @@ const BusinessOnboarding = () => {
   ];
 
   return (
+    <SafeAreaProvider>
     <SafeAreaView style={styles.root}>
       <View className="self-start">
         <BackNavigation />
@@ -91,6 +92,7 @@ const BusinessOnboarding = () => {
         percentage={(currentIndex + 1) * (100 / slides.length)}
       />
     </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

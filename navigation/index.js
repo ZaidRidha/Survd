@@ -232,6 +232,7 @@ const Navigation = () => {
           component={FilterScreen}
           options={{
             presentation: 'modal',
+            headerShown:false,
           }}
         />
 

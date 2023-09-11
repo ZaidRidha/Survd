@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,10 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { authentication, database } from '../../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
-import { updateEmail, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import { updateEmail, reauthenticateWithCredential, EmailAuthProvider, sendEmailVerification } from 'firebase/auth';
 import { setDoc, doc } from 'firebase/firestore';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
 
@@ -20,7 +20,14 @@ const EmailScreen = () => {
   const navigation = useNavigation();
   const user = authentication.currentUser;
   const [newEmail, setNewEmail] = useState('');
-  const [password, setPassword] = useState(''); // to reauthenticate before changing the email
+  const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (user && user.emailVerified) {
+      const userRef = doc(database, 'users', user.uid);
+      setDoc(userRef, { emailVerified: true }, { merge: true });
+    }
+  }, [user]);
 
   const handleUpdateEmail = async () => {
     if (!newEmail || !password) {
@@ -28,19 +35,22 @@ const EmailScreen = () => {
       return;
     }
 
-    // Re-authenticate user
     const credentials = EmailAuthProvider.credential(user.email, password);
     reauthenticateWithCredential(user, credentials)
       .then(() => {
-        // Update email in Firebase Authentication
         updateEmail(user, newEmail)
           .then(() => {
-            // Update email in Firestore
             const userRef = doc(database, 'users', user.uid);
-            setDoc(userRef, { email: newEmail }, { merge: true });
+            setDoc(userRef, { email: newEmail, emailVerified: false }, { merge: true });
 
-            Alert.alert('Success', 'Email updated successfully!');
-            navigation.goBack();
+            sendEmailVerification(user)
+              .then(() => {
+                Alert.alert('Success', 'Email updated and verification email sent. Please verify your new email.');
+                navigation.goBack();
+              })
+              .catch((error) => {
+                console.error('Error sending verification email:', error);
+              });
           })
           .catch((error) => {
             console.error('Error updating email in Auth:', error);
@@ -59,34 +69,36 @@ const EmailScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <SafeAreaView style={styles.root}>
-        <View className="self-start">
-          <BackNavigation />
-        </View>
-        <View style={styles.container}>
-          <Text style={styles.headerText}>Change Email</Text>
-          <TextInput
-            style={styles.input}
-            value={newEmail}
-            onChangeText={setNewEmail}
-            placeholder="Enter new email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          <TextInput
-            style={styles.input}
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Enter your password for verification"
-            secureTextEntry
-          />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleUpdateEmail}>
-            <Text style={styles.buttonText}>Update Email</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.root}>
+          <View className="self-start">
+            <BackNavigation />
+          </View>
+          <View style={styles.container}>
+            <Text style={styles.headerText}>Change Email</Text>
+            <TextInput
+              style={styles.input}
+              value={newEmail}
+              onChangeText={setNewEmail}
+              placeholder="Enter new email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Enter your password for verification"
+              secureTextEntry
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleUpdateEmail}>
+              <Text style={styles.buttonText}>Update Email</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
     </TouchableWithoutFeedback>
   );
 };

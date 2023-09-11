@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Icon } from '@rneui/themed';
 import { doc, getDoc } from 'firebase/firestore';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import * as Location from 'expo-location';
 import { SCREENS } from 'navigation/navigationPaths';
@@ -97,88 +97,90 @@ const LocationScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.root}>
-        <View className="self-start ">
-          <TouchableOpacity onPress={goBack}>
-            <Icon
-              type="ant-design"
-              name="close"
-              color="black"
-              size={38}
-              style={styles.locationIcon}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View
-          style={styles.topButton}
-          className="p-2  self-center mb-5">
-          <View className="flex flex-row  items-center justify-between">
-            <View className="flex flex-row items-center">
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.root}>
+          <View className="self-start ">
+            <TouchableOpacity onPress={goBack}>
               <Icon
-                type="font-awesome"
-                name="location-arrow"
-                color="black"
-                size={31}
-              />
-              <View>
-                <Text
-                  style={styles.poppinsMed}
-                  className=" text-base ml-4 ">
-                  Current Location
-                </Text>
-                <Text
-                  style={styles.poppinsMed}
-                  className=" text-base ml-4 ">
-                  {address ? address[0].name : 'Loading...'}
-                </Text>
-                <Text
-                  style={styles.poppinsMed}
-                  className=" text-base ml-4 ">
-                  {address ? address[0].postalCode : 'Loading...'}
-                </Text>
-              </View>
-            </View>
-            <Icon
-              type="antdesign"
-              name="right"
-              color="black"
-              size={21}
-            />
-          </View>
-        </View>
-
-        {currentLat && currentLong ? (
-          <MapView
-            initialRegion={{
-              latitude: currentLat,
-              longitude: currentLong,
-              latitudeDelta: 0.004,
-              longitudeDelta: 0.004,
-            }}
-            provider={PROVIDER_GOOGLE}
-            style={styles.map}
-            onPress={handleMapPress}>
-            <Marker coordinate={{ latitude: currentLat, longitude: currentLong }} />
-            <Marker coordinate={{ latitude: 51.3812, longitude: -0.2452 }}>
-              <Icon
-                type="entypo"
-                name="scissors"
+                type="ant-design"
+                name="close"
                 color="black"
                 size={38}
                 style={styles.locationIcon}
               />
-            </Marker>
-          </MapView>
-        ) : (
-          <ActivityIndicator
-            size="large"
-            color="#0000ff"
-          />
-        )}
-      </View>
-    </SafeAreaView>
+            </TouchableOpacity>
+          </View>
+
+          <View
+            style={styles.topButton}
+            className="p-2  self-center mb-5">
+            <View className="flex flex-row  items-center justify-between">
+              <View className="flex flex-row items-center">
+                <Icon
+                  type="font-awesome"
+                  name="location-arrow"
+                  color="black"
+                  size={31}
+                />
+                <View>
+                  <Text
+                    style={styles.poppinsMed}
+                    className=" text-base ml-4 ">
+                    Current Location
+                  </Text>
+                  <Text
+                    style={styles.poppinsMed}
+                    className=" text-base ml-4 ">
+                    {address ? address[0].name : 'Loading...'}
+                  </Text>
+                  <Text
+                    style={styles.poppinsMed}
+                    className=" text-base ml-4 ">
+                    {address ? address[0].postalCode : 'Loading...'}
+                  </Text>
+                </View>
+              </View>
+              <Icon
+                type="antdesign"
+                name="right"
+                color="black"
+                size={21}
+              />
+            </View>
+          </View>
+
+          {currentLat && currentLong ? (
+            <MapView
+              initialRegion={{
+                latitude: currentLat,
+                longitude: currentLong,
+                latitudeDelta: 0.004,
+                longitudeDelta: 0.004,
+              }}
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              onPress={handleMapPress}>
+              <Marker coordinate={{ latitude: currentLat, longitude: currentLong }} />
+              <Marker coordinate={{ latitude: 51.3812, longitude: -0.2452 }}>
+                <Icon
+                  type="entypo"
+                  name="scissors"
+                  color="black"
+                  size={38}
+                  style={styles.locationIcon}
+                />
+              </Marker>
+            </MapView>
+          ) : (
+            <ActivityIndicator
+              size="large"
+              color="#0000ff"
+            />
+          )}
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

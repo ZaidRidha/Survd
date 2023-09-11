@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   TouchableWithoutFeedback,
   Keyboard,
-  SafeAreaView,
 } from 'react-native';
 import React, { useState, useRef } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -15,7 +14,7 @@ import { CountryPicker } from 'react-native-country-codes-picker';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { PhoneAuthProvider, updatePhoneNumber } from 'firebase/auth';
 import { doc, updateDoc, getDocs, query, collection, where } from 'firebase/firestore';
-
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { Button, Icon } from '@rneui/themed';
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -94,110 +93,112 @@ const PhoneScreen = () => {
   const isValidCode = value.length < CELL_COUNT;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <View className="self-start">{showBack ? <BackNavigation /> : null}</View>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <KeyboardAvoidingView
-          behavior="padding"
-          enabled
-          style={styles.root}>
-          <Text style={styles.headertext}>Enter Your Phone Number</Text>
-          <View style={styles.inputContainer}>
-            <TouchableOpacity onPress={phoneTextPressed} />
-            <Text
-              onPress={phoneTextPressed}
-              style={{ fontSize: 22, marginLeft: 5 }}>
-              {countryCode}
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+        <View className="self-start">{showBack ? <BackNavigation /> : null}</View>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <KeyboardAvoidingView
+            behavior="padding"
+            enabled
+            style={styles.root}>
+            <Text style={styles.headertext}>Enter Your Phone Number</Text>
+            <View style={styles.inputContainer}>
+              <TouchableOpacity onPress={phoneTextPressed} />
+              <Text
+                onPress={phoneTextPressed}
+                style={{ fontSize: 22, marginLeft: 5 }}>
+                {countryCode}
+              </Text>
+              <TextInput
+                onChangeText={(text) => setPhoneNumber(`${countryCode} ${text}`)}
+                maxLength={11}
+                style={[isFocused ? styles.inputFocused : styles.input]}
+                keyboardType="phone-pad"
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+              />
+            </View>
+            <Text style={styles.concode}>
+              We will send you a confirmation code. Standard message and data rates apply.
             </Text>
-            <TextInput
-              onChangeText={(text) => setPhoneNumber(`${countryCode} ${text}`)}
-              maxLength={11}
-              style={[isFocused ? styles.inputFocused : styles.input]}
-              keyboardType="phone-pad"
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+            <Button
+              title="Send Confirmation"
+              buttonStyle={{ backgroundColor: 'rgba(39, 39, 39, 1)' }}
+              disabled={!isValidPhoneNumber}
+              containerStyle={{
+                width: '80%',
+                marginHorizontal: 50,
+                marginTop: 25,
+                marginBottom: 20,
+              }}
+              titleStyle={{ color: 'white', marginHorizontal: 20 }}
+              onPress={sendConfirmation}
             />
-          </View>
-          <Text style={styles.concode}>
-            We will send you a confirmation code. Standard message and data rates apply.
-          </Text>
-          <Button
-            title="Send Confirmation"
-            buttonStyle={{ backgroundColor: 'rgba(39, 39, 39, 1)' }}
-            disabled={!isValidPhoneNumber}
-            containerStyle={{
-              width: '80%',
-              marginHorizontal: 50,
-              marginTop: 25,
-              marginBottom: 20,
-            }}
-            titleStyle={{ color: 'white', marginHorizontal: 20 }}
-            onPress={sendConfirmation}
-          />
 
-          <FirebaseRecaptchaVerifierModal
-            ref={recaptchaVerifier}
-            firebaseConfig={firebaseConfig}
-          />
+            <FirebaseRecaptchaVerifierModal
+              ref={recaptchaVerifier}
+              firebaseConfig={firebaseConfig}
+            />
 
-          <Text style={styles.headertext2}>Enter The Code Below</Text>
+            <Text style={styles.headertext2}>Enter The Code Below</Text>
 
-          <CodeField
-            ref={ref}
-            {...props}
-            value={value}
-            onChangeText={setValue}
-            cellCount={CELL_COUNT}
-            rootStyle={styles.codeFieldRoot}
-            keyboardType="number-pad"
-            textContentType="oneTimeCode"
-            renderCell={({ index, symbol, isFocused: focused }) => (
-              <View
-                onLayout={getCellOnLayoutHandler(index)}
-                key={index}
-                style={[styles.cellRoot, focused && styles.focusCell]}>
-                <Text style={styles.cellText}>{symbol || (focused ? <Cursor /> : null)}</Text>
-              </View>
+            <CodeField
+              ref={ref}
+              {...props}
+              value={value}
+              onChangeText={setValue}
+              cellCount={CELL_COUNT}
+              rootStyle={styles.codeFieldRoot}
+              keyboardType="number-pad"
+              textContentType="oneTimeCode"
+              renderCell={({ index, symbol, isFocused: focused }) => (
+                <View
+                  onLayout={getCellOnLayoutHandler(index)}
+                  key={index}
+                  style={[styles.cellRoot, focused && styles.focusCell]}>
+                  <Text style={styles.cellText}>{symbol || (focused ? <Cursor /> : null)}</Text>
+                </View>
+              )}
+            />
+            <Button
+              title="Continue"
+              onPress={confirmCode}
+              disabled={isValidCode}
+              buttonStyle={{ backgroundColor: 'rgba(39, 39, 39, 1)' }}
+              containerStyle={{
+                width: '80%',
+                marginHorizontal: 50,
+                marginTop: 25,
+                marginBottom: 20,
+              }}
+              titleStyle={{ color: 'white', marginHorizontal: 20 }}
+            />
+
+            {loading && (
+              <ActivityIndicator
+                size="large"
+                color="#999999"
+              />
             )}
-          />
-          <Button
-            title="Continue"
-            onPress={confirmCode}
-            disabled={isValidCode}
-            buttonStyle={{ backgroundColor: 'rgba(39, 39, 39, 1)' }}
-            containerStyle={{
-              width: '80%',
-              marginHorizontal: 50,
-              marginTop: 25,
-              marginBottom: 20,
-            }}
-            titleStyle={{ color: 'white', marginHorizontal: 20 }}
-          />
 
-          {loading && (
-            <ActivityIndicator
-              size="large"
-              color="#999999"
+            <CountryPicker
+              show={showCountryPicker}
+              style={countryPickerStyles}
+              enableModalAvoiding
+              onBackdropPress={() => {
+                setLoading(false);
+                setShowCountryPicker(false);
+              }}
+              pickerButtonOnPress={(item) => {
+                setCountryCode(item.dial_code);
+                setLoading(false);
+                setShowCountryPicker(false);
+              }}
             />
-          )}
-
-          <CountryPicker
-            show={showCountryPicker}
-            style={countryPickerStyles}
-            enableModalAvoiding
-            onBackdropPress={() => {
-              setLoading(false);
-              setShowCountryPicker(false);
-            }}
-            pickerButtonOnPress={(item) => {
-              setCountryCode(item.dial_code);
-              setLoading(false);
-              setShowCountryPicker(false);
-            }}
-          />
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-    </SafeAreaView>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

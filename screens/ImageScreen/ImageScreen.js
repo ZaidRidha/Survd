@@ -1,16 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  FlatList,
-  Image,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { StyleSheet, Text, View, Dimensions, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState, useRef } from 'react';
 import { Icon } from '@rneui/themed';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -58,35 +50,37 @@ const ImageScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
-      <TouchableWithoutFeedback onPress={goBack}>
-        <View className="items-center flex flex-row">
-          <Icon
-            type="entypo"
-            name="chevron-left"
-            color="white"
-            size={42}
-          />
-          <Text className="text-white self-center">
-            Photos ({currentIndex + 1}/{carouselData.length})
-          </Text>
-        </View>
-      </TouchableWithoutFeedback>
-      <FlatList
-        ref={flatListRef}
-        data={carouselData}
-        renderItem={renderImageItem}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={WIDTH} // Snap to each item's width
-        decelerationRate="fast" // Snap instantly without deceleration
-        initialScrollIndex={index} // Start at the specified index
-        getItemLayout={getItemLayout} // Provide item layout information
-        onScroll={handleScroll} // Set the current index while scrolling
-        onScrollEndDrag={handleScrollEnd} // Set the current index when scrolling ends
-      />
-    </SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.root}>
+        <TouchableWithoutFeedback onPress={goBack}>
+          <View className="items-center flex flex-row">
+            <Icon
+              type="entypo"
+              name="chevron-left"
+              color="white"
+              size={42}
+            />
+            <Text className="text-white self-center">
+              Photos ({currentIndex + 1}/{carouselData.length})
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
+        <FlatList
+          ref={flatListRef}
+          data={carouselData}
+          renderItem={renderImageItem}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={WIDTH} // Snap to each item's width
+          decelerationRate="fast" // Snap instantly without deceleration
+          initialScrollIndex={index} // Start at the specified index
+          getItemLayout={getItemLayout} // Provide item layout information
+          onScroll={handleScroll} // Set the current index while scrolling
+          onScrollEndDrag={handleScrollEnd} // Set the current index when scrolling ends
+        />
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

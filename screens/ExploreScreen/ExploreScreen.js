@@ -4,7 +4,7 @@ import { SearchBar, Card, Icon } from '@rneui/themed';
 import { getDocs, query, collection } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import Fuse from 'fuse.js';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
 import { database } from '../../firebaseConfig';
 
@@ -47,172 +47,174 @@ const ExploreScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
-      <View className="flex flex-row items-center ">
-        <SearchBar
-          placeholder="Search name, username, speciality, etc."
-          value={searchQuery}
-          onChangeText={performSearch}
-          lightTheme={false}
-          round
-          containerStyle={{
-            width: WIDTH * 0.9,
-            backgroundColor: 'white',
-            borderWidth: 0,
-            shadowColor: 'white',
-            borderBottomColor: 'transparent',
-            borderTopColor: 'transparent',
-          }}
-          inputContainerStyle={{ backgroundColor: '#EEEEEE' }}
-          inputStyle={{ fontSize: 14, color: 'black' }}
-          clearIcon={{ size: 25 }}
-        />
-        <TouchableOpacity onPress={navigateFilter}>
-          <Icon
-            type="material-community"
-            name="tune-variant"
-            color="black"
-            size={24}
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.root}>
+        <View className="flex flex-row items-center ">
+          <SearchBar
+            placeholder="Search name, username, speciality, etc."
+            value={searchQuery}
+            onChangeText={performSearch}
+            lightTheme={false}
+            round
+            containerStyle={{
+              width: WIDTH * 0.9,
+              backgroundColor: 'white',
+              borderWidth: 0,
+              shadowColor: 'white',
+              borderBottomColor: 'transparent',
+              borderTopColor: 'transparent',
+            }}
+            inputContainerStyle={{ backgroundColor: '#EEEEEE' }}
+            inputStyle={{ fontSize: 14, color: 'black' }}
+            clearIcon={{ size: 25 }}
           />
-        </TouchableOpacity>
-      </View>
-      <ScrollView style={styles.inner}>
-        {searchResults.length > 0 ? (
-          <View
-            className="mb-3"
-            style={styles.searchParts}>
-            <FlatList
-              data={searchResults}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View className="mb-2">
-                  <View className="flex flex-row ml-2 items-center ">
-                    <Image
-                      source={require('../../assets/images/bizlogo.jpg')}
-                      style={styles.image}
-                    />
-                    <View>
-                      <Text
-                        style={styles.PoppinsMed}
-                        className="text-lg">
-                        {item.name}
-                      </Text>
-                      <Text
-                        style={styles.PoppinsLight}
-                        className=" text-sm text-gray-600">
-                        {item.username}
-                      </Text>
+          <TouchableOpacity onPress={navigateFilter}>
+            <Icon
+              type="material-community"
+              name="tune-variant"
+              color="black"
+              size={24}
+            />
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={styles.inner}>
+          {searchResults.length > 0 ? (
+            <View
+              className="mb-3"
+              style={styles.searchParts}>
+              <FlatList
+                data={searchResults}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <View className="mb-2">
+                    <View className="flex flex-row ml-2 items-center ">
+                      <Image
+                        source={require('../../assets/images/bizlogo.jpg')}
+                        style={styles.image}
+                      />
+                      <View>
+                        <Text
+                          style={styles.PoppinsMed}
+                          className="text-lg">
+                          {item.name}
+                        </Text>
+                        <Text
+                          style={styles.PoppinsLight}
+                          className=" text-sm text-gray-600">
+                          {item.username}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                      <View
+                        style={{
+                          width: WIDTH * 0.9,
+                          height: 1,
+                          backgroundColor: 'lightgray',
+                          alignSelf: 'center',
+                          justifyContent: 'center',
+                          marginTop: 5,
+                          marginBottom: 5,
+                        }}
+                      />
                     </View>
                   </View>
-
-                  <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                    <View
-                      style={{
-                        width: WIDTH * 0.9,
-                        height: 1,
-                        backgroundColor: 'lightgray',
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        marginTop: 5,
-                        marginBottom: 5,
-                      }}
-                    />
-                  </View>
-                </View>
-              )}
-            />
-          </View>
-        ) : null}
-
-        {searchResults.length === 0 ? (
-          <>
-            <Text
-              style={styles.PoppinsMed}
-              className="ml-3 text-xl">
-              Top Categories
-            </Text>
-            <View className="flex flex-row items-center">
-              <Card containerStyle={styles.cardContainer}>
-                <Card.Image
-                  style={styles.cardImage}
-                  source={require('../../assets/images/CategoryIcon.png')}
-                />
-                <Card.Divider />
-                <Card.Title>Barber</Card.Title>
-              </Card>
-
-              <Card containerStyle={styles.cardContainer}>
-                <Card.Image
-                  style={styles.cardImage}
-                  source={require('../../assets/images/hairstylistplaceholder.jpg')}
-                />
-                <Card.Divider />
-                <Card.Title>Hairstylist</Card.Title>
-              </Card>
+                )}
+              />
             </View>
-            <View className="flex flex-row items-center my-5">
-              <Card containerStyle={styles.cardContainer}>
-                <Card.Image
-                  style={styles.cardImage}
-                  source={require('../../assets/images/nailsplaceholder.png')}
-                />
-                <Card.Divider />
-                <Card.Title>Nails</Card.Title>
-              </Card>
+          ) : null}
 
-              <Card containerStyle={styles.cardContainer}>
-                <Card.Image
-                  style={styles.cardImage}
-                  source={require('../../assets/images/makeupplaceholder.jpg')}
-                />
-                <Card.Divider />
-                <Card.Title>Makeup</Card.Title>
-              </Card>
-            </View>
+          {searchResults.length === 0 ? (
+            <>
+              <Text
+                style={styles.PoppinsMed}
+                className="ml-3 text-xl">
+                Top Categories
+              </Text>
+              <View className="flex flex-row items-center">
+                <Card containerStyle={styles.cardContainer}>
+                  <Card.Image
+                    style={styles.cardImage}
+                    source={require('../../assets/images/CategoryIcon.png')}
+                  />
+                  <Card.Divider />
+                  <Card.Title>Barber</Card.Title>
+                </Card>
 
-            <View className="flex flex-row items-center my-5">
-              <Card containerStyle={styles.cardContainer}>
-                <Card.Image
-                  style={styles.cardImage}
-                  source={require('../../assets/images/massageplaceholder.jpg')}
-                />
-                <Card.Divider />
-                <Card.Title>Massage</Card.Title>
-              </Card>
+                <Card containerStyle={styles.cardContainer}>
+                  <Card.Image
+                    style={styles.cardImage}
+                    source={require('../../assets/images/hairstylistplaceholder.jpg')}
+                  />
+                  <Card.Divider />
+                  <Card.Title>Hairstylist</Card.Title>
+                </Card>
+              </View>
+              <View className="flex flex-row items-center my-5">
+                <Card containerStyle={styles.cardContainer}>
+                  <Card.Image
+                    style={styles.cardImage}
+                    source={require('../../assets/images/nailsplaceholder.png')}
+                  />
+                  <Card.Divider />
+                  <Card.Title>Nails</Card.Title>
+                </Card>
 
-              <Card containerStyle={styles.cardContainer}>
-                <Card.Image
-                  style={styles.cardImage}
-                  source={require('../../assets/images/laundryplaceholder.jpg')}
-                />
-                <Card.Divider />
-                <Card.Title>Laundry</Card.Title>
-              </Card>
-            </View>
+                <Card containerStyle={styles.cardContainer}>
+                  <Card.Image
+                    style={styles.cardImage}
+                    source={require('../../assets/images/makeupplaceholder.jpg')}
+                  />
+                  <Card.Divider />
+                  <Card.Title>Makeup</Card.Title>
+                </Card>
+              </View>
 
-            <View className="flex flex-row items-center my-5">
-              <Card containerStyle={styles.cardContainer}>
-                <Card.Image
-                  style={styles.cardImage}
-                  source={require('../../assets/images/cleaningplaceholder.jpg')}
-                />
-                <Card.Divider />
-                <Card.Title>Cleaning Services</Card.Title>
-              </Card>
+              <View className="flex flex-row items-center my-5">
+                <Card containerStyle={styles.cardContainer}>
+                  <Card.Image
+                    style={styles.cardImage}
+                    source={require('../../assets/images/massageplaceholder.jpg')}
+                  />
+                  <Card.Divider />
+                  <Card.Title>Massage</Card.Title>
+                </Card>
 
-              <Card containerStyle={styles.cardContainer}>
-                <Card.Image
-                  style={styles.cardImage}
-                  source={require('../../assets/images/tattooplaceholder.jpg')}
-                />
-                <Card.Divider />
-                <Card.Title>Tattoos</Card.Title>
-              </Card>
-            </View>
-          </>
-        ) : null}
-      </ScrollView>
-    </SafeAreaView>
+                <Card containerStyle={styles.cardContainer}>
+                  <Card.Image
+                    style={styles.cardImage}
+                    source={require('../../assets/images/laundryplaceholder.jpg')}
+                  />
+                  <Card.Divider />
+                  <Card.Title>Laundry</Card.Title>
+                </Card>
+              </View>
+
+              <View className="flex flex-row items-center my-5">
+                <Card containerStyle={styles.cardContainer}>
+                  <Card.Image
+                    style={styles.cardImage}
+                    source={require('../../assets/images/cleaningplaceholder.jpg')}
+                  />
+                  <Card.Divider />
+                  <Card.Title>Cleaning Services</Card.Title>
+                </Card>
+
+                <Card containerStyle={styles.cardContainer}>
+                  <Card.Image
+                    style={styles.cardImage}
+                    source={require('../../assets/images/tattooplaceholder.jpg')}
+                  />
+                  <Card.Divider />
+                  <Card.Title>Tattoos</Card.Title>
+                </Card>
+              </View>
+            </>
+          ) : null}
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

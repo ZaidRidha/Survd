@@ -18,7 +18,7 @@ import { getDocs, collection, onSnapshot } from 'firebase/firestore';
 import { useSelector } from 'react-redux';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
 import { selectCurrentBasket, selectCurrentVendor } from '../../slices/locSlice';
 
@@ -754,94 +754,96 @@ const PressProfile = () => {
   };
 
   return (
-    <SafeAreaView style={styles.root}>
-      <View className="flex flex-row ml-5 mb-3">
-        <Image
-          source={require('../../assets/images/bizlogo.jpg')}
-          style={styles.image}
-        />
-        <View className="flex flex-col ml-5">
-          <Text
-            style={[styles.PoppinsMed, { width: 200 }]}
-            className="text-lg mt-5">
-            {name}
-          </Text>
-          <Text
-            style={styles.PoppinsLight}
-            className="text-sm text-gray-500">
-            {username}
-          </Text>
-          <View className="flex flex-row ">
-            <Icon
-              type="font-awesome"
-              name="star"
-              color="#f7bf25"
-              size={16}
-            />
-            <Icon
-              type="font-awesome"
-              name="star"
-              color="#f7bf25"
-              size={16}
-            />
-            <Icon
-              type="font-awesome"
-              name="star"
-              color="#f7bf25"
-              size={16}
-            />
-            <Icon
-              type="font-awesome"
-              name="star"
-              color="#f7bf25"
-              size={16}
-            />
-            <Icon
-              type="font-awesome"
-              name="star"
-              color="#f7bf25"
-              size={16}
-            />
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.root}>
+        <View className="flex flex-row ml-5 mb-3">
+          <Image
+            source={require('../../assets/images/bizlogo.jpg')}
+            style={styles.image}
+          />
+          <View className="flex flex-col ml-5">
             <Text
-              className="text-sm "
-              style={styles.PoppinsMed}>
-              5.0 (140)
+              style={[styles.PoppinsMed, { width: 200 }]}
+              className="text-lg mt-5">
+              {name}
             </Text>
-          </View>
-          <View className="flex flex-row items-center">
-            <View style={styles.circle} />
             <Text
-              className="text-base "
-              style={styles.PoppinsLight}>
-              Active Now
+              style={styles.PoppinsLight}
+              className="text-sm text-gray-500">
+              {username}
             </Text>
+            <View className="flex flex-row ">
+              <Icon
+                type="font-awesome"
+                name="star"
+                color="#f7bf25"
+                size={16}
+              />
+              <Icon
+                type="font-awesome"
+                name="star"
+                color="#f7bf25"
+                size={16}
+              />
+              <Icon
+                type="font-awesome"
+                name="star"
+                color="#f7bf25"
+                size={16}
+              />
+              <Icon
+                type="font-awesome"
+                name="star"
+                color="#f7bf25"
+                size={16}
+              />
+              <Icon
+                type="font-awesome"
+                name="star"
+                color="#f7bf25"
+                size={16}
+              />
+              <Text
+                className="text-sm "
+                style={styles.PoppinsMed}>
+                5.0 (140)
+              </Text>
+            </View>
+            <View className="flex flex-row items-center">
+              <View style={styles.circle} />
+              <Text
+                className="text-base "
+                style={styles.PoppinsLight}>
+                Active Now
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={initialLayout}
-        renderTabBar={renderTabBar}
-      />
-
-      {showCheckout && (
-        <Button
-          titleStyle={styles.PoppinsReg}
-          onPress={pressContinue}
-          title={`Continue (£${total.toFixed(2)})`}
-          color="black"
-          containerStyle={{
-            width: WIDTH - 120,
-            borderRadius: 10,
-            alignSelf: 'center',
-            justifyContent: 'center',
-          }}
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={initialLayout}
+          renderTabBar={renderTabBar}
         />
-      )}
-    </SafeAreaView>
+
+        {showCheckout && (
+          <Button
+            titleStyle={styles.PoppinsReg}
+            onPress={pressContinue}
+            title={`Continue (£${total.toFixed(2)})`}
+            color="black"
+            containerStyle={{
+              width: WIDTH - 120,
+              borderRadius: 10,
+              alignSelf: 'center',
+              justifyContent: 'center',
+            }}
+          />
+        )}
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

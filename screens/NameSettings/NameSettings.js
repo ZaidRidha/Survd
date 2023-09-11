@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView,SafeAreaProvider } from 'react-native-safe-area-context';
 import { authentication, database } from '../../firebaseConfig';
 import ProfileSectionLink from '../ProfileScreen/ProfileSectionLink';
 import ProfileSectionHeader from '../ProfileScreen/ProfileSectionHeader';
@@ -61,6 +61,7 @@ const NameSettings = () => {
   }, []);
 
   return (
+    <SafeAreaProvider>
     <SafeAreaView style={styles.root}>
       <View className="self-start">
       <BackNavigation />
@@ -74,6 +75,7 @@ const NameSettings = () => {
         />
       </ScrollView>
     </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 

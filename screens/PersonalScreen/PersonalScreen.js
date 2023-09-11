@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Icon } from '@rneui/themed';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
 import { authentication, database } from '../../firebaseConfig';
 import ProfileSectionLink from '../ProfileScreen/ProfileSectionLink';
@@ -70,73 +70,75 @@ const PersonalScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.root}>
-      <ScrollView style={styles.inner}>
-        <Text
-          style={styles.PoppinsMed}
-          className=" text-lg self-center">
-          Personal Information
-        </Text>
-        <View className="mt-3">
-          <View className="flex flex-row justify-between items-center my-2">
-            <View>
-              <Text
-                style={styles.PoppinsMed}
-                className="text-lg ">
-                Email
-              </Text>
-              <Text
-                style={styles.PoppinsMed}
-                className="text-base text-gray-500 ">
-                {email}
-              </Text>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.root}>
+        <ScrollView style={styles.inner}>
+          <Text
+            style={styles.PoppinsMed}
+            className=" text-lg self-center">
+            Personal Information
+          </Text>
+          <View className="mt-3">
+            <View className="flex flex-row justify-between items-center my-2">
+              <View>
+                <Text
+                  style={styles.PoppinsMed}
+                  className="text-lg ">
+                  Email
+                </Text>
+                <Text
+                  style={styles.PoppinsMed}
+                  className="text-base text-gray-500 ">
+                  {email}
+                </Text>
+              </View>
+              <TouchableOpacity onPress={navigateEmail}>
+                <Text className="underline text-base">Edit</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={navigateEmail}>
-            <Text className="underline text-base">Edit</Text>
-            </TouchableOpacity>
-          </View>
-          <View className="flex flex-row justify-between items-center my-2">
-            <View>
-              <Text
-                style={styles.PoppinsMed}
-                className="text-lg">
-                Name
-              </Text>
-              <Text
-                style={styles.PoppinsMed}
-                className="text-base text-gray-500 ">
-                {name}
-              </Text>
+            <View className="flex flex-row justify-between items-center my-2">
+              <View>
+                <Text
+                  style={styles.PoppinsMed}
+                  className="text-lg">
+                  Name
+                </Text>
+                <Text
+                  style={styles.PoppinsMed}
+                  className="text-base text-gray-500 ">
+                  {name}
+                </Text>
+              </View>
+              <TouchableOpacity onPress={navigateName}>
+                <Text className="underline text-base">Edit</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={navigateName}>
-            <Text className="underline text-base">Edit</Text>
-            </TouchableOpacity>
-          </View>
-          <View className="flex flex-row justify-between items-center my-2">
-            <View>
-              <Text
-                style={styles.PoppinsMed}
-                className="text-lg ">
-                Phone Number
-              </Text>
-              <Text
-                style={styles.PoppinsMed}
-                className="text-base text-gray-500 ">
-                {phone}
-              </Text>
+            <View className="flex flex-row justify-between items-center my-2">
+              <View>
+                <Text
+                  style={styles.PoppinsMed}
+                  className="text-lg ">
+                  Phone Number
+                </Text>
+                <Text
+                  style={styles.PoppinsMed}
+                  className="text-base text-gray-500 ">
+                  {phone}
+                </Text>
+              </View>
+              <TouchableOpacity onPress={navigatePhone}>
+                <Text className="underline text-base">Edit</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={navigatePhone}>
-              <Text className="underline text-base">Edit</Text>
-            </TouchableOpacity>
           </View>
-        </View>
 
-        <ProfileSectionLink
-          text="Password"
-          onPress={() => navigation.navigate(SCREENS.RESET_PASSWORD)}
-        />
-      </ScrollView>
-    </SafeAreaView>
+          <ProfileSectionLink
+            text="Password"
+            onPress={() => navigation.navigate(SCREENS.RESET_PASSWORD)}
+          />
+        </ScrollView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 };
 
