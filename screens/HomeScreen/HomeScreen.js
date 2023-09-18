@@ -150,6 +150,29 @@ const HomeScreen = () => {
   }, [uid]);
 
   useEffect(() => {
+    const updateVerificationStatus = async () => {
+      const currentUser = authentication.currentUser; // Get the current user
+
+      if (currentUser) {
+        const emailVerified = currentUser.emailVerified; // Check if email is verified
+        const phoneVerified = Boolean(currentUser.phoneNumber); // If phoneNumber is present, it's verified
+
+        if (emailVerified || phoneVerified) {
+          const userDocRef = doc(database, 'users', currentUser.uid); // Reference to the user's document in Firestore
+
+          // Update the fields in Firestore
+          await updateDoc(userDocRef, {
+            emailVerified: emailVerified,
+            phoneVerified: phoneVerified,
+          });
+        }
+      }
+    };
+
+    updateVerificationStatus();
+  }, []);
+
+  useEffect(() => {
     const fetchUserLocationAndReverseGeocode = async () => {
       // Check if the user is logged in by verifying uid
       const currentUser = authentication.currentUser;
