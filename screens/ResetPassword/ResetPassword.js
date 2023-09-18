@@ -1,17 +1,9 @@
-import {
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Dimensions,
-} from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableWithoutFeedback, Keyboard, Dimensions } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { authentication } from '../../firebaseConfig';
-import { SafeAreaView,SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
 
 const WIDTH = Dimensions.get('window').width;
@@ -21,6 +13,9 @@ const ResetPasswordScreen = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  const user = authentication.currentUser;
+  const userEmail = user ? user.email : '';
 
   const pressButton = async () => {
     if (!email.trim()) {
@@ -41,33 +36,34 @@ const ResetPasswordScreen = () => {
 
   return (
     <SafeAreaProvider>
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.backNavigationContainer}>
-        <BackNavigation />
-      </View>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.root}>
-          <Text style={styles.headerText}>Reset Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            onChangeText={(text) => {
-              setEmail(text);
-              setError('');
-            }}
-            value={email}
-            placeholderTextColor="grey"
-          />
-          {error && <Text style={styles.errorText}>{error}</Text>}
-          {successMessage && <Text style={styles.successText}>{successMessage}</Text>}
-          <TouchableWithoutFeedback onPress={pressButton}>
-            <View style={styles.continueButton}>
-              <Text style={styles.buttonText}>Send Reset Email</Text>
-            </View>
-          </TouchableWithoutFeedback>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.backNavigationContainer}>
+          <BackNavigation />
         </View>
-      </TouchableWithoutFeedback>
-    </SafeAreaView>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={styles.root}>
+            <Text style={styles.headerText}>Reset Password</Text>
+            <TextInput
+              style={styles.input}
+              placeholder={userEmail || "Email"}
+              onChangeText={(text) => {
+                setEmail(text);
+                setError('');
+              }}
+              value={email}
+              placeholderTextColor="grey"
+              editable={!user} // If a user exists, this will be false, making the input uneditable.
+            />
+            {error && <Text style={styles.errorText}>{error}</Text>}
+            {successMessage && <Text style={styles.successText}>{successMessage}</Text>}
+            <TouchableWithoutFeedback onPress={pressButton}>
+              <View style={styles.continueButton}>
+                <Text style={styles.buttonText}>Send Reset Email</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 };

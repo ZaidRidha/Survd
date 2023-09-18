@@ -17,6 +17,8 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   const { currentUser } = authentication;
   const [name, setName] = useState(null);
+  const [phoneVerified, setPhoneVerified] = useState(true); // default to true
+  const [emailVerified, setEmailVerified] = useState(true); // default to true // Added this for the phone number
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(authentication, (user) => {
@@ -34,6 +36,8 @@ const ProfileScreen = () => {
               const userData = docSnapshot.data();
               const userName = userData.name;
               setName(userName);
+              setPhoneVerified(userData.phoneVerified);
+              setEmailVerified(userData.emailVerified);
               console.log(userName);
             } else {
               console.log('No such user document!');
@@ -111,6 +115,7 @@ const ProfileScreen = () => {
             <ProfileSectionLink
               text="Personal information"
               onPress={navigatePersonal}
+              isWarning={!emailVerified || !phoneVerified}
             />
             <ProfileSectionLink
               text="Payment methods"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Dimensions } from 'react-native';
@@ -29,6 +29,8 @@ import ResetPassword from 'screens/ResetPassword/ResetPassword';
 import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
 import BackNavigation from '../components/BackNavigation/BackNavigation';
 import PersonalScreen from 'screens/PersonalScreen/PersonalScreen';
+import { database, authentication } from '../firebaseConfig';
+import { getDoc, doc, onSnapshot } from 'firebase/firestore';
 import EmailScreen from 'screens/EmailScreen/EmailScreen';
 import {
   ACTIVE_COLOR,
@@ -44,6 +46,31 @@ const Tab = createBottomTabNavigator();
 const HEIGHT = Dimensions.get('window').height;
 
 const BottomTabNavigator = () => {
+  const [profileBadge, setProfileBadge] = useState(false);
+  useEffect(() => {
+    const currentUser = authentication.currentUser;
+
+    if (currentUser) {
+      const userDocRef = doc(database, 'users', currentUser.uid);
+
+      // Listen to document changes in real-time
+      const unsubscribe = onSnapshot(userDocRef, (userDoc) => {
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          if (!userData.phoneVerified || !userData.emailVerified) {
+            // If either phone or email isn't verified, show the badge.
+
+            setProfileBadge(true);
+          } else {
+            setProfileBadge(false);
+          }
+        }
+      });
+
+      // Detach the listener when the component is unmounted
+      return () => unsubscribe();
+    }
+  }, [database, authentication]);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -92,6 +119,7 @@ const BottomTabNavigator = () => {
           tabBarActiveTintColor: ACTIVE_COLOR,
           tabBarInactiveTintColor: INACTIVE_COLOR,
           tabBarIcon: TAB_SCREENS.profile.tabIcon,
+          tabBarBadge: profileBadge ? '' : null,
         }}
       />
     </Tab.Navigator>
@@ -232,7 +260,7 @@ const Navigation = () => {
           component={FilterScreen}
           options={{
             presentation: 'modal',
-            headerShown:false,
+            headerShown: false,
           }}
         />
 

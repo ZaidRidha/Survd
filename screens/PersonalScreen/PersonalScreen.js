@@ -16,7 +16,9 @@ const PersonalScreen = () => {
   const { currentUser } = authentication;
   const [name, setName] = useState(null);
   const [phone, setPhone] = useState(null);
-  const [email, setEmail] = useState(null); // Added this for the phone number
+  const [email, setEmail] = useState(null);
+  const [phoneVerified, setPhoneVerified] = useState(true); // default to true
+  const [emailVerified, setEmailVerified] = useState(true); // default to true // Added this for the phone number
 
   const navigateName = () => {
     navigation.navigate(SCREENS.NAME_SCREEN, { showBack: true });
@@ -35,7 +37,7 @@ const PersonalScreen = () => {
       if (user) {
         const userRef = doc(database, 'users', user.uid);
 
-        // Setting up the real-time listener for the user's name and phone
+        // Setting up the real-time listener for the user's name, phone, email and their verification status
         const unsubscribeSnapshot = onSnapshot(
           userRef,
           (docSnapshot) => {
@@ -43,10 +45,16 @@ const PersonalScreen = () => {
               const userData = docSnapshot.data();
               const userName = userData.name;
               const userPhone = userData.phoneNumber;
-              const userEmail = userData.email; // Get the phone data from Firestore
+              const userEmail = userData.email;
+
+              // Update the state with user's data
               setName(userName);
-              setPhone(userPhone); // Set the phone state
-              setEmail(userEmail); // Set the email state
+              setPhone(userPhone);
+              setEmail(userEmail);
+
+              // Extracting and setting the verification status for phone and email
+              setPhoneVerified(userData.phoneVerified);
+              setEmailVerified(userData.emailVerified);
             } else {
               console.log('No such user document!');
             }
@@ -81,11 +89,23 @@ const PersonalScreen = () => {
           <View className="mt-3">
             <View className="flex flex-row justify-between items-center my-2">
               <View>
-                <Text
-                  style={styles.PoppinsMed}
-                  className="text-lg ">
-                  Email
-                </Text>
+                <View className="flex flex-row items-center">
+                  {emailVerified ? null : (
+                    <Icon
+                      name="exclamation"
+                      type="font-awesome-5"
+                      color="darkred"
+                      style={styles.Icon}
+                      size={20}
+                    />
+                  )}
+
+                  <Text
+                    style={styles.PoppinsMed}
+                    className="text-lg ">
+                    Email
+                  </Text>
+                </View>
                 <Text
                   style={styles.PoppinsMed}
                   className="text-base text-gray-500 ">
@@ -115,11 +135,23 @@ const PersonalScreen = () => {
             </View>
             <View className="flex flex-row justify-between items-center my-2">
               <View>
-                <Text
-                  style={styles.PoppinsMed}
-                  className="text-lg ">
-                  Phone Number
-                </Text>
+                <View className="flex flex-row items-center">
+                  {phoneVerified ? null : (
+                    <Icon
+                      name="exclamation"
+                      type="font-awesome-5"
+                      color="darkred"
+                      style={styles.Icon}
+                      size={20}
+                    />
+                  )}
+
+                  <Text
+                    style={styles.PoppinsMed}
+                    className="text-lg ">
+                    Phone
+                  </Text>
+                </View>
                 <Text
                   style={styles.PoppinsMed}
                   className="text-base text-gray-500 ">
@@ -136,6 +168,16 @@ const PersonalScreen = () => {
             text="Password"
             onPress={() => navigation.navigate(SCREENS.RESET_PASSWORD)}
           />
+
+          {(!phoneVerified || !emailVerified) && (
+            <View style={{ padding: 10, backgroundColor: '#ffcccb', borderRadius: 5, marginVertical: 20 }}>
+              <Text style={{ color: 'red', fontFamily: 'PoppinsMed' }}>
+                Please verify your {!phoneVerified ? 'phone number' : ''}
+                {!phoneVerified && !emailVerified ? ' and ' : ''}
+                {!emailVerified ? 'email' : ''} to ensure full functionality.
+              </Text>
+            </View>
+          )}
         </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -165,6 +207,9 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     textAlign: 'center',
+  },
+  Icon: {
+    marginRight: 10,
   },
 });
 
