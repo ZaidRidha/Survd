@@ -91,7 +91,7 @@ Using branches and pull requests helps us maintain a stable main branch and enco
 Submitting Your Changes
 When submitting a PR, please ensure the following:
 
-Your code is thoroughly tested and free from errors.
-You've provided relevant documentation for your changes if needed.
-Your commit messages are clear and concise, following the conventional style if possible.
-Our team will review your PR, provide feedback, and, once approved, merge your changes into the main branch.
+- Your code is thoroughly tested and free from errors.
+- You've provided relevant documentation for your changes if needed.
+- Your commit messages are clear and concise, following the conventional style if possible.
+- Our team will review your PR, provide feedback, and, once approved, merge your changes into the main branch.
