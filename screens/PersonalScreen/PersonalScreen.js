@@ -56,7 +56,7 @@ const PersonalScreen = () => {
               setPhoneVerified(userData.phoneVerified);
               setEmailVerified(userData.emailVerified);
             } else {
-              console.log('No such user document!');
+              // console.log('No such user document!');
             }
           },
           (error) => {

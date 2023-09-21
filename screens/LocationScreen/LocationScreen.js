@@ -43,7 +43,7 @@ const LocationScreen = () => {
           setPostcode(postalCode); // Store the postcode in state
         }
       } catch (error) {
-        console.log('Error retrieving postcode:', error);
+        // console.log('Error retrieving postcode:', error);
       }
     };
 
@@ -85,7 +85,7 @@ const LocationScreen = () => {
           // Reverse geocoding
         }
       } else {
-        console.log('No such user!');
+        // console.log('No such user!');
       }
     };
 

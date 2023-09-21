@@ -46,7 +46,7 @@ const FullMapScreen = () => {
           setcurrentLong(longitude);
         }
       } else {
-        console.log('No such user!');
+        // console.log('No such user!');
       }
     };
 

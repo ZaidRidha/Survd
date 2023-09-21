@@ -19,7 +19,7 @@ const BusinessOnboarding = () => {
     if (currentIndex < slides.length - 1) {
       slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
-      console.log('Last item.');
+      // console.log('Last item.');
     }
   };
 

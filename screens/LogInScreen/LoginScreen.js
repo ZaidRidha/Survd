@@ -41,7 +41,7 @@ const LoginScreen = () => {
   /*   useEffect(() => {
 
     const checkAndNavigate = async () =>{  //once user is checked, then check if they have completed registration, if they have sign them in. 
-      console.log(currUid);
+      // console.log(currUid);
       const docRef = doc(database,"users",currUid);
       const docSnap = await getDoc(docRef); 
       const val = docSnap.get('registrationComplete');
@@ -72,7 +72,7 @@ const LoginScreen = () => {
       const user = await signInWithEmailAndPassword(authentication, email, password);
       navigation.navigate(SCREENS.HOME);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setIserror(true);
       setTimeout(() => {
         setIserror(false);

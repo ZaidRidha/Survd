@@ -39,7 +39,7 @@ const NameSettings = () => {
               const userName = userData.name;
               setName(userName);
             } else {
-              console.log('No such user document!');
+              // console.log('No such user document!');
             }
           },
           (error) => {
