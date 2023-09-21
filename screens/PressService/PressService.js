@@ -104,7 +104,7 @@ const PressService = () => {
     navigation.goBack();
   };
 
-  console.log(groupedExtras);
+  // console.log(groupedExtras);
 
   return (
     <View style={styles.root}>

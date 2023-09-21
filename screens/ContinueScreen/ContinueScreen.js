@@ -249,7 +249,7 @@ const ContinueScreen = () => {
         setAddress(location[0].name);
         setPostCode(location[0].postalCode);
       } catch (error) {
-        console.log('Error getting location', error);
+        // console.log('Error getting location', error);
       }
     };
 

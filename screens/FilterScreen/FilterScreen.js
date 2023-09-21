@@ -34,7 +34,7 @@ const FilterScreen = () => {
   };
 
   const pressContinue = () => {
-    console.log('Continue Pressed');
+    // console.log('Continue Pressed');
   };
 
   const pressFeatured = () => {
@@ -55,7 +55,7 @@ const FilterScreen = () => {
 
   const clearAll = () => {
     // Add the logic here to clear all filters or perform the desired action
-    console.log('Clear All Pressed');
+    // console.log('Clear All Pressed');
     setActiveSection('featured');
   };
 

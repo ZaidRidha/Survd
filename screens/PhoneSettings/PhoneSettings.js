@@ -39,7 +39,7 @@ const PhoneSettings = () => {
               const userPhone = userData.phoneNumber;
               setPhone(userPhone);
             } else {
-              console.log('No such user document!');
+              // console.log('No such user document!');
             }
           },
           (error) => {

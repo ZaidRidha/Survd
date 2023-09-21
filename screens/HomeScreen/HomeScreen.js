@@ -178,7 +178,7 @@ const HomeScreen = () => {
       const currentUser = authentication.currentUser;
       if (currentUser) {
         const userID = currentUser.uid;
-        console.log(userID);
+        // console.log(userID);
         const userDocRef = doc(database, 'users', userID); // Get the document reference
         const userDoc = await getDoc(userDocRef); // Retrieve the document data
 
@@ -187,14 +187,14 @@ const HomeScreen = () => {
           setLocation({ longitude, latitude });
           setcurrentLat(latitude);
           setcurrentLong(longitude);
-          console.log(`Longitude: ${longitude}, Latitude: ${latitude}`); // Log the coordinates
+          // console.log(`Longitude: ${longitude}, Latitude: ${latitude}`); // Log the coordinates
 
           // Reverse geocoding
           const currentAddress = await Location.reverseGeocodeAsync({ latitude, longitude });
-          console.log('hello' + currentAddress);
+          // console.log('hello' + currentAddress);
           setAddress(currentAddress);
         } else {
-          console.log('No such user!');
+          // console.log('No such user!');
         }
       } else {
         // If user is not logged in, get their current location instead
@@ -268,7 +268,7 @@ const HomeScreen = () => {
 
       setNearbyBarbers(nearBarbers);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     } finally {
       setRefreshing(false);
     }

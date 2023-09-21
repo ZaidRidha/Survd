@@ -63,7 +63,7 @@ const PhoneScreen = () => {
       const res = await phoneProvider.verifyPhoneNumber({ phoneNumber }, recaptchaVerifier.current);
       setVerificationId(res);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

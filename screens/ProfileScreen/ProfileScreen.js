@@ -23,7 +23,7 @@ const ProfileScreen = () => {
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(authentication, (user) => {
       if (user) {
-        console.log(user.uid);
+        // console.log(user.uid);
         setIsSignedOut(false);
 
         const userRef = doc(database, 'users', user.uid);
@@ -38,9 +38,9 @@ const ProfileScreen = () => {
               setName(userName);
               setPhoneVerified(userData.phoneVerified);
               setEmailVerified(userData.emailVerified);
-              console.log(userName);
+              // console.log(userName);
             } else {
-              console.log('No such user document!');
+              // console.log('No such user document!');
             }
           },
           (error) => {
