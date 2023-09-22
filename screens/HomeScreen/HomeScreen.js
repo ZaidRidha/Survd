@@ -14,6 +14,7 @@ import { SCREENS } from 'navigation/navigationPaths';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
 import BarberCard from '../../components/BarberCard/BarberCard';
 import useFont from '../../useFont';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { database, authentication } from '../../firebaseConfig';
 
 const WIDTH = Dimensions.get('window').width;
@@ -124,29 +125,59 @@ const HomeScreen = () => {
   }, [uid]);
 
   useEffect(() => {
-    const fetchAppointments = () => {
-      const appointmentsRef = collection(database, 'appointments');
-      const q = query(appointmentsRef, where('userID', '==', uid));
+    const fetchAppointments = async () => {
+      if (authentication.currentUser) {
+        const appointmentsRef = collection(database, 'appointments');
+        const q = query(appointmentsRef, where('userID', '==', uid));
 
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const appointments = [];
-        querySnapshot.forEach((doc) => {
-          const appointmentData = {
-            appointmentID: doc.id,
-            ...doc.data(),
-          };
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const appointments = [];
+          querySnapshot.forEach((doc) => {
+            const appointmentData = {
+              appointmentID: doc.id,
+              ...doc.data(),
+            };
 
-          // Process the appointment data if needed
-          appointments.push(appointmentData);
+            // Process the appointment data if needed
+            appointments.push(appointmentData);
+          });
+
+          setMatchingAppointments(appointments);
         });
 
-        setMatchingAppointments(appointments);
-      });
+        return () => unsubscribe();
+      } else {
+        const guestName = await AsyncStorage.getItem('guestName');
+        const guestEmail = await AsyncStorage.getItem('guestEmail');
+        const guestPhone = await AsyncStorage.getItem('guestPhone');
 
-      return () => unsubscribe();
+        // Use guestName and other fields for querying
+        const appointmentsRef = collection(database, 'appointments');
+        const q = query(
+          appointmentsRef,
+          where('guestName', '==', guestName),
+          where('guestEmail', '==', guestEmail),
+          where('guestPhone', '==', guestPhone)
+        );
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const appointments = [];
+          querySnapshot.forEach((doc) => {
+            const appointmentData = {
+              appointmentID: doc.id,
+              ...doc.data(),
+            };
+
+            // Process the appointment data if needed
+            appointments.push(appointmentData);
+          });
+
+          setMatchingAppointments(appointments);
+        });
+      }
     };
 
-    fetchAppointments();
+    fetchAppointments(); // Call the function here
   }, [uid]);
 
   useEffect(() => {

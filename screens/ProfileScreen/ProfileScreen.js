@@ -67,6 +67,7 @@ const ProfileScreen = () => {
       .then(() => {
         // Sign-out successful.
         setIsSignedOut(true);
+        navigation.navigate(SCREENS.HOME);
       })
       .catch((error) => {
         // An error happened.

@@ -32,6 +32,7 @@ import PersonalScreen from 'screens/PersonalScreen/PersonalScreen';
 import { database, authentication } from '../firebaseConfig';
 import { getDoc, doc, onSnapshot } from 'firebase/firestore';
 import EmailScreen from 'screens/EmailScreen/EmailScreen';
+import GuestCheckout from 'screens/GuestCheckout/GuestCheckout';
 import {
   ACTIVE_COLOR,
   AppointmentsTabIcon,
@@ -322,6 +323,14 @@ const Navigation = () => {
             },
           }}
         />
+
+        <Stack.Screen
+          name={SCREENS.GUEST_CHECKOUT}
+          component={GuestCheckout}
+          options={{
+            headerShown: false,
+            presentation: 'modal',
+          }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

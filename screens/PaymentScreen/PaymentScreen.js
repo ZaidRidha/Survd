@@ -26,8 +26,19 @@ const PaymentScreen = () => {
   const auth = getAuth();
   const WIDTH = Dimensions.get('window').width;
   const route = useRoute();
-  const { selectedTimeslot, address, postCode, selectedDate, vendorName, servicesDuration, subtotal, docId } =
-    route.params;
+  const {
+    selectedTimeslot,
+    address,
+    postCode,
+    selectedDate,
+    vendorName,
+    servicesDuration,
+    subtotal,
+    docId,
+    guestPhone,
+    guestEmail,
+    guestName,
+  } = route.params;
   const navigation = useNavigation();
   const Basket = useSelector(selectCurrentBasket);
   const dispatch = useDispatch();
@@ -36,6 +47,8 @@ const PaymentScreen = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [uid, setUid] = useState(null); // Add the state for storing uid
   const currentDate = new Date();
+
+  console.log(guestPhone);
 
   const serializedBasket = JSON.stringify(Basket);
 
@@ -55,7 +68,8 @@ const PaymentScreen = () => {
     if (!isButtonDisabled) {
       setIsButtonDisabled(true);
 
-      const docRef = await addDoc(collection(database, 'appointments'), {
+      // Create a base appointment object
+      let appointmentObj = {
         barberID: docId,
         date: selectedDate,
         duration: servicesDuration,
@@ -69,7 +83,15 @@ const PaymentScreen = () => {
         postCode,
         hidden: false,
         status: 'awaiting',
-      });
+      };
+
+      // Conditionally add guest fields if they exist
+      if (guestEmail !== undefined) appointmentObj.guestEmail = guestEmail;
+      if (guestPhone !== undefined) appointmentObj.guestPhone = guestPhone;
+      if (guestName !== undefined) appointmentObj.guestName = guestName;
+
+      // Add the appointment to Firestore
+      const docRef = await addDoc(collection(database, 'appointments'), appointmentObj);
 
       navigation.dispatch(
         CommonActions.reset({
@@ -83,7 +105,10 @@ const PaymentScreen = () => {
                 formattedDate,
                 selectedTimeslot,
                 vendorName,
-                appointmentId: docRef.id, // Add the new appointment ID as a parameter
+                appointmentId: docRef.id,
+                guestPhone,
+                guestName,
+                guestEmail,
               },
             },
           ],
@@ -131,7 +156,7 @@ const PaymentScreen = () => {
 
         <Text
           style={styles.poppinsReg}
-          className="text-2xl mt-1 mb-3">
+          className="text-2xl mt-1 mb-3 ml-2">
           Just to confirm..
         </Text>
 

@@ -7,11 +7,13 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { database, authentication } from '../../firebaseConfig';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -20,12 +22,43 @@ const ViewAppointment = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const [showServices, setShowServices] = useState(false);
+  const [userName, setUserName] = useState(''); // Add this line
 
-  const { barberName, date, duration, price, time, basket, timeDate, postcode, address, status } = route.params;
+  const { appointmentData } = route.params;
 
-  const deserializedBasket = JSON.parse(basket);
+  const getName = async () => {
+    if (authentication.currentUser) {
+      // Get name from Firestore using the uid
+      const userDocRef = doc(database, 'users', authentication.currentUser.uid);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists && userDoc.data().name) {
+        return userDoc.data().name;
+      } else {
+        console.error('User document does not exist or lacks a name field.');
+        return null; // Or return a default name or handle this case differently
+      }
+    } else {
+      // Get name from AsyncStorage
+      const guestName = await AsyncStorage.getItem('guestName');
+      console.log(guestName);
+      return guestName;
+    }
+  };
 
-  const timestamp = new Date(timeDate.seconds * 1000 + timeDate.nanoseconds / 1000000);
+  useEffect(() => {
+    const retrieveName = async () => {
+      const name = await getName();
+      setUserName(name); // This updates the state variable with the name
+    };
+
+    retrieveName(); // Call the function inside useEffect
+  }, []);
+
+  console.log(appointmentData);
+
+  const deserializedBasket = JSON.parse(appointmentData.Basket);
+
+  const timestamp = new Date(appointmentData.timeDate.seconds * 1000 + appointmentData.timeDate.nanoseconds / 1000000);
 
   const options = {
     year: 'numeric',
@@ -61,14 +94,14 @@ const ViewAppointment = () => {
         </View>
 
         <ScrollView style={styles.inner}>
-          {status === 'cancelled' ? (
+          {appointmentData.status === 'cancelled' ? (
             <Lottie
               source={require('../../assets/animations/18053-no-error-cancelled.json')}
               autoPlay
               loop={false} // Set loop prop to false
               style={styles.animation}
             />
-          ) : status === 'awaiting' ? (
+          ) : appointmentData.status === 'awaiting' ? (
             <Lottie
               source={require('../../assets/animations/136473-waiting.json')}
               autoPlay
@@ -87,13 +120,13 @@ const ViewAppointment = () => {
           <Text
             style={styles.PoppinsMed}
             className="text-xl flex-grow text-center">
-            {status === 'awaiting'
+            {appointmentData.status === 'awaiting'
               ? 'Awaiting Confirmation'
-              : status === 'cancelled'
+              : appointmentData.status === 'cancelled'
               ? 'Appointment Cancelled'
-              : status === 'confirmed'
+              : appointmentData.status === 'confirmed'
               ? 'Appointment Confirmed'
-              : status === 'completed'
+              : appointmentData.status === 'completed'
               ? 'Appointment Completed'
               : ''}
           </Text>
@@ -114,7 +147,7 @@ const ViewAppointment = () => {
               <Text
                 style={styles.PoppinsReg}
                 className="text-base ml-1 ">
-                Tommy
+                {userName}
               </Text>
             </View>
             <View className="flex flex-row items-center mt-1 mb-2">
@@ -126,7 +159,7 @@ const ViewAppointment = () => {
               <Text
                 style={styles.PoppinsReg}
                 className="text-base ml-1 ">
-                {barberName}
+                {appointmentData.barberName}
               </Text>
             </View>
             <View className="flex flex-row items-center my-1">
@@ -152,12 +185,12 @@ const ViewAppointment = () => {
               <Text
                 style={styles.PoppinsMed}
                 className="text-base ml-1 ">
-                {address},
+                {appointmentData.address},
               </Text>
               <Text
                 style={styles.PoppinsMed}
                 className="text-base ml-1">
-                {postcode}
+                {appointmentData.postcode}
               </Text>
             </View>
             <View className="flex flex-row items-center my-1">
@@ -170,7 +203,7 @@ const ViewAppointment = () => {
               <Text
                 style={styles.PoppinsMed}
                 className="text-base ml-1">
-                {date}, {time}
+                {appointmentData.date}, {appointmentData.time}
               </Text>
             </View>
 
@@ -283,13 +316,13 @@ const ViewAppointment = () => {
           <Text
             className=" text-sm mt-1 "
             style={styles.PoppinsReg}>
-            Total Duration: {duration} Minutes
+            Total Duration: {appointmentData.duration} Minutes
           </Text>
 
           <Text
             className=" text-base mb-1 "
             style={styles.PoppinsMed}>
-            Subtotal: £{price.toFixed(2)}
+            Subtotal: £{appointmentData.price.toFixed(2)}
           </Text>
 
           <View
@@ -346,7 +379,7 @@ const ViewAppointment = () => {
             <View
               className="flex flex-row items-center justify-between"
               style={{ marginBottom: 15, marginTop: 10 }}>
-              {status !== 'completed' && status !== 'cancelled' && (
+              {appointmentData.status !== 'completed' && appointmentData.status !== 'cancelled' && (
                 <Button
                   title="Cancel"
                   buttonStyle={{
@@ -370,7 +403,7 @@ const ViewAppointment = () => {
                   backgroundColor: 'white',
                   borderWidth: 1,
                   borderColor: 'black',
-                  width: status === 'completed' || status === 'cancelled' ? WIDTH * 0.94 : WIDTH * 0.45,
+                  width: appointmentData.status === 'completed' || appointmentData.status === 'cancelled' ? WIDTH * 0.94 : WIDTH * 0.45,
                   marginTop: 10,
                   borderRadius: 5,
                 }}
