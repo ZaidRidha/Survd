@@ -11,7 +11,7 @@ import Toast from 'react-native-root-toast';
 import * as Clipboard from 'expo-clipboard';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
-import { database } from '../../firebaseConfig';
+import { database, authentication } from '../../firebaseConfig';
 import { selectCurrentBasket, removeFromBasket } from '../../slices/locSlice';
 
 const WIDTH = Dimensions.get('window').width;
@@ -274,13 +274,19 @@ const ContinueScreen = () => {
   const handleContinue = () => {
     if (Basket.length === 0) {
       alert('Basket is empty. Please add items before continuing.');
-    } else if (showCalendar && selectedTimeslot === '') {
+      return; // Return here to prevent further code execution
+    }
+
+    if (showCalendar && selectedTimeslot === '') {
       setDisplayError(true);
       setTimeout(() => {
         setDisplayError(false);
       }, 3000); // 3000 milliseconds = 3 seconds
-    } else {
-      navigation.navigate(SCREENS.PAYMENT_SCREEN, {
+      return; // Return here to prevent further code execution
+    }
+
+    if (!authentication.currentUser) {
+      navigation.navigate(SCREENS.GUEST_CHECKOUT, {
         selectedTimeslot,
         address,
         postCode,
@@ -289,8 +295,20 @@ const ContinueScreen = () => {
         subtotal: totalServicesPrice,
         servicesDuration: totalServicesDuration,
         docId,
-      });
+      }); // Assuming you've set the GuestCheckout screen's route name to 'GUEST_CHECKOUT'
+      return;
     }
+
+    navigation.navigate(SCREENS.PAYMENT_SCREEN, {
+      selectedTimeslot,
+      address,
+      postCode,
+      selectedDate,
+      vendorName,
+      subtotal: totalServicesPrice,
+      servicesDuration: totalServicesDuration,
+      docId,
+    });
   };
 
   const handleRemoveItem = (objectId) => {

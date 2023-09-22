@@ -23,5 +23,5 @@ export const SCREENS = {
   PERSONAL_SCREEN: 'PersonalScreen',
   RESET_PASSWORD: 'ResetPassword',
   EMAIL_SCREEN: 'EmailScreen',
-
+  GUEST_CHECKOUT: 'GuestCheckout',
 };

@@ -5,8 +5,9 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { query, collection, where, onSnapshot } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
-import { database } from '../../firebaseConfig';
+import { database, authentication } from '../../firebaseConfig';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
@@ -96,9 +97,24 @@ const AppointmentsScreen = () => {
   }, []);
 
   useEffect(() => {
-    const fetchAppointments = () => {
+    const fetchAppointments = async () => {
+      let q;
       const appointmentsRef = collection(database, 'appointments');
-      const q = query(appointmentsRef, where('userID', '==', uid));
+
+      if (uid) {
+        q = query(appointmentsRef, where('userID', '==', uid));
+      } else {
+        const asyncGuestName = await AsyncStorage.getItem('guestName');
+        const asyncGuestPhone = await AsyncStorage.getItem('guestPhone');
+        const asyncGuestEmail = await AsyncStorage.getItem('guestEmail');
+
+        q = query(
+          appointmentsRef,
+          where('guestName', '==', asyncGuestName),
+          where('guestPhone', '==', asyncGuestPhone),
+          where('guestEmail', '==', asyncGuestEmail)
+        );
+      }
 
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const upcomingAppointments = [];
@@ -118,20 +134,15 @@ const AppointmentsScreen = () => {
           }
         });
 
-        // Update state with the three arrays
         setUpcomingAppointments(upcomingAppointments);
         setCompletedAppointments(completedAppointments);
         setCancelledAppointments(cancelledAppointments);
       });
 
-      return unsubscribe; // Cleanup function to unsubscribe from the snapshot listener
+      return unsubscribe; // Cleanup the event listener on unmount
     };
 
-    const unsubscribe = fetchAppointments();
-
-    return () => {
-      unsubscribe(); // Unsubscribe when the component is unmounted
-    };
+    fetchAppointments();
   }, [uid]);
 
   const renderScene = SceneMap({

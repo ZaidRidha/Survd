@@ -46,16 +46,7 @@ const AppointmentCard = ({ appointmentData, showHide, hideablePage, promptUser }
 
   const handleNavigate = () => {
     navigation.navigate(SCREENS.VIEW_APPOINTMENT, {
-      barberName: appointmentData.barberName,
-      date: appointmentData.date,
-      duration: appointmentData.duration,
-      price: appointmentData.price,
-      time: appointmentData.time,
-      basket: appointmentData.Basket,
-      timeDate: appointmentData.timeDate,
-      postcode: appointmentData.postCode,
-      address: appointmentData.address,
-      status: appointmentData.status,
+      appointmentData,
     });
   };
 

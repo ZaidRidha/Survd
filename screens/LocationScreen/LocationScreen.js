@@ -92,6 +92,32 @@ const LocationScreen = () => {
     fetchUserLocationAndReverseGeocode();
   }, [uid, database, setcurrentLat, setcurrentLong, setAddress]);
 
+  useEffect(() => {
+    const fetchLocation = async () => {
+      if (uid) {
+        // Your existing logic to get user's saved location from Firestore
+      } else {
+        // No user is logged in. Get device's current location
+        try {
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status === 'granted') {
+            const location = await Location.getCurrentPositionAsync({});
+            const { latitude, longitude } = location.coords;
+            setcurrentLat(latitude);
+            setcurrentLong(longitude);
+
+            const result = await Location.reverseGeocodeAsync({ latitude, longitude });
+            setAddress(result);
+          }
+        } catch (error) {
+          console.error("Error getting device's location:", error);
+        }
+      }
+    };
+
+    fetchLocation();
+  }, [uid]);
+
   const goBack = () => {
     navigation.goBack();
   };

@@ -102,18 +102,14 @@ const LoginScreen = () => {
     navigation.navigate(SCREENS.RESET_PASSWORD);
   };
 
-
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <KeyboardAwareScrollView contentContainerStyle={styles.root}>
         <View style={{ alignItems: 'center', marginVertical: 40 }}>
-          <Text style={{ ...styles.PoppinsMed, fontSize: 28, textAlign: 'center' }}>
-            You're not currently logged in!
-          </Text>
           <Text
-            style={{ ...styles.PoppinsMed, fontSize: 18, textAlign: 'center' }}
+            style={{ ...styles.PoppinsMed, fontSize: 24, textAlign: 'center' }}
             className="text-lg">
-            Login to use all the app's features.
+            Login to use all of our features.
           </Text>
         </View>
 
@@ -136,16 +132,20 @@ const LoginScreen = () => {
           onChangeText={(text) => setPassword(text)}
         />
 
-        <Text onPress = {navigateForgot} style={styles.forgottext}>Forgot Password?</Text>
+        <Text
+          onPress={navigateForgot}
+          style={styles.forgottext}>
+          Forgot Password?
+        </Text>
 
         {isError ? <Text style={styles.errortext}>Invalid email/password combination!</Text> : null}
 
         {loading && (
-          <View className='p-5'>
-          <ActivityIndicator
-            size="large"
-            color="#999999"
-          />
+          <View className="p-5">
+            <ActivityIndicator
+              size="large"
+              color="#999999"
+            />
           </View>
         )}
 

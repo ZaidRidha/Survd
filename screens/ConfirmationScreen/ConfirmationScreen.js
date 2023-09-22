@@ -1,10 +1,13 @@
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useNavigation, useRoute, CommonActions } from '@react-navigation/native';
+import { getDoc, query, collection, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { database, authentication } from '../../firebaseConfig';
 
 const WIDTH = Dimensions.get('window').width;
 const HEIGHT = Dimensions.get('window').height;
@@ -12,6 +15,7 @@ const HEIGHT = Dimensions.get('window').height;
 const ConfirmationScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const [userName, setUserName] = useState(''); // Add this line
 
   const { selectedTimeslot, address, postCode, formattedDate, vendorName } = route.params;
 
@@ -23,6 +27,34 @@ const ConfirmationScreen = () => {
       })
     );
   };
+
+  const getName = async () => {
+    if (authentication.currentUser) {
+      // Get name from Firestore using the uid
+      const userDocRef = doc(database, 'users', authentication.currentUser.uid);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists && userDoc.data().name) {
+        return userDoc.data().name;
+      } else {
+        console.error('User document does not exist or lacks a name field.');
+        return null; // Or return a default name or handle this case differently
+      }
+    } else {
+      // Get name from AsyncStorage
+      const guestName = await AsyncStorage.getItem('guestName');
+      console.log(guestName);
+      return guestName;
+    }
+  };
+
+  useEffect(() => {
+    const retrieveName = async () => {
+      const name = await getName();
+      setUserName(name); // This updates the state variable with the name
+    };
+
+    retrieveName(); // Call the function inside useEffect
+  }, []);
 
   return (
     <SafeAreaProvider>
@@ -55,7 +87,7 @@ const ConfirmationScreen = () => {
             <Text
               style={styles.PoppinsReg}
               className="text-xl ml-1">
-              Tommy
+              {userName}
             </Text>
           </View>
           <View className="flex flex-row items-center mt-1 mb-2">
