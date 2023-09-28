@@ -55,6 +55,7 @@
     "react-native-country-codes-picker": "^2.2.2",
     "react-native-country-flag": "^1.1.9",
     "react-native-country-picker-modal-fix": "^0.3.2",
+    "react-native-device-country": "^1.0.4",
     "react-native-divider": "^1.0.3",
     "react-native-flash-message": "^0.4.1",
     "react-native-gesture-handler": "~2.12.0",
@@ -95,7 +96,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-react-native": "^4.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
-    "husky": ">=6",
+    "husky": "^8.0.3",
     "lint-staged": ">=10",
     "prettier": "3.0.2",
     "tailwindcss": "3.3.2"

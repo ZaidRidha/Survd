@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
@@ -18,17 +18,18 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { Button, Icon } from '@rneui/themed';
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { database, authentication, firebaseConfig } from '../../firebaseConfig';
+import * as Location from 'expo-location';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
 import { SCREENS } from 'navigation/navigationPaths';
+import { database, authentication, firebaseConfig } from '../../firebaseConfig';
 
 const PhoneScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const recaptchaVerifier = useRef(null);
   const navigation = useNavigation();
   const [showCountryPicker, setShowCountryPicker] = useState(false);
-  const [countryCode, setCountryCode] = useState('+44');
-  // const [currentFlag, setCurrentFlag] = useState('AI');
+  const [countryCode, setCountryCode] = useState('');
+  const [isoCountryCode, setIsoCountryCode] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [isFocused, setIsFocused] = useState(false);
@@ -41,6 +42,62 @@ const PhoneScreen = () => {
 
   const showBack = route.params?.showBack || false;
 
+  const isoToPhoneCode = {
+    // North America
+    US: '+1', // United States
+    CA: '+1', // Canada
+    MX: '+52', // Mexico
+
+    // Western Europe
+    GB: '+44', // United Kingdom
+    DE: '+49', // Germany
+    FR: '+33', // France
+    IT: '+39', // Italy
+    ES: '+34', // Spain
+    PT: '+351', // Portugal
+    NL: '+31', // Netherlands
+    BE: '+32', // Belgium
+    CH: '+41', // Switzerland
+    AT: '+43', // Austria
+    SE: '+46', // Sweden
+    NO: '+47', // Norway
+    DK: '+45', // Denmark
+    FI: '+358', // Finland
+    IE: '+353', // Ireland
+    LU: '+352', // Luxembourg
+    IS: '+354', // Iceland
+
+    // Gulf States
+    AE: '+971', // United Arab Emirates
+    SA: '+966', // Saudi Arabia
+    QA: '+974', // Qatar
+    OM: '+968', // Oman
+    KW: '+965', // Kuwait
+    BH: '+973', // Bahrain
+  };
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === 'granted') {
+          const location = await Location.getCurrentPositionAsync({});
+          const { latitude, longitude } = location.coords;
+
+          const result = await Location.reverseGeocodeAsync({ latitude, longitude });
+          const iso = result[0].isoCountryCode;
+
+          if (isoToPhoneCode.hasOwnProperty(iso)) {
+            setCountryCode(isoToPhoneCode[iso]);
+          }
+        }
+      } catch (error) {
+        console.error("Error getting device's location:", error);
+      }
+    };
+
+    fetchLocation();
+  }, []);
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,

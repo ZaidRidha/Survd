@@ -403,7 +403,10 @@ const ViewAppointment = () => {
                   backgroundColor: 'white',
                   borderWidth: 1,
                   borderColor: 'black',
-                  width: appointmentData.status === 'completed' || appointmentData.status === 'cancelled' ? WIDTH * 0.94 : WIDTH * 0.45,
+                  width:
+                    appointmentData.status === 'completed' || appointmentData.status === 'cancelled'
+                      ? WIDTH * 0.94
+                      : WIDTH * 0.45,
                   marginTop: 10,
                   borderRadius: 5,
                 }}

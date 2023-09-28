@@ -84,12 +84,12 @@ const BottomTabNavigator = () => {
       }}>
       <Tab.Screen
         name={SCREENS.HOME}
-        component={TAB_SCREENS.home.component}
+        component={TAB_SCREENS.homeTab.component}
         options={{
           tabBarActiveTintColor: ACTIVE_COLOR,
           tabBarInactiveTintColor: INACTIVE_COLOR,
           unmountOnBlur: true,
-          tabBarIcon: TAB_SCREENS.home.tabIcon,
+          tabBarIcon: TAB_SCREENS.homeTab.tabIcon,
         }}
       />
 
@@ -339,7 +339,7 @@ const Navigation = () => {
 export default Navigation;
 
 const TAB_SCREENS = {
-  home: {
+  homeTab: {
     component: HomeScreen,
     tabIcon: HomeTabIcon,
   },
