@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
+
 const UpcomingScreen = ({ appointments }) => (
   <ScrollView style={styles.scene}>
     {appointments.length > 0
@@ -80,29 +81,18 @@ const AppointmentsScreen = () => {
   const [completedAppointments, setCompletedAppointments] = useState([]);
   const [cancelledAppointments, setCancelledAppointments] = useState([]);
 
-  const auth = getAuth();
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUid(user.uid);
-      } else {
-        setUid(null);
-      }
-    });
-
-    return () => unsubscribe(); // Cleanup the event listener on unmount
-  }, []);
 
   useEffect(() => {
     const fetchAppointments = async () => {
+      const user = authentication.currentUser;
       let q;
       const appointmentsRef = collection(database, 'appointments');
 
-      if (uid) {
-        q = query(appointmentsRef, where('userID', '==', uid));
+      if (user) {
+        q = query(appointmentsRef, where('userID', '==', user.uid));
       } else {
         const asyncGuestName = await AsyncStorage.getItem('guestName');
         const asyncGuestPhone = await AsyncStorage.getItem('guestPhone');
@@ -137,13 +127,15 @@ const AppointmentsScreen = () => {
         setUpcomingAppointments(upcomingAppointments);
         setCompletedAppointments(completedAppointments);
         setCancelledAppointments(cancelledAppointments);
+
+
       });
 
       return unsubscribe; // Cleanup the event listener on unmount
     };
 
     fetchAppointments();
-  }, [uid]);
+  }, []);
 
   const renderScene = SceneMap({
     upcoming: () => <UpcomingScreen appointments={upcomingAppointments} />,
