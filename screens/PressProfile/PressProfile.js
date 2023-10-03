@@ -59,10 +59,14 @@ const PressProfile = () => {
     homeActive,
     updatedhours,
     walkins,
+    rating,
   } = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
   const initialLayout = { width: WIDTH };
+  const fullStars = Math.floor(rating);
+  const halfStar = rating - fullStars >= 0.5;
+  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
   let total = 0;
 
@@ -772,42 +776,34 @@ const PressProfile = () => {
               className="text-sm text-gray-500">
               {username}
             </Text>
-            <View className="flex flex-row ">
-              <Icon
-                type="font-awesome"
-                name="star"
-                color="#f7bf25"
-                size={16}
-              />
-              <Icon
-                type="font-awesome"
-                name="star"
-                color="#f7bf25"
-                size={16}
-              />
-              <Icon
-                type="font-awesome"
-                name="star"
-                color="#f7bf25"
-                size={16}
-              />
-              <Icon
-                type="font-awesome"
-                name="star"
-                color="#f7bf25"
-                size={16}
-              />
-              <Icon
-                type="font-awesome"
-                name="star"
-                color="#f7bf25"
-                size={16}
-              />
-              <Text
-                className="text-sm "
-                style={styles.PoppinsMed}>
-                5.0 (140)
-              </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {[...Array(fullStars)].map((_, i) => (
+                <Icon
+                  key={i}
+                  type="font-awesome"
+                  name="star"
+                  color="black"
+                  size={16}
+                />
+              ))}
+              {halfStar && (
+                <Icon
+                  type="font-awesome"
+                  name="star-half"
+                  color="black"
+                  size={16}
+                />
+              )}
+              {[...Array(emptyStars)].map((_, i) => (
+                <Icon
+                  key={i}
+                  type="font-awesome"
+                  name="star-o"
+                  color="#f7bf25"
+                  size={16}
+                />
+              ))}
+              <Text style={styles.PoppinsMed}> {rating.toFixed(1)} (140)</Text>
             </View>
             <View className="flex flex-row items-center">
               <View style={styles.circle} />

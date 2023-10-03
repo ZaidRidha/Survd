@@ -3,6 +3,8 @@ import { Icon, Button } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectFilters, setFilters } from '../../slices/locSlice.js';
 
 import Slider from '@react-native-community/slider';
 
@@ -11,12 +13,19 @@ const WIDTH = Dimensions.get('window').width;
 
 const FilterScreen = () => {
   const navigation = useNavigation();
-  const [distance, setDistance] = useState(10);
-  const [activeSection, setActiveSection] = useState('featured');
-  const [shopSelected, setShopSelected] = useState(false);
-  const [mobileSelected, setMobileSelected] = useState(false);
-  const [homeSelected, setHomeSelected] = useState(false);
+  const dispatch = useDispatch();
+  const filters = useSelector(selectFilters); // get filters from Redux store
 
+  const [distance, setDistance] = useState(filters.distance);
+  const [activeSection, setActiveSection] = useState(filters.sortBy);
+  const [shopSelected, setShopSelected] = useState(filters.serviceTypes.includes('shop'));
+  const [mobileSelected, setMobileSelected] = useState(filters.serviceTypes.includes('mobile'));
+  const [homeSelected, setHomeSelected] = useState(filters.serviceTypes.includes('home'));
+  const selectedServiceTypes = [
+    ...(shopSelected ? ['shop'] : []),
+    ...(mobileSelected ? ['mobile'] : []),
+    ...(homeSelected ? ['home'] : []),
+  ];
   const toggleShopSelected = () => {
     setShopSelected(!shopSelected);
   };
@@ -34,9 +43,25 @@ const FilterScreen = () => {
   };
 
   const pressContinue = () => {
-    // console.log('Continue Pressed');
-  };
+    const newFilters = {
+      sortBy: activeSection,
+      distance: distance,
+      serviceTypes: [
+        ...(shopSelected ? ['shop'] : []),
+        ...(mobileSelected ? ['mobile'] : []),
+        ...(homeSelected ? ['home'] : []),
+      ],
+    };
 
+    if (selectedServiceTypes.length === 0) {
+      // Show a warning if no service types are selected
+      alert('You must select at least one service type to continue.');
+      return;
+    }
+
+    dispatch(setFilters(newFilters)); // update Redux store
+    navigation.goBack(); // Optionally navigate back
+  };
   const pressFeatured = () => {
     setActiveSection('featured');
   };

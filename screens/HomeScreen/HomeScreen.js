@@ -6,7 +6,7 @@ import { useNavigation, useScrollToTop } from '@react-navigation/native';
 
 import { getDistance } from 'geolib';
 import { doc, getDocs, query, collection, where, onSnapshot, updateDoc, getDoc } from 'firebase/firestore';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Fuse from 'fuse.js';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
@@ -16,6 +16,7 @@ import BarberCard from '../../components/BarberCard/BarberCard';
 import useFont from '../../useFont';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { database, authentication } from '../../firebaseConfig';
+import { selectFilters } from '../../slices/locSlice';
 
 const WIDTH = Dimensions.get('window').width;
 // const HEIGHT = Dimensions.get('window').height;
@@ -24,6 +25,8 @@ const HomeScreen = () => {
   useFont();
   const navigation = useNavigation();
   const auth = getAuth();
+  const filters = useSelector(selectFilters);
+  const [storedFilters, setStoredFilters] = useState(null);
 
   const [currentLat, setcurrentLat] = useState(null);
   const [currentLong, setcurrentLong] = useState(null);
@@ -42,6 +45,11 @@ const HomeScreen = () => {
     setSearchQuery('');
     setSearchResults([]);
   };
+
+  useEffect(() => {
+    setStoredFilters(filters);
+    console.log(storedFilters);
+  }, [filters]);
 
   const navigateFilter = () => {
     navigation.navigate(SCREENS.FILTER_SCREEN);
@@ -256,48 +264,105 @@ const HomeScreen = () => {
 
   useEffect(() => {
     (async () => {
-      const querySnapshot = await getDocs(collection(database, 'barbers'));
+      const barbersRef = collection(database, 'barbers');
       const nearBarbers = [];
-      querySnapshot.forEach((doc) => {
-        const docData = doc.data(); // Retrieve all the document data at once
 
-        const distance = getDistance(
-          { latitude: currentLat, longitude: currentLong },
-          { latitude: docData.latitude, longitude: docData.longitude }
-        );
-        const distanceInMiles = (distance / 1609).toFixed(1);
+      for (const serviceType of storedFilters.serviceTypes) {
+        const q = query(barbersRef, where(serviceType, '==', true));
+        const querySnapshot = await getDocs(q);
 
-        if (distance < 6000) {
-          nearBarbers.push({ ...docData, distance: distanceInMiles, docId: doc.id });
-        }
-      });
+        querySnapshot.forEach((doc) => {
+          const docData = doc.data();
 
-      setNearbyBarbers(nearBarbers);
+          const distance = getDistance(
+            { latitude: currentLat, longitude: currentLong },
+            { latitude: docData.latitude, longitude: docData.longitude }
+          );
+
+          const distanceInMiles = (distance / 1609).toFixed(1);
+
+          if (distanceInMiles < storedFilters.distance) {
+            nearBarbers.push({ ...docData, distance: distanceInMiles, docId: doc.id });
+          }
+        });
+      }
+
+      // Remove duplicates if any, based on docId
+      const uniqueNearBarbers = Array.from(new Map(nearBarbers.map((barber) => [barber.docId, barber])).values());
+
+      // Sorting logic
+      switch (storedFilters.sortBy) {
+        case 'rating':
+          uniqueNearBarbers.sort((a, b) => b.rating - a.rating);
+
+          break;
+        case 'price':
+          uniqueNearBarbers.sort((a, b) => a.price - b.price);
+          break;
+        case 'distance':
+          uniqueNearBarbers.sort((a, b) => a.distance - b.distance);
+          break;
+        case 'featured':
+          // Do nothing (or implement custom logic if you have a way to determine "featured")
+          break;
+        default:
+          break;
+      }
+
+      setNearbyBarbers(uniqueNearBarbers);
     })();
-  }, [currentLat, currentLong, setNearbyBarbers]);
+  }, [currentLat, currentLong, storedFilters]);
 
   const renderBarberCard = ({ item }) => <BarberCard cardData={item} />;
 
   const onRefresh = async () => {
     setRefreshing(true);
     try {
-      const querySnapshot = await getDocs(collection(database, 'barbers'));
+      const barbersRef = collection(database, 'barbers');
       const nearBarbers = [];
-      querySnapshot.forEach((doc) => {
-        const docData = doc.data(); // Retrieve all the document data at once
 
-        const distance = getDistance(
-          { latitude: currentLat, longitude: currentLong },
-          { latitude: docData.latitude, longitude: docData.longitude }
-        );
-        const distanceInMiles = (distance / 1609).toFixed(1);
+      for (const serviceType of storedFilters.serviceTypes) {
+        const q = query(barbersRef, where(serviceType, '==', true));
+        const querySnapshot = await getDocs(q);
 
-        if (distance < 6000) {
-          nearBarbers.push({ ...docData, distance: distanceInMiles, docId: doc.id });
-        }
-      });
+        querySnapshot.forEach((doc) => {
+          const docData = doc.data();
 
-      setNearbyBarbers(nearBarbers);
+          const distance = getDistance(
+            { latitude: currentLat, longitude: currentLong },
+            { latitude: docData.latitude, longitude: docData.longitude }
+          );
+
+          const distanceInMiles = (distance / 1609).toFixed(1);
+
+          if (distanceInMiles < storedFilters.distance) {
+            nearBarbers.push({ ...docData, distance: distanceInMiles, docId: doc.id });
+          }
+        });
+      }
+
+      // Remove duplicates if any, based on docId
+      const uniqueNearBarbers = Array.from(new Map(nearBarbers.map((barber) => [barber.docId, barber])).values());
+
+      switch (storedFilters.sortBy) {
+        case 'rating':
+          uniqueNearBarbers.sort((a, b) => b.rating - a.rating);
+
+          break;
+        case 'price':
+          uniqueNearBarbers.sort((a, b) => a.price - b.price);
+          break;
+        case 'distance':
+          uniqueNearBarbers.sort((a, b) => a.distance - b.distance);
+          break;
+        case 'featured':
+          // Do nothing (or implement custom logic if you have a way to determine "featured")
+          break;
+        default:
+          break;
+      }
+
+      setNearbyBarbers(uniqueNearBarbers);
     } catch (error) {
       // console.log(error);
     } finally {

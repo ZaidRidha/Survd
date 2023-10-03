@@ -35,6 +35,9 @@ const BarberCard = ({ cardData }) => {
   const { walkins } = cardData;
   const { onbreak } = cardData;
   const { unavailable } = cardData;
+  const {rating} = cardData;
+
+
 
   useEffect(() => {
     if (liveHome || liveMobile || liveShop) {
@@ -87,6 +90,7 @@ const BarberCard = ({ cardData }) => {
       isLive,
       updatedhours,
       walkins,
+      rating,
     });
   };
 
@@ -329,7 +333,7 @@ const BarberCard = ({ cardData }) => {
             <Text
               className="text-sm"
               style={styles.figlight}>
-              {''} 5.0 {''}
+              {''} {rating} {''}
               <Text
                 className="text-sm"
                 style={styles.figreg}>

@@ -7,6 +7,15 @@ const initialState = {
   currentAddress: null,
   totalBasket: [],
   currentVendor: null,
+  filters: {
+    sortBy: 'featured', // Default value, for example
+    distance: 10, // Default value, for example
+    serviceTypes: [
+      "shop",
+      "mobile",
+      "home",
+    ], // Default value, for example
+  },
 };
 
 export const locSlice = createSlice({
@@ -38,6 +47,13 @@ export const locSlice = createSlice({
     setcurrentVendor: (state, action) => {
       state.currentVendor = action.payload;
     },
+
+    setFilters: (state, action) => {
+      state.filters = action.payload;
+    },
+    clearFilters: (state) => {
+      state.filters = initialState.filters;
+    },
   },
 });
 
@@ -51,6 +67,8 @@ export const {
   clearBasket,
   addtoB,
   setcurrentVendor,
+  setFilters,
+  clearFilters,
 } = locSlice.actions;
 
 // selectors
@@ -60,7 +78,7 @@ export const selectSearchRadius = (state) => state.loc.searchRadius;
 export const selectCurrentAddress = (state) => state.loc.currentAddress;
 export const selectCurrentBasket = (state) => state.loc.totalBasket;
 export const selectCurrentVendor = (state) => state.loc.currentVendor;
-
+export const selectFilters = (state) => state.loc.filters;
 // primary export
 
 export default locSlice.reducer;
