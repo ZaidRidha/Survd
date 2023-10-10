@@ -1,4 +1,14 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, Dimensions, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+  Dimensions,
+  Image,
+  ActivityIndicator,
+} from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { Icon, SearchBar } from '@rneui/themed';
 import * as Location from 'expo-location';
@@ -37,6 +47,7 @@ const HomeScreen = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [nearbyBarbers, setNearbyBarbers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [uid, setUid] = useState(null); // Add the state for storing uid
   const [matchingAppointments, setMatchingAppointments] = useState([]);
@@ -48,8 +59,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     setStoredFilters(filters);
-    console.log(storedFilters);
-  }, [filters]);
+  }, [filters, storedFilters]);
 
   const navigateFilter = () => {
     navigation.navigate(SCREENS.FILTER_SCREEN);
@@ -264,11 +274,12 @@ const HomeScreen = () => {
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const barbersRef = collection(database, 'barbers');
       const nearBarbers = [];
 
       for (const serviceType of storedFilters.serviceTypes) {
-        const q = query(barbersRef, where(serviceType, '==', true));
+        const q = query(barbersRef, where(serviceType , '==', true));
         const querySnapshot = await getDocs(q);
 
         querySnapshot.forEach((doc) => {
@@ -290,26 +301,31 @@ const HomeScreen = () => {
       // Remove duplicates if any, based on docId
       const uniqueNearBarbers = Array.from(new Map(nearBarbers.map((barber) => [barber.docId, barber])).values());
 
-      // Sorting logic
-      switch (storedFilters.sortBy) {
-        case 'rating':
-          uniqueNearBarbers.sort((a, b) => b.rating - a.rating);
+      // Sort based on whether the service type is active and then by other criteria
+      uniqueNearBarbers.sort((a, b) => {
+        for (const serviceType of storedFilters.serviceTypes) {
+          const activeField = serviceType + 'active';
+          if (a[activeField] && !b[activeField]) return -1;
+          if (!a[activeField] && b[activeField]) return 1;
+        }
 
-          break;
-        case 'price':
-          uniqueNearBarbers.sort((a, b) => a.price - b.price);
-          break;
-        case 'distance':
-          uniqueNearBarbers.sort((a, b) => a.distance - b.distance);
-          break;
-        case 'featured':
-          // Do nothing (or implement custom logic if you have a way to determine "featured")
-          break;
-        default:
-          break;
-      }
+        switch (storedFilters.sortBy) {
+          case 'rating':
+            return b.rating - a.rating;
+          case 'price':
+            return a.price - b.price;
+          case 'distance':
+            return a.distance - b.distance;
+          case 'featured':
+            // Implement your logic for featured, if any
+            return 0;
+          default:
+            return 0;
+        }
+      });
 
       setNearbyBarbers(uniqueNearBarbers);
+      setLoading(false);
     })();
   }, [currentLat, currentLong, storedFilters]);
 
@@ -493,6 +509,12 @@ const HomeScreen = () => {
               className="text-xl mb-2 ml-5">
               Services Near You:
             </Text>
+            {loading ? (
+              <ActivityIndicator
+                size="small"
+                color="black"
+              />
+            ) : null}
             <FlatList
               ref={scrollRef}
               data={nearbyBarbers}

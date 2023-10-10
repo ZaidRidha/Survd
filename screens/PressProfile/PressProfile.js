@@ -799,7 +799,7 @@ const PressProfile = () => {
                   key={i}
                   type="font-awesome"
                   name="star-o"
-                  color="#f7bf25"
+                  color="black"
                   size={16}
                 />
               ))}

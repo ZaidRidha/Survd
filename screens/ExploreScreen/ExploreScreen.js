@@ -77,54 +77,53 @@ const ExploreScreen = () => {
             />
           </TouchableOpacity>
         </View>
-        <ScrollView style={styles.inner}>
-          {searchResults.length > 0 ? (
-            <View
-              className="mb-3"
-              style={styles.searchParts}>
-              <FlatList
-                data={searchResults}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                  <View className="mb-2">
-                    <View className="flex flex-row ml-2 items-center ">
-                      <Image
-                        source={require('../../assets/images/bizlogo.jpg')}
-                        style={styles.image}
-                      />
-                      <View>
-                        <Text
-                          style={styles.PoppinsMed}
-                          className="text-lg">
-                          {item.name}
-                        </Text>
-                        <Text
-                          style={styles.PoppinsLight}
-                          className=" text-sm text-gray-600">
-                          {item.username}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                      <View
-                        style={{
-                          width: WIDTH * 0.9,
-                          height: 1,
-                          backgroundColor: 'lightgray',
-                          alignSelf: 'center',
-                          justifyContent: 'center',
-                          marginTop: 5,
-                          marginBottom: 5,
-                        }}
-                      />
+        {searchResults.length > 0 ? (
+          <View
+            className="mb-3"
+            style={styles.searchParts}>
+            <FlatList
+              data={searchResults}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View className="mb-2">
+                  <View className="flex flex-row ml-2 items-center ">
+                    <Image
+                      source={require('../../assets/images/bizlogo.jpg')}
+                      style={styles.image}
+                    />
+                    <View>
+                      <Text
+                        style={styles.PoppinsMed}
+                        className="text-lg">
+                        {item.name}
+                      </Text>
+                      <Text
+                        style={styles.PoppinsLight}
+                        className=" text-sm text-gray-600">
+                        {item.username}
+                      </Text>
                     </View>
                   </View>
-                )}
-              />
-            </View>
-          ) : null}
 
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+                    <View
+                      style={{
+                        width: WIDTH * 0.9,
+                        height: 1,
+                        backgroundColor: 'lightgray',
+                        alignSelf: 'center',
+                        justifyContent: 'center',
+                        marginTop: 5,
+                        marginBottom: 5,
+                      }}
+                    />
+                  </View>
+                </View>
+              )}
+            />
+          </View>
+        ) : null}
+        <ScrollView style={styles.inner}>
           {searchResults.length === 0 ? (
             <>
               <Text
