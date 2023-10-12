@@ -33,16 +33,14 @@ const ViewAppointment = () => {
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists && userDoc.data().name) {
         return userDoc.data().name;
-      } else {
-        console.error('User document does not exist or lacks a name field.');
-        return null; // Or return a default name or handle this case differently
       }
-    } else {
-      // Get name from AsyncStorage
-      const guestName = await AsyncStorage.getItem('guestName');
-      console.log(guestName);
-      return guestName;
+      console.error('User document does not exist or lacks a name field.');
+      return null; // Or return a default name or handle this case differently
     }
+    // Get name from AsyncStorage
+    const guestName = await AsyncStorage.getItem('guestName');
+    console.log(guestName);
+    return guestName;
   };
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useNavigation, useRoute, CommonActions } from '@react-navigation/native';
-import { getDoc, query, collection, onSnapshot, deleteDoc } from 'firebase/firestore';
+import { getDoc } from 'firebase/firestore';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -35,16 +35,14 @@ const ConfirmationScreen = () => {
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists && userDoc.data().name) {
         return userDoc.data().name;
-      } else {
-        console.error('User document does not exist or lacks a name field.');
-        return null; // Or return a default name or handle this case differently
       }
-    } else {
-      // Get name from AsyncStorage
-      const guestName = await AsyncStorage.getItem('guestName');
-      console.log(guestName);
-      return guestName;
+      console.error('User document does not exist or lacks a name field.');
+      return null; // Or return a default name or handle this case differently
     }
+    // Get name from AsyncStorage
+    const guestName = await AsyncStorage.getItem('guestName');
+    console.log(guestName);
+    return guestName;
   };
 
   useEffect(() => {

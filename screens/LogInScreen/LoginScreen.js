@@ -1,6 +1,5 @@
 import {
   View,
-  Image,
   useWindowDimensions,
   StyleSheet,
   Text,
@@ -21,7 +20,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { SCREENS } from 'navigation/navigationPaths';
 import useFont from '../../useFont';
 import CustomButton from '../../components/CustomButton';
-import logo from '../../assets/images/boxlogo.png';
 import { authentication } from '../../firebaseConfig';
 
 const LoginScreen = () => {

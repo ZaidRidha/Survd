@@ -35,9 +35,7 @@ const BarberCard = ({ cardData }) => {
   const { walkins } = cardData;
   const { onbreak } = cardData;
   const { unavailable } = cardData;
-  const {rating} = cardData;
-
-
+  const { rating } = cardData;
 
   useEffect(() => {
     if (liveHome || liveMobile || liveShop) {

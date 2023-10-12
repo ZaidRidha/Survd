@@ -7,11 +7,11 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { SCREENS } from 'navigation/navigationPaths';
+import { doc, onSnapshot } from 'firebase/firestore';
 import LoginScreen from '../LogInScreen';
 import { authentication, database } from '../../firebaseConfig';
 import ProfileSectionLink from './ProfileSectionLink';
 import ProfileSectionHeader from './ProfileSectionHeader';
-import { getDoc, doc, onSnapshot } from 'firebase/firestore';
 
 const ProfileScreen = () => {
   const navigation = useNavigation();

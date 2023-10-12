@@ -59,39 +59,39 @@ const BusinessOnboarding = () => {
 
   return (
     <SafeAreaProvider>
-    <SafeAreaView style={styles.root}>
-      <View className="self-start">
-        <BackNavigation />
-      </View>
+      <SafeAreaView style={styles.root}>
+        <View className="self-start">
+          <BackNavigation />
+        </View>
 
-      <View style={{ flex: 4 }}>
-        <FlatList
+        <View style={{ flex: 4 }}>
+          <FlatList
+            data={slides}
+            renderItem={({ item }) => <OnboardingItem item={item} />}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            bounces={false}
+            keyExtractor={(item) => item.id}
+            onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
+              useNativeDriver: false,
+            })}
+            onViewableItemsChanged={viewableItemsChanged}
+            viewabilityConfig={viewConfig}
+            ref={slidesRef}
+          />
+        </View>
+
+        <Onboardingpaginator
           data={slides}
-          renderItem={({ item }) => <OnboardingItem item={item} />}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled
-          bounces={false}
-          keyExtractor={(item) => item.id}
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], {
-            useNativeDriver: false,
-          })}
-          onViewableItemsChanged={viewableItemsChanged}
-          viewabilityConfig={viewConfig}
-          ref={slidesRef}
+          scrollX={scrollX}
         />
-      </View>
 
-      <Onboardingpaginator
-        data={slides}
-        scrollX={scrollX}
-      />
-
-      <OnboardingButton
-        scrollTo={scrollTo}
-        percentage={(currentIndex + 1) * (100 / slides.length)}
-      />
-    </SafeAreaView>
+        <OnboardingButton
+          scrollTo={scrollTo}
+          percentage={(currentIndex + 1) * (100 / slides.length)}
+        />
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 };

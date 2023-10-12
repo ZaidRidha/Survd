@@ -2,10 +2,10 @@ import { View, StyleSheet, Text, TextInput, TouchableWithoutFeedback, Keyboard, 
 import React, { useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SCREENS } from 'navigation/navigationPaths';
-import { authentication, database } from '../../firebaseConfig';
 import { updateDoc, doc } from 'firebase/firestore';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
+import { authentication, database } from '../../firebaseConfig';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -27,7 +27,7 @@ const NameScreen = () => {
     if (user) {
       try {
         const userRef = doc(database, 'users', user.uid);
-        await updateDoc(userRef, { name: name });
+        await updateDoc(userRef, { name });
       } catch (error) {
         console.error("Error updating user's name: ", error);
       }

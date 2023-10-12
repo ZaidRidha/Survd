@@ -6,16 +6,14 @@ import {
   TextInput,
   Keyboard,
   Dimensions,
-  View
+  View,
 } from 'react-native';
 import React, { useState } from 'react';
-import { Icon } from '@rneui/themed';
+import { Icon, Button } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { SCREENS } from 'navigation/navigationPaths';
-import { Button } from '@rneui/themed';
-import CustomButton from '../../components/CustomButton';
 
 import useFont from '../../useFont';
 import { authentication, database } from '../../firebaseConfig';
@@ -41,7 +39,7 @@ const SignUpScreen = () => {
       setErrorMessage('Passwords do not match, Please try again.');
       setTimeout(() => {
         setIsError(false);
-        setDisabled(false);  // Reset the disabled state here
+        setDisabled(false); // Reset the disabled state here
       }, 3000); // Hide error message after 3 seconds
       return;
     }
@@ -57,10 +55,10 @@ const SignUpScreen = () => {
       // ... (rest of your error handling code)
       setTimeout(() => {
         setIsError(false);
-        setDisabled(false);  // Reset the disabled state here too
+        setDisabled(false); // Reset the disabled state here too
       }, 3000); // Hide error message after 3 seconds
     }
-};
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -105,7 +103,7 @@ const SignUpScreen = () => {
               height: 40,
               borderRadius: 10, // Adjust as needed to change the button's height
             }}
-            disabledStyle={{ backgroundColor: 'black' }}  // This maintains the original color when disabled
+            disabledStyle={{ backgroundColor: 'black' }} // This maintains the original color when disabled
             disabledTitleStyle={{ color: 'white' }}
             titleStyle={{ color: 'white' }}
           />

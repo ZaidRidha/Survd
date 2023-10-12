@@ -5,6 +5,12 @@ import { Dimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { SCREENS } from 'navigation/navigationPaths';
 import PressProfileHeaderRight from 'screens/PressProfile/PressProfileHeaderRight';
+import NameScreen from 'screens/NameScreen/NameScreen';
+import ResetPassword from 'screens/ResetPassword/ResetPassword';
+import PersonalScreen from 'screens/PersonalScreen/PersonalScreen';
+import { doc, onSnapshot } from 'firebase/firestore';
+import EmailScreen from 'screens/EmailScreen/EmailScreen';
+import GuestCheckout from 'screens/GuestCheckout/GuestCheckout';
 import LoginScreen from '../screens/LogInScreen/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
@@ -24,15 +30,8 @@ import ViewAppointment from '../screens/ViewAppointment/ViewAppointment';
 import BusinessOnBoarding from '../screens/BusinessOnboarding/BusinessOnboarding';
 import FullMapScreen from '../screens/FullMapScreen/FullMapScreen';
 import FilterScreen from '../screens/FilterScreen/FilterScreen';
-import NameScreen from 'screens/NameScreen/NameScreen';
-import ResetPassword from 'screens/ResetPassword/ResetPassword';
 import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
-import BackNavigation from '../components/BackNavigation/BackNavigation';
-import PersonalScreen from 'screens/PersonalScreen/PersonalScreen';
 import { database, authentication } from '../firebaseConfig';
-import { getDoc, doc, onSnapshot } from 'firebase/firestore';
-import EmailScreen from 'screens/EmailScreen/EmailScreen';
-import GuestCheckout from 'screens/GuestCheckout/GuestCheckout';
 import {
   ACTIVE_COLOR,
   AppointmentsTabIcon,
@@ -49,7 +48,7 @@ const HEIGHT = Dimensions.get('window').height;
 const BottomTabNavigator = () => {
   const [profileBadge, setProfileBadge] = useState(false);
   useEffect(() => {
-    const currentUser = authentication.currentUser;
+    const { currentUser } = authentication;
 
     if (currentUser) {
       const userDocRef = doc(database, 'users', currentUser.uid);
@@ -330,7 +329,8 @@ const Navigation = () => {
           options={{
             headerShown: false,
             presentation: 'modal',
-          }} />
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

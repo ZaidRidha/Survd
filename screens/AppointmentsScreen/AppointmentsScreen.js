@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Dimensions, Text, ScrollView } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { query, collection, where, onSnapshot } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
-import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
-import { database, authentication } from '../../firebaseConfig';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
+import { database, authentication } from '../../firebaseConfig';
 
 const initialLayout = { width: Dimensions.get('window').width };
-
 
 const UpcomingScreen = ({ appointments }) => (
   <ScrollView style={styles.scene}>
@@ -81,9 +79,7 @@ const AppointmentsScreen = () => {
   const [completedAppointments, setCompletedAppointments] = useState([]);
   const [cancelledAppointments, setCancelledAppointments] = useState([]);
 
-
   const navigation = useNavigation();
-
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -127,8 +123,6 @@ const AppointmentsScreen = () => {
         setUpcomingAppointments(upcomingAppointments);
         setCompletedAppointments(completedAppointments);
         setCancelledAppointments(cancelledAppointments);
-
-
       });
 
       return unsubscribe; // Cleanup the event listener on unmount

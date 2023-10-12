@@ -10,11 +10,7 @@ const initialState = {
   filters: {
     sortBy: 'featured', // Default value, for example
     distance: 10, // Default value, for example
-    serviceTypes: [
-      "shop",
-      "mobile",
-      "home",
-    ], // Default value, for example
+    serviceTypes: ['shop', 'mobile', 'home'], // Default value, for example
   },
 };
 

@@ -15,7 +15,7 @@ import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { PhoneAuthProvider, updatePhoneNumber } from 'firebase/auth';
 import { doc, updateDoc, getDocs, query, collection, where } from 'firebase/firestore';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
-import { Button, Icon } from '@rneui/themed';
+import { Button } from '@rneui/themed';
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Location from 'expo-location';
@@ -135,7 +135,7 @@ const PhoneScreen = () => {
         phoneNumber,
       });
 
-      //alert('Phone verification successful');
+      // alert('Phone verification successful');
       if (showBack) {
         navigation.navigate(SCREENS.HOME); // Navigate to the HOME screen if showBack is true
       } else {
