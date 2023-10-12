@@ -2,15 +2,14 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView,SafeAreaProvider } from 'react-native-safe-area-context';
-import { authentication, database } from '../../firebaseConfig';
-import ProfileSectionLink from '../ProfileScreen/ProfileSectionLink';
-import ProfileSectionHeader from '../ProfileScreen/ProfileSectionHeader';
-import { getDoc, doc, onSnapshot } from 'firebase/firestore';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import { doc, onSnapshot } from 'firebase/firestore';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
-import { Button, Icon } from '@rneui/themed';
 
 import { SCREENS } from 'navigation/navigationPaths';
+import ProfileSectionHeader from '../ProfileScreen/ProfileSectionHeader';
+import ProfileSectionLink from '../ProfileScreen/ProfileSectionLink';
+import { authentication, database } from '../../firebaseConfig';
 
 const NameSettings = () => {
   const navigation = useNavigation();
@@ -62,19 +61,23 @@ const NameSettings = () => {
 
   return (
     <SafeAreaProvider>
-    <SafeAreaView style={styles.root}>
-      <View className="self-start">
-      <BackNavigation />
-      </View>
-      <ScrollView style={styles.inner}>
-        <Text style={styles.PoppinsMed} className='text-xl my-2'>Current Name: {name}</Text>
-        <ProfileSectionHeader text="Actions" />
-        <ProfileSectionLink
-          text="Update your current name"
-          onPress={navigateNameChange}
-        />
-      </ScrollView>
-    </SafeAreaView>
+      <SafeAreaView style={styles.root}>
+        <View className="self-start">
+          <BackNavigation />
+        </View>
+        <ScrollView style={styles.inner}>
+          <Text
+            style={styles.PoppinsMed}
+            className="text-xl my-2">
+            Current Name: {name}
+          </Text>
+          <ProfileSectionHeader text="Actions" />
+          <ProfileSectionLink
+            text="Update your current name"
+            onPress={navigateNameChange}
+          />
+        </ScrollView>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 };

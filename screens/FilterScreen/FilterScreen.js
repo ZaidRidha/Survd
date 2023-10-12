@@ -4,9 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectFilters, setFilters } from '../../slices/locSlice.js';
-
 import Slider from '@react-native-community/slider';
+import { selectFilters, setFilters } from '../../slices/locSlice.js';
 
 const WIDTH = Dimensions.get('window').width;
 // const HEIGHT = Dimensions.get('window').height;
@@ -45,7 +44,7 @@ const FilterScreen = () => {
   const pressContinue = () => {
     const newFilters = {
       sortBy: activeSection,
-      distance: distance,
+      distance,
       serviceTypes: [
         ...(shopSelected ? ['shop'] : []),
         ...(mobileSelected ? ['mobile'] : []),

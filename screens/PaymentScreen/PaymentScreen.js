@@ -69,7 +69,7 @@ const PaymentScreen = () => {
       setIsButtonDisabled(true);
 
       // Create a base appointment object
-      let appointmentObj = {
+      const appointmentObj = {
         barberID: docId,
         date: selectedDate,
         duration: servicesDuration,

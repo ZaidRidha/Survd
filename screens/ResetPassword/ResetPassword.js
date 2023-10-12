@@ -2,9 +2,9 @@ import { View, StyleSheet, Text, TextInput, TouchableWithoutFeedback, Keyboard, 
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { authentication } from '../../firebaseConfig';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
+import { authentication } from '../../firebaseConfig';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -45,7 +45,7 @@ const ResetPasswordScreen = () => {
             <Text style={styles.headerText}>Reset Password</Text>
             <TextInput
               style={styles.input}
-              placeholder={userEmail || "Email"}
+              placeholder={userEmail || 'Email'}
               onChangeText={(text) => {
                 setEmail(text);
                 setError('');

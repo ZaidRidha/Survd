@@ -10,11 +10,11 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
-import { authentication, database } from '../../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 import { updateEmail, reauthenticateWithCredential, EmailAuthProvider, sendEmailVerification } from 'firebase/auth';
 import { setDoc, doc } from 'firebase/firestore';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
+import { authentication, database } from '../../firebaseConfig';
 
 const EmailScreen = () => {
   const navigation = useNavigation();

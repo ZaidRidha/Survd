@@ -21,10 +21,10 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Fuse from 'fuse.js';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
 import BarberCard from '../../components/BarberCard/BarberCard';
 import useFont from '../../useFont';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { database, authentication } from '../../firebaseConfig';
 import { selectFilters } from '../../slices/locSlice';
 
@@ -164,35 +164,34 @@ const HomeScreen = () => {
         });
 
         return () => unsubscribe();
-      } else {
-        const guestName = await AsyncStorage.getItem('guestName');
-        const guestEmail = await AsyncStorage.getItem('guestEmail');
-        const guestPhone = await AsyncStorage.getItem('guestPhone');
-
-        // Use guestName and other fields for querying
-        const appointmentsRef = collection(database, 'appointments');
-        const q = query(
-          appointmentsRef,
-          where('guestName', '==', guestName),
-          where('guestEmail', '==', guestEmail),
-          where('guestPhone', '==', guestPhone)
-        );
-
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-          const appointments = [];
-          querySnapshot.forEach((doc) => {
-            const appointmentData = {
-              appointmentID: doc.id,
-              ...doc.data(),
-            };
-
-            // Process the appointment data if needed
-            appointments.push(appointmentData);
-          });
-
-          setMatchingAppointments(appointments);
-        });
       }
+      const guestName = await AsyncStorage.getItem('guestName');
+      const guestEmail = await AsyncStorage.getItem('guestEmail');
+      const guestPhone = await AsyncStorage.getItem('guestPhone');
+
+      // Use guestName and other fields for querying
+      const appointmentsRef = collection(database, 'appointments');
+      const q = query(
+        appointmentsRef,
+        where('guestName', '==', guestName),
+        where('guestEmail', '==', guestEmail),
+        where('guestPhone', '==', guestPhone)
+      );
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const appointments = [];
+        querySnapshot.forEach((doc) => {
+          const appointmentData = {
+            appointmentID: doc.id,
+            ...doc.data(),
+          };
+
+          // Process the appointment data if needed
+          appointments.push(appointmentData);
+        });
+
+        setMatchingAppointments(appointments);
+      });
     };
 
     fetchAppointments(); // Call the function here
@@ -200,10 +199,10 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const updateVerificationStatus = async () => {
-      const currentUser = authentication.currentUser; // Get the current user
+      const { currentUser } = authentication; // Get the current user
 
       if (currentUser) {
-        const emailVerified = currentUser.emailVerified; // Check if email is verified
+        const { emailVerified } = currentUser; // Check if email is verified
         const phoneVerified = Boolean(currentUser.phoneNumber); // If phoneNumber is present, it's verified
 
         if (emailVerified || phoneVerified) {
@@ -211,8 +210,8 @@ const HomeScreen = () => {
 
           // Update the fields in Firestore
           await updateDoc(userDocRef, {
-            emailVerified: emailVerified,
-            phoneVerified: phoneVerified,
+            emailVerified,
+            phoneVerified,
           });
         }
       }
@@ -224,7 +223,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchUserLocationAndReverseGeocode = async () => {
       // Check if the user is logged in by verifying uid
-      const currentUser = authentication.currentUser;
+      const { currentUser } = authentication;
       if (currentUser) {
         const userID = currentUser.uid;
         // console.log(userID);
@@ -258,7 +257,7 @@ const HomeScreen = () => {
           setLocation({ longitude, latitude });
           setcurrentLat(latitude);
           setcurrentLong(longitude);
-          //console.log(`Longitude: ${longitude}, Latitude: ${latitude}`); // Log the coordinates
+          // console.log(`Longitude: ${longitude}, Latitude: ${latitude}`); // Log the coordinates
 
           // Reverse geocoding
           const currentAddress = await Location.reverseGeocodeAsync({ latitude, longitude });
@@ -279,7 +278,7 @@ const HomeScreen = () => {
       const nearBarbers = [];
 
       for (const serviceType of storedFilters.serviceTypes) {
-        const q = query(barbersRef, where(serviceType , '==', true));
+        const q = query(barbersRef, where(serviceType, '==', true));
         const querySnapshot = await getDocs(q);
 
         querySnapshot.forEach((doc) => {
@@ -304,7 +303,7 @@ const HomeScreen = () => {
       // Sort based on whether the service type is active and then by other criteria
       uniqueNearBarbers.sort((a, b) => {
         for (const serviceType of storedFilters.serviceTypes) {
-          const activeField = serviceType + 'active';
+          const activeField = `${serviceType}active`;
           if (a[activeField] && !b[activeField]) return -1;
           if (!a[activeField] && b[activeField]) return 1;
         }

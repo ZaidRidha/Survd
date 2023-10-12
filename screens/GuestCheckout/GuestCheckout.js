@@ -14,8 +14,8 @@ import { Icon, Button } from '@rneui/themed';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { CountryPicker } from 'react-native-country-codes-picker';
 import { SCREENS } from 'navigation/navigationPaths';
-import LoginScreen from '../LogInScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoginScreen from '../LogInScreen';
 
 const WIDTH = Dimensions.get('window').width;
 
@@ -83,8 +83,6 @@ const GuestCheckout = () => {
       setName(asyncName);
       setEmail(asyncEmail);
       setPhone(formatStoredPhone(asyncPhone));
-
-
     } catch (error) {
       console.error('Failed to retrieve the data from storage');
     }

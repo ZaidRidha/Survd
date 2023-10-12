@@ -3,14 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
-import { authentication, database } from '../../firebaseConfig';
-import ProfileSectionLink from '../ProfileScreen/ProfileSectionLink';
-import ProfileSectionHeader from '../ProfileScreen/ProfileSectionHeader';
-import { getDoc, doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import BackNavigation from 'components/BackNavigation/BackNavigation';
-import { Button, Icon } from '@rneui/themed';
 
 import { SCREENS } from 'navigation/navigationPaths';
+import ProfileSectionHeader from '../ProfileScreen/ProfileSectionHeader';
+import ProfileSectionLink from '../ProfileScreen/ProfileSectionLink';
+import { authentication, database } from '../../firebaseConfig';
 
 const PhoneSettings = () => {
   const navigation = useNavigation();

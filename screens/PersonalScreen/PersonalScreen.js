@@ -1,15 +1,13 @@
-import { View, Text, StyleSheet, ScrollView, Touchable, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { Button, Icon } from '@rneui/themed';
+import { Icon } from '@rneui/themed';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { authentication, database } from '../../firebaseConfig';
 import ProfileSectionLink from '../ProfileScreen/ProfileSectionLink';
-import ProfileSectionHeader from '../ProfileScreen/ProfileSectionHeader';
-import { getDoc, doc, onSnapshot } from 'firebase/firestore';
-import BackNavigation from 'components/BackNavigation/BackNavigation';
 
 const PersonalScreen = () => {
   const navigation = useNavigation();
