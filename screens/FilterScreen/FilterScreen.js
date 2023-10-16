@@ -77,6 +77,10 @@ const FilterScreen = () => {
     setActiveSection('price');
   };
 
+  const pressActivity = () => {
+    setActiveSection('activity');
+  };
+
   const clearAll = () => {
     // Add the logic here to clear all filters or perform the desired action
     // console.log('Clear All Pressed');
@@ -204,6 +208,32 @@ const FilterScreen = () => {
                   </Text>
                 </View>
                 {activeSection === 'price' ? (
+                  <Icon
+                    type="entypo"
+                    name="check"
+                    color="darkgreen"
+                    size={22}
+                  />
+                ) : null}
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={pressActivity}>
+              <View className="flex flex-row items-center justify-between mb-3">
+                <View className="flex flex-row items-center">
+                  <Icon
+                    type="antdesign"
+                    name="rocket1"
+                    color="black"
+                    size={24}
+                  />
+                  <Text
+                    style={styles.PoppinsMed}
+                    className="self-center text-base ml-3">
+                    Activity
+                  </Text>
+                </View>
+                {activeSection === 'activity' ? (
                   <Icon
                     type="entypo"
                     name="check"

@@ -274,6 +274,7 @@ const HomeScreen = () => {
   useEffect(() => {
     (async () => {
       setLoading(true);
+      console.log(storedFilters);
       const barbersRef = collection(database, 'barbers');
       const nearBarbers = [];
 
@@ -300,27 +301,38 @@ const HomeScreen = () => {
       // Remove duplicates if any, based on docId
       const uniqueNearBarbers = Array.from(new Map(nearBarbers.map((barber) => [barber.docId, barber])).values());
 
-      // Sort based on whether the service type is active and then by other criteria
       uniqueNearBarbers.sort((a, b) => {
-        for (const serviceType of storedFilters.serviceTypes) {
-          const activeField = `${serviceType}active`;
-          if (a[activeField] && !b[activeField]) return -1;
-          if (!a[activeField] && b[activeField]) return 1;
-        }
-
+        // If "active" status is the same, sort by other criteria
+        let sortValue = 0;
         switch (storedFilters.sortBy) {
           case 'rating':
-            return b.rating - a.rating;
+            sortValue = b.rating - a.rating;
+            break;
           case 'price':
-            return a.price - b.price;
+            sortValue = a.price - b.price;
+            break;
           case 'distance':
-            return a.distance - b.distance;
+            sortValue = a.distance - b.distance;
+            break;
           case 'featured':
-            // Implement your logic for featured, if any
-            return 0;
+            sortValue = 0;
+            break;
+
+          case 'activity':
+            const activeServicesA = storedFilters.serviceTypes.filter(
+              (serviceType) => a[`${serviceType}active`]
+            ).length;
+            const activeServicesB = storedFilters.serviceTypes.filter(
+              (serviceType) => b[`${serviceType}active`]
+            ).length;
+            sortValue = activeServicesB - activeServicesA;
+            break;
           default:
-            return 0;
+            console.log('Went to default case.');
+            sortValue = 0;
         }
+
+        return sortValue;
       });
 
       setNearbyBarbers(uniqueNearBarbers);
