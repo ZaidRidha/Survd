@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   currentBasket: [],
+  availability: {},
   currentLoc: null,
   searchRadius: null,
   currentAddress: null,
@@ -40,6 +41,16 @@ export const locSlice = createSlice({
     clearBasket: (state) => {
       state.totalBasket = [];
     },
+
+    clearAvailability: (state) => {
+      state.availability = {};
+    },
+
+    removeFromAvailability: (state, action) => {
+      const serviceIdToRemove = action.payload;
+      delete state.availability[serviceIdToRemove];
+    },
+
     setcurrentVendor: (state, action) => {
       state.currentVendor = action.payload;
     },
@@ -49,6 +60,19 @@ export const locSlice = createSlice({
     },
     clearFilters: (state) => {
       state.filters = initialState.filters;
+    },
+    addTimeslotToService: (state, action) => {
+      const { date, timeslot, serviceId } = action.payload;
+
+      if (!state.availability[serviceId]) {
+        state.availability[serviceId] = {};
+      }
+
+      if (!state.availability[serviceId][date]) {
+        state.availability[serviceId][date] = [];
+      }
+
+      state.availability[serviceId][date].push(timeslot);
     },
   },
 });
@@ -65,6 +89,9 @@ export const {
   setcurrentVendor,
   setFilters,
   clearFilters,
+  addTimeslotToService,
+  removeFromAvailability,
+  clearAvailability,
 } = locSlice.actions;
 
 // selectors
@@ -75,6 +102,7 @@ export const selectCurrentAddress = (state) => state.loc.currentAddress;
 export const selectCurrentBasket = (state) => state.loc.totalBasket;
 export const selectCurrentVendor = (state) => state.loc.currentVendor;
 export const selectFilters = (state) => state.loc.filters;
+export const selectAvailability = (state) => state.loc.availability;
 // primary export
 
 export default locSlice.reducer;

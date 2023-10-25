@@ -23,7 +23,7 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
-import BarberCard from '../../components/BarberCard/BarberCard';
+import VendorCard from '../../components/VendorCard/VendorCard';
 import useFont from '../../useFont';
 import { database, authentication } from '../../firebaseConfig';
 import { selectFilters } from '../../slices/locSlice';
@@ -45,7 +45,7 @@ const HomeScreen = () => {
   const [address, setAddress] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [nearbyBarbers, setNearbyBarbers] = useState([]);
+  const [nearbyVendors, setNearbyVendors] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -68,7 +68,7 @@ const HomeScreen = () => {
   const performSearch = async (text) => {
     try {
       setSearchQuery(text);
-      const q = query(collection(database, 'barbers'));
+      const q = query(collection(database, 'vendors'));
       const querySnapshot = await getDocs(q);
 
       const data = querySnapshot.docs.map((doc) => {
@@ -275,11 +275,11 @@ const HomeScreen = () => {
     (async () => {
       setLoading(true);
       console.log(storedFilters);
-      const barbersRef = collection(database, 'barbers');
-      const nearBarbers = [];
+      const VendorsRef = collection(database, 'vendors');
+      const nearVendors = [];
 
       for (const serviceType of storedFilters.serviceTypes) {
-        const q = query(barbersRef, where(serviceType, '==', true));
+        const q = query(VendorsRef, where(serviceType, '==', true));
         const querySnapshot = await getDocs(q);
 
         querySnapshot.forEach((doc) => {
@@ -293,15 +293,15 @@ const HomeScreen = () => {
           const distanceInMiles = (distance / 1609).toFixed(1);
 
           if (distanceInMiles < storedFilters.distance) {
-            nearBarbers.push({ ...docData, distance: distanceInMiles, docId: doc.id });
+            nearVendors.push({ ...docData, distance: distanceInMiles, docId: doc.id });
           }
         });
       }
 
       // Remove duplicates if any, based on docId
-      const uniqueNearBarbers = Array.from(new Map(nearBarbers.map((barber) => [barber.docId, barber])).values());
+      const uniqueNearVendors = Array.from(new Map(nearVendors.map((vendor) => [vendor.docId, vendor])).values());
 
-      uniqueNearBarbers.sort((a, b) => {
+      uniqueNearVendors.sort((a, b) => {
         // If "active" status is the same, sort by other criteria
         let sortValue = 0;
         switch (storedFilters.sortBy) {
@@ -335,21 +335,21 @@ const HomeScreen = () => {
         return sortValue;
       });
 
-      setNearbyBarbers(uniqueNearBarbers);
+      setNearbyVendors(uniqueNearVendors);
       setLoading(false);
     })();
   }, [currentLat, currentLong, storedFilters]);
 
-  const renderBarberCard = ({ item }) => <BarberCard cardData={item} />;
+  const renderVendorCard = ({ item }) => <VendorCard cardData={item} />;
 
   const onRefresh = async () => {
     setRefreshing(true);
     try {
-      const barbersRef = collection(database, 'barbers');
-      const nearBarbers = [];
+      const VendorsRef = collection(database, 'vendors');
+      const nearVendors = [];
 
       for (const serviceType of storedFilters.serviceTypes) {
-        const q = query(barbersRef, where(serviceType, '==', true));
+        const q = query(VendorsRef, where(serviceType, '==', true));
         const querySnapshot = await getDocs(q);
 
         querySnapshot.forEach((doc) => {
@@ -363,24 +363,24 @@ const HomeScreen = () => {
           const distanceInMiles = (distance / 1609).toFixed(1);
 
           if (distanceInMiles < storedFilters.distance) {
-            nearBarbers.push({ ...docData, distance: distanceInMiles, docId: doc.id });
+            nearVendors.push({ ...docData, distance: distanceInMiles, docId: doc.id });
           }
         });
       }
 
       // Remove duplicates if any, based on docId
-      const uniqueNearBarbers = Array.from(new Map(nearBarbers.map((barber) => [barber.docId, barber])).values());
+      const uniqueNearVendors = Array.from(new Map(nearVendors.map((vendor) => [vendor.docId, vendor])).values());
 
       switch (storedFilters.sortBy) {
         case 'rating':
-          uniqueNearBarbers.sort((a, b) => b.rating - a.rating);
+          uniqueNearVendors.sort((a, b) => b.rating - a.rating);
 
           break;
         case 'price':
-          uniqueNearBarbers.sort((a, b) => a.price - b.price);
+          uniqueNearVendors.sort((a, b) => a.price - b.price);
           break;
         case 'distance':
-          uniqueNearBarbers.sort((a, b) => a.distance - b.distance);
+          uniqueNearVendors.sort((a, b) => a.distance - b.distance);
           break;
         case 'featured':
           // Do nothing (or implement custom logic if you have a way to determine "featured")
@@ -389,7 +389,7 @@ const HomeScreen = () => {
           break;
       }
 
-      setNearbyBarbers(uniqueNearBarbers);
+      setNearbyVendors(uniqueNearVendors);
     } catch (error) {
       // console.log(error);
     } finally {
@@ -528,9 +528,9 @@ const HomeScreen = () => {
             ) : null}
             <FlatList
               ref={scrollRef}
-              data={nearbyBarbers}
+              data={nearbyVendors}
               keyExtractor={(item) => item.docId}
-              renderItem={renderBarberCard}
+              renderItem={renderVendorCard}
               showsHorizontalScrollIndicator={false}
               showsVerticalScrollIndicator={false}
               refreshControl={

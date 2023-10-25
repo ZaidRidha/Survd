@@ -157,7 +157,7 @@ const ViewAppointment = () => {
               <Text
                 style={styles.PoppinsReg}
                 className="text-base ml-1 ">
-                {appointmentData.barberName}
+                {appointmentData.vendorName}
               </Text>
             </View>
             <View className="flex flex-row items-center my-1">

@@ -22,7 +22,7 @@ const ExploreScreen = () => {
   const performSearch = async (text) => {
     try {
       setSearchQuery(text);
-      const q = query(collection(database, 'barbers'));
+      const q = query(collection(database, 'vendors'));
       const querySnapshot = await getDocs(q);
 
       const data = querySnapshot.docs.map((doc) => {

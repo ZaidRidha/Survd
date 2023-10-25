@@ -12,14 +12,21 @@ import * as Clipboard from 'expo-clipboard';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
 import { database, authentication } from '../../firebaseConfig';
-import { selectCurrentBasket, removeFromBasket } from '../../slices/locSlice';
+import {
+  selectCurrentBasket,
+  removeFromBasket,
+  selectAvailability,
+  clearAvailability,
+  removeFromAvailability,
+} from '../../slices/locSlice';
 
 const WIDTH = Dimensions.get('window').width;
 
 const ContinueScreen = () => {
   const route = useRoute();
   const Basket = useSelector(selectCurrentBasket);
-  const { lat, long, barberID, vendorName, isLive, docId } = route.params;
+  const Availability = useSelector(selectAvailability);
+  const { lat, long, vendorID, vendorName, isLive, docId } = route.params;
   const WIDTH = Dimensions.get('window').width;
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -32,6 +39,7 @@ const ContinueScreen = () => {
   const [totalServicesDuration, settotalServicesDuration] = useState(0);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [selectedTimeslot, setSelectedTimeslot] = useState('');
+  const [isconflictFound, setIsConflictFound] = useState(false);
   const [liveAppointment, setLiveAppointment] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
   const [monthDays, setMonthDays] = useState([]);
@@ -72,6 +80,61 @@ const ContinueScreen = () => {
     });
   };
 
+  useEffect(() => {
+    let conflictFound = false;
+
+    // For each date, gather all timeslots from all services
+    const timeslotsPerDate = {};
+
+    for (const service in Availability) {
+      for (const date in Availability[service]) {
+        if (!timeslotsPerDate[date]) {
+          timeslotsPerDate[date] = new Set();
+        }
+
+        for (const time of Availability[service][date]) {
+          timeslotsPerDate[date].add(time);
+        }
+      }
+    }
+
+    // For each date, check if all services have the exact same timeslots
+    for (const date in timeslotsPerDate) {
+      const uniqueTimes = timeslotsPerDate[date];
+
+      for (const service in Availability) {
+        // If this service doesn't have data for the date, that's a conflict
+        if (!Availability[service][date]) {
+          conflictFound = true;
+          break;
+        }
+
+        const serviceTimes = new Set(Availability[service][date]);
+
+        // If there's any difference in the timeslots, that's a conflict
+        for (const time of uniqueTimes) {
+          if (!serviceTimes.has(time)) {
+            conflictFound = true;
+            break;
+          }
+        }
+
+        for (const time of serviceTimes) {
+          if (!uniqueTimes.has(time)) {
+            conflictFound = true;
+            break;
+          }
+        }
+      }
+
+      if (conflictFound) break;
+    }
+
+    if (conflictFound) {
+      setIsConflictFound(true);
+    }
+  }, [Availability, navigation]);
+
   const isSameDate = (date1, date2) => {
     return (
       date1.getFullYear() === date2.getFullYear() &&
@@ -89,7 +152,7 @@ const ContinueScreen = () => {
   useEffect(() => {
     if (showCalendar) {
       const currentDate = new Date(); // Get the current date
-      const collectionRef = collection(database, 'barbers', barberID, 'availability');
+      const collectionRef = collection(database, 'vendors', vendorID, 'availability');
 
       const fetchData = async () => {
         const q = query(collectionRef);
@@ -115,35 +178,27 @@ const ContinueScreen = () => {
         // Cleanup tasks (if any)
       };
     }
-  }, [database, barberID, showCalendar]);
+  }, [database, vendorID, showCalendar]);
 
   useEffect(() => {
     if (showCalendar) {
-      const q = query(collection(database, 'barbers', barberID, 'availability'));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        let found = false;
-        const availableDates = []; // Create a new array for available dates
+      const availableDates = []; // Create a new array for available dates
 
-        querySnapshot.forEach((doc) => {
-          if (doc.id === selectedDate) {
-            setAvailableSlots(doc.data().timeslots);
-            found = true;
+      // Assuming Availability has the structure you provided
+      for (let service in Availability) {
+        for (let date in Availability[service]) {
+          if (date === selectedDate) {
+            setAvailableSlots(Availability[service][date]);
           }
-          availableDates.push(doc.id); // Add the doc ID to availableDates array
-        });
-
-        if (!found) {
-          setAvailableSlots([]);
+          if (!availableDates.includes(date)) {
+            availableDates.push(date); // Add the date to availableDates array if not already present
+          }
         }
+      }
 
-        setAvailableDates(availableDates); // Update the availableDates state
-      });
-
-      return () => {
-        unsubscribe();
-      };
+      setAvailableDates(availableDates); // Update the availableDates state
     }
-  }, [database, barberID, showCalendar, selectedDate]);
+  }, [showCalendar, selectedDate]);
 
   // the format of timeslots is YYYY-MM-DD
 
@@ -277,6 +332,11 @@ const ContinueScreen = () => {
       return; // Return here to prevent further code execution
     }
 
+    if (isconflictFound == true) {
+      alert('Conflicting timeslots detected between services! Please Book Services separately.');
+      return; // Assuming you're using react-navigation
+    }
+
     if (showCalendar && selectedTimeslot === '') {
       setDisplayError(true);
       setTimeout(() => {
@@ -313,6 +373,7 @@ const ContinueScreen = () => {
 
   const handleRemoveItem = (objectId) => {
     dispatch(removeFromBasket(objectId));
+    dispatch(removeFromAvailability(objectId));
   };
 
   const renderTimeslot = ({ item }) => {
