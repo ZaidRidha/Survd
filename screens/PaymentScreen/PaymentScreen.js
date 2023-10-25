@@ -70,13 +70,13 @@ const PaymentScreen = () => {
 
       // Create a base appointment object
       const appointmentObj = {
-        barberID: docId,
+        vendorID: docId,
         date: selectedDate,
         duration: servicesDuration,
         price: subtotal,
         time: selectedTimeslot,
         userID: uid,
-        barberName: vendorName,
+        vendorName: vendorName,
         Basket: serializedBasket,
         timeDate: currentDate,
         address,

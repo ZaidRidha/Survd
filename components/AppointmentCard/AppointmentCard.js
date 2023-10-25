@@ -9,7 +9,7 @@ import { database } from '../../firebaseConfig';
 const WIDTH = Dimensions.get('window').width;
 
 const AppointmentCard = ({ appointmentData, showHide, hideablePage, promptUser }) => {
-  const barberName = 'John Doe';
+  const vendorName = 'John Doe';
   const date = 'June 10, 2023';
   const time = '10:00 AM';
   const navigation = useNavigation();
@@ -54,7 +54,7 @@ const AppointmentCard = ({ appointmentData, showHide, hideablePage, promptUser }
     <TouchableWithoutFeedback onPress={handleNavigate}>
       <View style={styles.container}>
         <View className="flex flex-row  justify-between">
-          <Text style={styles.barberName}>{appointmentData.barberName}</Text>
+          <Text style={styles.vendorName}>{appointmentData.vendorName}</Text>
           {showHide ? (
             <Icon
               type="antdesign"
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  barberName: {
+  vendorName: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,

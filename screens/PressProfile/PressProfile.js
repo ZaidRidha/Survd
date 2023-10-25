@@ -51,13 +51,13 @@ const PressProfile = () => {
     mobile,
     shop,
     home,
-    pinmsg,
+    pinMsg,
     docId,
     isLive,
     mobileActive,
     shopActive,
     homeActive,
-    updatedhours,
+    updatedHours,
     walkins,
     rating,
   } = route.params;
@@ -65,10 +65,12 @@ const PressProfile = () => {
   const currentVendor = useSelector(selectCurrentVendor);
   const initialLayout = { width: WIDTH };
   const fullStars = Math.floor(rating);
-  const halfStar = rating - fullStars >= 0.5;
+  const halfStar = rating - fullStars >= 0.4;
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
   let total = 0;
+
+
 
   const sethandle = () => {
     if (instagram) {
@@ -105,7 +107,7 @@ const PressProfile = () => {
       navigation.navigate(SCREENS.CONTINUE_SCREEN, {
         lat,
         long,
-        barberID: docId,
+        vendorID: docId,
         vendorName: name,
         isLive,
         docId,
@@ -154,7 +156,9 @@ const PressProfile = () => {
   }
 
   useEffect(() => {
+          console.log("hello"+ currentBasket.length);
     if (currentVendor === docId && currentBasket.length > 0) {
+
       setshowCheckout(true);
     } else {
       setshowCheckout(false);
@@ -177,21 +181,20 @@ const PressProfile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const querySnapshot = await getDocs(collection(database, 'barbers', docId, 'services'));
+      const querySnapshot = await getDocs(collection(database, 'vendors', docId, 'services'));
       const servicesArray = querySnapshot.docs.map((doc) => {
         const name = doc.get('name');
         const category = doc.get('category');
         const description = doc.get('description');
         const duration = doc.get('duration');
         const price = doc.get('price');
-        const notes = doc.get('notes');
         const serviceId = doc.id;
-        return { name, category, description, duration, price, notes, serviceId };
+        return { name, category, description, duration, price, serviceId };
       });
       setServices(servicesArray);
     };
 
-    const unsubscribe = onSnapshot(collection(database, 'barbers', docId, 'services'), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(database, 'vendors', docId, 'services'), (snapshot) => {
       fetchData();
     });
 
@@ -299,7 +302,7 @@ const PressProfile = () => {
                 <Text
                   style={styles.PoppinsMed}
                   className="text-sm">
-                  {service.price ? `£${service.price.toFixed(2)}` : 'Price not available'}
+                  {service.price ? `£${parseFloat(service.price).toFixed(2)}` : 'Price not available'}
                 </Text>
                 <Text
                   style={[styles.PoppinsLight, { maxWidth: '95%' }]}
@@ -354,7 +357,7 @@ const PressProfile = () => {
           </Text>
         </View>
         <View>
-          <Text style={styles.Pinnedtext}>{pinmsg}</Text>
+          <Text style={styles.Pinnedtext}>{pinMsg}</Text>
         </View>
         <View className="flex flex-row items-center justify-center self-start mt-2">
           {mobile ? (
@@ -497,8 +500,8 @@ const PressProfile = () => {
               className="text-l">
               Monday: {''}
               <Text style={styles.PoppinsReg}>
-                {updatedhours.monstart && updatedhours.monend
-                  ? `${updatedhours.monstart}-${updatedhours.monend}`
+                {updatedHours.monStart && updatedHours.monEnd
+                  ? `${updatedHours.monStart}-${updatedHours.monEnd}`
                   : null}
               </Text>
             </Text>
@@ -507,8 +510,8 @@ const PressProfile = () => {
               className="text-l">
               Tuesday: {''}
               <Text style={styles.PoppinsReg}>
-                {updatedhours.tuestart && updatedhours.tueend
-                  ? `${updatedhours.tuestart}-${updatedhours.tueend}`
+                {updatedHours.tueStart && updatedHours.tueEnd
+                  ? `${updatedHours.tueStart}-${updatedHours.tueEnd}`
                   : null}
               </Text>
             </Text>
@@ -517,8 +520,8 @@ const PressProfile = () => {
               className="text-l">
               Wednesday: {''}
               <Text style={styles.PoppinsReg}>
-                {updatedhours.wedstart && updatedhours.wedend
-                  ? `${updatedhours.wedstart}-${updatedhours.wedend}`
+                {updatedHours.wedStart && updatedHours.wedEnd
+                  ? `${updatedHours.wedStart}-${updatedHours.wedEnd}`
                   : null}
               </Text>
             </Text>
@@ -527,8 +530,8 @@ const PressProfile = () => {
               className="text-l">
               Thursday: {''}
               <Text style={styles.PoppinsReg}>
-                {updatedhours.thustart && updatedhours.thuend
-                  ? `${updatedhours.thustart}-${updatedhours.thuend}`
+                {updatedHours.thuStart && updatedHours.thuEnd
+                  ? `${updatedHours.thuStart}-${updatedHours.thuEnd}`
                   : null}
               </Text>
             </Text>
@@ -537,8 +540,8 @@ const PressProfile = () => {
               className="text-l">
               Friday: {''}
               <Text style={styles.PoppinsReg}>
-                {updatedhours.fristart && updatedhours.friend
-                  ? `${updatedhours.fristart}-${updatedhours.friend}`
+                {updatedHours.friStart && updatedHours.friEnd
+                  ? `${updatedHours.friStart}-${updatedHours.friEnd}`
                   : null}
               </Text>
             </Text>
@@ -547,8 +550,8 @@ const PressProfile = () => {
               className="text-l">
               Saturday: {''}
               <Text style={styles.PoppinsReg}>
-                {updatedhours.satstart && updatedhours.satend
-                  ? `${updatedhours.satstart}-${updatedhours.satend}`
+                {updatedHours.satStart && updatedHours.satEnd
+                  ? `${updatedHours.satStart}-${updatedHours.satEnd}`
                   : null}
               </Text>
             </Text>
@@ -557,8 +560,8 @@ const PressProfile = () => {
               className="text-l">
               Sunday: {''}
               <Text style={styles.PoppinsReg}>
-                {updatedhours.sunstart && updatedhours.sunend
-                  ? `${updatedhours.sunstart}-${updatedhours.sunend}`
+                {updatedHours.sunstart && updatedHours.sunEnd
+                  ? `${updatedHours.sunstart}-${updatedHours.sunEnd}`
                   : null}
               </Text>
             </Text>

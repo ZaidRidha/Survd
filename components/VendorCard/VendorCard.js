@@ -7,7 +7,7 @@ import { SCREENS } from 'navigation/navigationPaths';
 const HEIGHT = 270;
 const WIDTH = Dimensions.get('window').width;
 
-const BarberCard = ({ cardData }) => {
+const VendorCard = ({ cardData }) => {
   const navigation = useNavigation();
   const [iconColor, setIconColor] = useState('darkgray');
   const [iconType, setIconType] = useState('heart-outline');
@@ -26,12 +26,12 @@ const BarberCard = ({ cardData }) => {
   const { mobile } = cardData;
   const { home } = cardData;
   const { shop } = cardData;
-  const { pinmsg } = cardData;
+  const { pinMsg } = cardData;
   const { docId } = cardData;
-  const mobileActive = cardData.mobileactive;
-  const shopActive = cardData.shopactive;
-  const homeActive = cardData.homeactive;
-  const { updatedhours } = cardData;
+  const mobileActive = cardData.mobileActive;
+  const shopActive = cardData.shopActive;
+  const homeActive = cardData.homeActive;
+  const { updatedHours } = cardData;
   const { walkins } = cardData;
   const { onbreak } = cardData;
   const { unavailable } = cardData;
@@ -80,13 +80,13 @@ const BarberCard = ({ cardData }) => {
       mobile,
       home,
       shop,
-      pinmsg,
+      pinMsg,
       docId,
       mobileActive,
       shopActive,
       homeActive,
       isLive,
-      updatedhours,
+      updatedHours,
       walkins,
       rating,
     });
@@ -348,7 +348,7 @@ const BarberCard = ({ cardData }) => {
             <Text
               className="text-sm text-gray-700"
               style={styles.poppinsMed}>
-              Barber ·
+              vendor ·
             </Text>
             <Text
               className="text-sm text-purple-800"
@@ -443,4 +443,4 @@ const styles = StyleSheet.create({
   subheading: { fontSize: 18, marginTop: 5 },
 });
 
-export default BarberCard;
+export default VendorCard;

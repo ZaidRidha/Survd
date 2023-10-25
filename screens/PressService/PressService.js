@@ -7,7 +7,15 @@ import { CheckBox } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import useFont from '../../useFont';
 import { database } from '../../firebaseConfig';
-import { addtoB, setcurrentVendor, selectCurrentVendor, clearBasket, selectCurrentBasket } from '../../slices/locSlice';
+import {
+  addtoB,
+  setcurrentVendor,
+  selectCurrentVendor,
+  clearBasket,
+  selectCurrentBasket,
+  clearAvailability,
+  addTimeslotToService,
+} from '../../slices/locSlice';
 
 const PressService = () => {
   const navigation = useNavigation();
@@ -27,10 +35,42 @@ const PressService = () => {
   const dispatch = useDispatch();
   const currentVendor = useSelector(selectCurrentVendor);
   const reduxBasket = useSelector(selectCurrentBasket);
+  const [timeSlots, setTimeSlots] = useState([]);
+
+  const fetchTimeSlots = async () => {
+    //THE NAME OF THE SERVICE, MUST BE UNIQUE FOR EXAMPLE: MIKETHABARBERSERVICE1, WHEN CREATING THE SERVICE PLEASE.
+
+    const availabilityCollection = collection(database, 'vendors', docId, 'services', serviceId, 'availability');
+
+    const querySnapshot = await getDocs(availabilityCollection);
+
+    querySnapshot.forEach((doc) => {
+      const date = doc.id; // The doc id is the date
+
+      const timeslotsForDate = doc.data().timeslots;
+
+      timeslotsForDate.forEach((timeslot) => {
+        dispatch(
+          addTimeslotToService({
+            date,
+            timeslot,
+            serviceId,
+          })
+        );
+      });
+    });
+
+    // Optionally, if you want to keep local state
+    const allTimeSlots = querySnapshot.docs.map((doc) => ({
+      date: doc.id,
+      timeslots: doc.data().timeslots,
+    }));
+    setTimeSlots(allTimeSlots);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const querySnapshot = await getDocs(collection(database, 'barbers', docId, 'services', serviceId, 'extras'));
+      const querySnapshot = await getDocs(collection(database, 'vendors', docId, 'services', serviceId, 'extras'));
       const extrasArray = querySnapshot.docs.map((doc) => {
         const name = doc.get('name');
         const category = doc.get('category');
@@ -44,7 +84,7 @@ const PressService = () => {
     };
 
     const unsubscribe = onSnapshot(
-      collection(database, 'barbers', docId, 'services', serviceId, 'extras'),
+      collection(database, 'vendors', docId, 'services', serviceId, 'extras'),
       (snapshot) => {
         fetchData();
       }
@@ -72,10 +112,12 @@ const PressService = () => {
 
     if (docId !== currentVendor) {
       dispatch(clearBasket());
+      dispatch(clearAvailability());
     }
 
     dispatch(addtoB(basketWithExtras));
     dispatch(setcurrentVendor(docId));
+    fetchTimeSlots();
     goBack();
   };
 
