@@ -306,7 +306,7 @@ const FilterScreen = () => {
             <Slider
               style={styles.slider}
               minimumValue={1}
-              maximumValue={100}
+              maximumValue={50}
               value={distance}
               onValueChange={(value) => setDistance(value)}
               step={1}

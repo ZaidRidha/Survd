@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Icon } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { SCREENS } from 'navigation/navigationPaths';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 const HEIGHT = 270;
 const WIDTH = Dimensions.get('window').width;
@@ -12,6 +13,8 @@ const VendorCard = ({ cardData }) => {
   const [iconColor, setIconColor] = useState('darkgray');
   const [iconType, setIconType] = useState('heart-outline');
   const [isLive, setIsLive] = useState(false);
+  const [galleryImages, setGalleryImages] = useState([]);
+
   // gathering variables from the data
   const { liveHome } = cardData;
   const { liveMobile } = cardData;
@@ -36,6 +39,28 @@ const VendorCard = ({ cardData }) => {
   const { onbreak } = cardData;
   const { unavailable } = cardData;
   const { rating } = cardData;
+  const { pictureGallery } = cardData;
+
+  const { profilePicUrl } = cardData;
+
+  useEffect(() => {
+    const fetchGalleryImages = async () => {
+      const imageUrls = await Promise.all(
+        pictureGallery.map(async (gsUrl) => {
+          if (gsUrl.startsWith('gs://')) {
+            const storage = getStorage();
+            const storageRef = ref(storage, gsUrl);
+            return await getDownloadURL(storageRef);
+          } else {
+            return gsUrl; // If it's already an HTTP/HTTPS URL
+          }
+        })
+      );
+      setGalleryImages(imageUrls.slice(0, 5)); // Show only the first 5 images
+    };
+
+    fetchGalleryImages();
+  }, [pictureGallery]);
 
   useEffect(() => {
     if (liveHome || liveMobile || liveShop) {
@@ -89,6 +114,7 @@ const VendorCard = ({ cardData }) => {
       updatedHours,
       walkins,
       rating,
+      profilePicUrl,
     });
   };
 
@@ -244,7 +270,7 @@ const VendorCard = ({ cardData }) => {
         </Pressable>
         {/* Images */}
         <FlatList
-          data={images}
+          data={galleryImages}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}
@@ -262,15 +288,16 @@ const VendorCard = ({ cardData }) => {
               style={styles.imageContainer}>
               <Image
                 style={styles.image}
-                source={item.image}
+                source={{ uri: item }} // Use the fetched URL here
               />
             </Pressable>
           )}
         />
         {/*  Dot Container */}
-        {images.length > 1 && (
+        {/* Dot Container */}
+        {galleryImages.length > 0 && (
           <View style={styles.dotContainer}>
-            {images.map((_, index) => (
+            {galleryImages.map((_, index) => (
               <View
                 key={index}
                 style={[
