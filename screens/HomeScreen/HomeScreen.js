@@ -517,7 +517,7 @@ const HomeScreen = () => {
             ))}
             <Text
               style={styles.fgreg}
-              className="text-xl mb-2 ml-5">
+              className="text-lg mb-2 ml-5">
               Services Near You:
             </Text>
             {loading ? (

@@ -9,6 +9,7 @@ import {
   FlatList,
   Dimensions,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Icon, Button } from '@rneui/themed';
@@ -21,6 +22,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { SCREENS } from 'navigation/navigationPaths';
 import { selectCurrentBasket, selectCurrentVendor } from '../../slices/locSlice';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 import { database } from '../../firebaseConfig';
 import useFont from '../../useFont';
@@ -36,6 +38,7 @@ const PressProfile = () => {
   const [showPhotos, setShowPhotos] = useState(false);
   const [ighandle, setigHandle] = useState(' ');
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [httpProfilePicUrl, setHttpProfilePicUrl] = useState(null);
 
   const navigation = useNavigation();
   useFont();
@@ -60,6 +63,7 @@ const PressProfile = () => {
     updatedHours,
     walkins,
     rating,
+    profilePicUrl,
   } = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
@@ -69,8 +73,6 @@ const PressProfile = () => {
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
   let total = 0;
-
-
 
   const sethandle = () => {
     if (instagram) {
@@ -141,6 +143,21 @@ const PressProfile = () => {
     sethandle();
   }, [instagram]);
 
+  useEffect(() => {
+    const fetchHttpUrl = async () => {
+      if (profilePicUrl?.startsWith('gs://')) {
+        const storage = getStorage();
+        const storageRef = ref(storage, profilePicUrl);
+        const httpUrl = await getDownloadURL(storageRef);
+        setHttpProfilePicUrl(httpUrl);
+      } else {
+        setHttpProfilePicUrl(profilePicUrl); // If it's already an HTTP/HTTPS URL
+      }
+    };
+
+    fetchHttpUrl();
+  }, [profilePicUrl]);
+
   // Loop through each service
   for (const service of currentBasket) {
     // Loop through each sub-service
@@ -156,9 +173,8 @@ const PressProfile = () => {
   }
 
   useEffect(() => {
-          console.log("hello"+ currentBasket.length);
+    console.log('hello' + currentBasket.length);
     if (currentVendor === docId && currentBasket.length > 0) {
-
       setshowCheckout(true);
     } else {
       setshowCheckout(false);
@@ -765,7 +781,7 @@ const PressProfile = () => {
       <SafeAreaView style={styles.root}>
         <View className="flex flex-row ml-5 mb-3">
           <Image
-            source={require('../../assets/images/bizlogo.jpg')}
+            source={httpProfilePicUrl ? { uri: httpProfilePicUrl } : require('../../assets/images/white-square.jpg')}
             style={styles.image}
           />
           <View className="flex flex-col ml-5">
