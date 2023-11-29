@@ -273,7 +273,7 @@ const VendorCard = ({ cardData }) => {
           data={galleryImages}
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => index}
           ref={(ref) => {
             flatListRef.current = ref;
           }}

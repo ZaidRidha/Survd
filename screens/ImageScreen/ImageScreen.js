@@ -69,7 +69,7 @@ const ImageScreen = () => {
           ref={flatListRef}
           data={carouselData}
           renderItem={renderImageItem}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           horizontal
           showsHorizontalScrollIndicator={false}
           snapToInterval={WIDTH} // Snap to each item's width

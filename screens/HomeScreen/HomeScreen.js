@@ -464,7 +464,7 @@ const HomeScreen = () => {
             style={styles.searchParts}>
             <FlatList
               data={searchResults}
-              keyExtractor={(item, index) => index.toString()}
+              keyExtractor={(item, index) => index}
               renderItem={({ item }) => (
                 <View className="mb-2">
                   <View className="flex flex-row ml-2 items-center ">

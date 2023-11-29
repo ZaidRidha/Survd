@@ -26,7 +26,7 @@ const Onboardingpaginator = ({ data, scrollX }) => {
           <Animated.View
             style={[styles.dot, { width: dotWidth, opacity }]}
             // eslint-disable-next-line react/no-array-index-key
-            key={i.toString()}
+            key={i}
           />
         );
       })}
