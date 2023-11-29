@@ -8,7 +8,8 @@ const Paginator = ({ data, activeIndex }) => {
         return (
           <View
             style={[styles.dot, { width: 10, backgroundColor: activeIndex === i ? 'white' : 'darkgray' }]}
-            key={i.toString()}
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
           />
         );
       })}

@@ -131,7 +131,7 @@ const PaymentScreen = () => {
   };
 
   const handleLocationPress = async () => {
-    const copytext = address.toString();
+    const copytext = address;
     await Clipboard.setStringAsync(copytext);
     Toast.show('Location copied to clipboard', {
       duration: Toast.durations.SHORT,

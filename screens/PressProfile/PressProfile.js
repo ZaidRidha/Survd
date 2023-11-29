@@ -631,7 +631,7 @@ const PressProfile = () => {
                 horizontal
                 data={carouselData}
                 renderItem={renderCarouselItem}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.id}
                 showsHorizontalScrollIndicator={false}
               />
             </View>
