@@ -95,3 +95,8 @@ When submitting a PR, please ensure the following:
 - You've provided relevant documentation for your changes if needed.
 - Your commit messages are clear and concise, following the conventional style if possible.
 - Our team will review your PR, provide feedback, and, once approved, merge your changes into the main branch.
+
+## Github Codespaces
+
+1. ```npx expo login```
+2. ```npx expo start --tunnel```
