@@ -64,6 +64,7 @@ const PressProfile = () => {
     walkins,
     rating,
     profilePicUrl,
+    pictureGallery,
   } = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
@@ -73,6 +74,44 @@ const PressProfile = () => {
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
   let total = 0;
+
+  const [galleryImages, setGalleryImages] = useState([]);
+
+  // ... existing useEffects and functions
+
+  useEffect(() => {
+    const fetchGalleryImages = async () => {
+      const imageUrls = await Promise.all(
+        pictureGallery.map(async (gsUrl) => {
+          if (gsUrl.startsWith('gs://')) {
+            const storage = getStorage();
+            const storageRef = ref(storage, gsUrl);
+            return await getDownloadURL(storageRef);
+          } else {
+            return gsUrl; // If it's already an HTTP/HTTPS URL
+          }
+        })
+      );
+      setGalleryImages(imageUrls);
+    };
+
+    fetchGalleryImages();
+  }, [pictureGallery]);
+
+  const renderGalleryItem = ({ item, index }) => (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        navigation.navigate('ImageScreen', {
+          carouselData: galleryImages.map((image) => ({ image: { uri: image } })), // Convert URLs to the required format
+          index: index, // Current image index
+        });
+      }}>
+      <Image
+        source={{ uri: item }}
+        style={styles.displayImage}
+      />
+    </TouchableWithoutFeedback>
+  );
 
   const sethandle = () => {
     if (instagram) {
@@ -629,8 +668,9 @@ const PressProfile = () => {
             <View style={styles.carouselContainer}>
               <FlatList
                 horizontal
-                data={carouselData}
-                renderItem={renderCarouselItem}
+
+                data={galleryImages}
+                renderItem={renderGalleryItem}
                 keyExtractor={(item) => item.id}
                 showsHorizontalScrollIndicator={false}
               />

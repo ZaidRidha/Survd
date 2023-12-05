@@ -21,7 +21,7 @@ const ImageScreen = () => {
   const renderImageItem = ({ item }) => (
     <View style={styles.imageContainer}>
       <Image
-        source={item.image}
+        source={item.image} // Access the uri via item.image
         style={styles.image}
       />
     </View>

@@ -43,6 +43,11 @@ const VendorCard = ({ cardData }) => {
 
   const { profilePicUrl } = cardData;
 
+  const placeholderData = [{ image: require('../../assets/images/white-square.jpg') }];
+
+  // Use galleryImages if it's not empty, otherwise use placeholderData
+  const imageData = galleryImages.length > 0 ? galleryImages : placeholderData;
+
   useEffect(() => {
     const fetchGalleryImages = async () => {
       const imageUrls = await Promise.all(
@@ -115,6 +120,7 @@ const VendorCard = ({ cardData }) => {
       walkins,
       rating,
       profilePicUrl,
+      pictureGallery,
     });
   };
 
@@ -270,7 +276,7 @@ const VendorCard = ({ cardData }) => {
         </Pressable>
         {/* Images */}
         <FlatList
-          data={galleryImages}
+          data={imageData}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => index}

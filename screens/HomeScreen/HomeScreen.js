@@ -25,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppointmentCard from '../../components/AppointmentCard/AppointmentCard';
 import VendorCard from '../../components/VendorCard/VendorCard';
 import useFont from '../../useFont';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { database, authentication } from '../../firebaseConfig';
 import { selectFilters } from '../../slices/locSlice';
 
@@ -48,6 +49,7 @@ const HomeScreen = () => {
   const [nearbyVendors, setNearbyVendors] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imageUrls, setImageUrls] = useState({}); // New state to store image URLs
 
   const [uid, setUid] = useState(null); // Add the state for storing uid
   const [matchingAppointments, setMatchingAppointments] = useState([]);
@@ -65,6 +67,104 @@ const HomeScreen = () => {
     navigation.navigate(SCREENS.FILTER_SCREEN);
   };
 
+  const fetchHttpUrl = async (item) => {
+    const storageUrl = item.profilePicUrl;
+    if (storageUrl?.startsWith('gs://')) {
+      const storage = getStorage();
+      const storageRef = ref(storage, storageUrl);
+      try {
+        const url = await getDownloadURL(storageRef);
+        setImageUrls((prevUrls) => ({ ...prevUrls, [item.docId]: url }));
+      } catch (error) {
+        console.error('Error fetching image URL:', error);
+        // Set a default image in case of error
+        setImageUrls((prevUrls) => ({ ...prevUrls, [item.docId]: require('../../assets/images/white-square.jpg') }));
+      }
+    } else {
+      setImageUrls((prevUrls) => ({ ...prevUrls, [item.docId]: storageUrl }));
+    }
+  };
+
+  useEffect(() => {
+    searchResults.forEach((item) => {
+      if (item.profilePicUrl && !imageUrls[item.docId]) {
+        fetchHttpUrl(item);
+      }
+    });
+  }, [searchResults]);
+
+  const renderItem = ({ item }) => (
+    <View className="mb-2">
+      <TouchableOpacity onPress={() => navigateToBarberProfile(item)}>
+        <View className="flex flex-row ml-2 items-center ">
+          <Image
+            source={
+              imageUrls[item.docId] ? { uri: imageUrls[item.docId] } : require('../../assets/images/white-square.jpg')
+            }
+            style={styles.image}
+          />
+          <View>
+            <Text
+              style={styles.PoppinsMed}
+              className="text-lg">
+              {item.name}
+            </Text>
+            <Text
+              style={styles.PoppinsLight}
+              className="text-sm text-gray-600">
+              {item.username}
+            </Text>
+            <Text
+              style={styles.PoppinsLight}
+              className="text-xs text-gray-600">
+              {item.serviceCategory.join(', ')}
+            </Text>
+          </View>
+        </View>
+        {/* Divider */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
+          <View
+            style={{
+              width: WIDTH * 0.9,
+              height: 1,
+              backgroundColor: 'lightgray',
+              alignSelf: 'center',
+              justifyContent: 'center',
+              marginTop: 5,
+              marginBottom: 0,
+            }}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const navigateToBarberProfile = (barberData) => {
+    navigation.navigate(SCREENS.PRESS_PROFILE, {
+      name: barberData.name,
+      username: barberData.username,
+      lat: barberData.latitude,
+      long: barberData.longitude,
+      distance: barberData.distance,
+      instagram: barberData.instagram,
+      phone: barberData.phone,
+      mobile: barberData.mobile,
+      home: barberData.home,
+      shop: barberData.shop,
+      pinMsg: barberData.pinMsg,
+      docId: barberData.docId,
+      mobileActive: barberData.mobileActive,
+      shopActive: barberData.shopActive,
+      homeActive: barberData.homeActive,
+      isLive: barberData.isLive,
+      updatedHours: barberData.updatedHours,
+      walkins: barberData.walkins,
+      rating: barberData.rating,
+      profilePicUrl: barberData.profilePicUrl,
+      pictureGallery: barberData.pictureGallery,
+    });
+  };
+
   const performSearch = async (text) => {
     try {
       setSearchQuery(text);
@@ -72,20 +172,22 @@ const HomeScreen = () => {
       const querySnapshot = await getDocs(q);
 
       const data = querySnapshot.docs.map((doc) => {
-        const data = doc.data();
+        const fullData = doc.data();
+        // Add any additional processing here if needed, e.g., calculating distance
         return {
-          name: data.name,
-          username: data.username,
+          ...fullData, // Spread all fields from the vendor document
+          docId: doc.id, // Include the document ID as well
+          // Calculate and add additional fields if necessary
         };
       });
 
-      const fuse = new Fuse(data, {
-        keys: text.startsWith('@') ? ['username'] : ['name'],
-        threshold: 0.3, // Adjust the threshold as needed
-      });
+      const fuseOptions = {
+        keys: ['name', 'username', 'serviceCategory'],
+        threshold: 0.3,
+      };
 
+      const fuse = new Fuse(data, fuseOptions);
       const searchResults = fuse.search(text).map((result) => result.item);
-
       setSearchResults(searchResults);
     } catch (error) {
       console.error('Error searching Firestore:', error);
@@ -93,6 +195,8 @@ const HomeScreen = () => {
   };
 
   const dispatch = useDispatch();
+
+
 
   const scrollRef = useRef(null);
   useScrollToTop(scrollRef);
@@ -465,42 +569,7 @@ const HomeScreen = () => {
             <FlatList
               data={searchResults}
               keyExtractor={(item, index) => index}
-              renderItem={({ item }) => (
-                <View className="mb-2">
-                  <View className="flex flex-row ml-2 items-center ">
-                    <Image
-                      source={require('../../assets/images/bizlogo.jpg')}
-                      style={styles.image}
-                    />
-                    <View>
-                      <Text
-                        style={styles.PoppinsMed}
-                        className="text-lg">
-                        {item.name}
-                      </Text>
-                      <Text
-                        style={styles.PoppinsLight}
-                        className=" text-sm text-gray-600">
-                        {item.username}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 5 }}>
-                    <View
-                      style={{
-                        width: WIDTH * 0.9,
-                        height: 1,
-                        backgroundColor: 'lightgray',
-                        alignSelf: 'center',
-                        justifyContent: 'center',
-                        marginTop: 5,
-                        marginBottom: 5,
-                      }}
-                    />
-                  </View>
-                </View>
-              )}
+              renderItem={renderItem}
             />
           </View>
         ) : null}
