@@ -5,6 +5,7 @@ const initialState = {
   availability: {},
   currentLoc: null,
   searchRadius: null,
+  userId: "",
   currentAddress: null,
   totalBasket: [],
   currentVendor: null,
@@ -21,6 +22,9 @@ export const locSlice = createSlice({
   reducers: {
     setLoc: (state, action) => {
       state.currentLoc = action.payload;
+    },
+    setUserId: (state, action) => {
+      state.userId = action.payload;
     },
     setSearchRadius: (state, action) => {
       state.searchRadius = action.payload;
@@ -80,6 +84,7 @@ export const locSlice = createSlice({
 export const {
   setLoc,
   setSearchRadius,
+  setUserId,
   setAddress,
   setcurrentBasket,
   addToBasket,
@@ -98,6 +103,7 @@ export const {
 
 export const selectCurrentLoc = (state) => state.loc.currentLoc;
 export const selectSearchRadius = (state) => state.loc.searchRadius;
+export const selectUserId = (state) => state.loc.userId;
 export const selectCurrentAddress = (state) => state.loc.currentAddress;
 export const selectCurrentBasket = (state) => state.loc.totalBasket;
 export const selectCurrentVendor = (state) => state.loc.currentVendor;

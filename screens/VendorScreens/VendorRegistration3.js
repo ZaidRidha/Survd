@@ -1,3 +1,13 @@
+import React, { useState } from "react";
+import useFont from "../../useFont";
+import { useNavigation } from "@react-navigation/native";
+import { Button, Icon } from "@rneui/themed";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { SCREENS } from "navigation/navigationPaths";
+import { Dropdown } from "react-native-element-dropdown";
+import { authentication, database } from "../../firebaseConfig";
+
 import {
   StyleSheet,
   Text,
@@ -8,23 +18,14 @@ import {
   Dimensions,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
-import { Icon, Button } from '@rneui/themed';
-import { useNavigation } from '@react-navigation/native';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
-import { SCREENS } from 'navigation/navigationPaths';
-import { Dropdown } from 'react-native-element-dropdown';
 
-import useFont from '../../useFont';
-import { authentication, database } from '../../firebaseConfig';
 
 const WIDTH = Dimensions.get('window').width;
 
 const data = [
     { label: 'Passport', value: 'Passport' },
     { label: 'Drivers License', value: 'Drivers License' },
-    { label: 'Birth Certificate': 'Birth Certificate' },
+    { label: 'Birth Certificate', value: 'Birth Certificate' },
     { label: 'Identity Card', value: 'Identity Card' },
   ];
 

@@ -21,20 +21,22 @@ import { SCREENS } from 'navigation/navigationPaths';
 import useFont from '../../useFont';
 import CustomButton from '../../components/CustomButton';
 import { authentication } from '../../firebaseConfig';
+import { setUserId } from 'slices/locSlice';
 
 const LoginScreen = () => {
   useFont();
 
-  /*   const [currUid, setCurrUid] = useState(null);
+  const [currUid, setCurrUid] = useState(null);
 
   useEffect(() => { 
     onAuthStateChanged(authentication, (user) => {  //firebase getting current user
       if (user) {
         setCurrUid(user.uid); //gets the user id and sets it
+        setUserId(user.uid);
       } 
     }); 
   }, []);
- */
+ 
 
   /*   useEffect(() => {
 
