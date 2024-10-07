@@ -100,3 +100,31 @@ When submitting a PR, please ensure the following:
 
 1. ```npx expo login```
 2. ```npx expo start --tunnel```
+
+## How to Clone This Repository Using GitHub Desktop
+
+Follow these steps to clone this repository to your local machine using **GitHub Desktop**:
+
+### 1. Install GitHub Desktop (if not already installed)
+- Download GitHub Desktop from [here](https://desktop.github.com/).
+- Install it and log in using your GitHub account.
+
+### 2. Clone the Repository
+
+#### Option 1: Open with GitHub Desktop
+- Go to the [repository page]([Insert Your Repo Link Here]).
+- Click the **Code** button (the green button near the top).
+- In the dropdown, click **Open with GitHub Desktop**.
+- If prompted, allow your browser to open GitHub Desktop.
+- In GitHub Desktop, choose a local path where you want to clone the repository and click **Clone**.
+
+#### Option 2: Manually Clone via GitHub Desktop
+- On the repository page, click the **Code** button and copy the repository URL.
+- Open **GitHub Desktop**.
+- Click **File** > **Clone Repository**.
+- In the **URL** tab, paste the repository URL.
+- Choose a local path on your computer to store the repository.
+- Click **Clone**.
+
+### 3. You're Done!
+The repository is now cloned to your local machine. You can now modify the files, commit changes, and push updates using GitHub Desktop.
