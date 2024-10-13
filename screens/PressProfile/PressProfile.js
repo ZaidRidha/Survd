@@ -65,6 +65,7 @@ const PressProfile = () => {
     rating,
     profilePicUrl,
     pictureGallery,
+ 
   } = route.params;
   const currentBasket = useSelector(selectCurrentBasket);
   const currentVendor = useSelector(selectCurrentVendor);
@@ -72,6 +73,8 @@ const PressProfile = () => {
   const fullStars = Math.floor(rating);
   const halfStar = rating - fullStars >= 0.4;
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+
 
   let total = 0;
 
@@ -243,8 +246,11 @@ const PressProfile = () => {
         const description = doc.get('description');
         const duration = doc.get('duration');
         const price = doc.get('price');
+        const isMobile = doc.get('isMobile');
+        const ppm = doc.get('ppm');
+        const travelCalc = doc.get('travelCalc')
         const serviceId = doc.id;
-        return { name, category, description, duration, price, serviceId };
+        return { name, category, description, duration, price, serviceId, isMobile, ppm, travelCalc };
       });
       setServices(servicesArray);
     };
@@ -268,7 +274,7 @@ const PressProfile = () => {
   const [infoPressed, setInfoPressed] = useState(false);
   const [servicesPressed, setServicesPressed] = useState(true);
 
-  const PressService = ({ name, price, duration, description, notes, serviceId }) => {
+  const PressService = ({ name, price, duration, description, notes, serviceId, isMobile, ppm, travelCalc }) => {
     navigation.navigate(SCREENS.PRESS_SERVICE, {
       name,
       price,
@@ -277,6 +283,9 @@ const PressProfile = () => {
       notes,
       docId,
       serviceId,
+      isMobile,
+      ppm,
+      travelCalc,
     });
   };
 
@@ -346,14 +355,30 @@ const PressProfile = () => {
                     description: service.description,
                     notes: service.notes,
                     serviceId: service.serviceId,
+                    isMobile: service.isMobile,
+                    travelCalc: service.travelCalc,
+                    ppm: service.ppm,
                   })
                 }
                 key={service.name}>
-                <Text
-                  style={styles.PoppinsReg}
-                  className="text-base">
-                  {service.name}
-                </Text>
+                <View >
+                  <Text
+                    style={styles.PoppinsReg}
+                    className="text-base">
+                    {service.name}
+                  </Text>
+                  {service.isMobile && (
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Icon
+                        type="font-awesome-5"
+                        name="car-alt"
+                        color="black"
+                        size={18}
+                      />
+                      <Text style={styles.PoppinsLight}> Mobile Services</Text>
+                    </View>
+                  )}
+                </View>
                 <Text
                   style={styles.PoppinsMed}
                   className="text-sm">
@@ -668,7 +693,6 @@ const PressProfile = () => {
             <View style={styles.carouselContainer}>
               <FlatList
                 horizontal
-
                 data={galleryImages}
                 renderItem={renderGalleryItem}
                 keyExtractor={(item) => item.id}

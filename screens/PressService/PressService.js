@@ -31,11 +31,14 @@ const PressService = () => {
   const [basket, setBasket] = useState([]);
   const [extrasArray, setextrasArray] = useState([]);
   const [durationColor, setDurationColor] = useState('gray');
-  const { name, price, duration, description, docId, notes, serviceId } = route.params;
+  const { name, price, duration, description, docId, notes, serviceId, isMobile,travelCalc,ppm } = route.params;
   const dispatch = useDispatch();
   const currentVendor = useSelector(selectCurrentVendor);
   const reduxBasket = useSelector(selectCurrentBasket);
   const [timeSlots, setTimeSlots] = useState([]);
+
+  console.log(ppm);
+  console.log(travelCalc);
 
   const fetchTimeSlots = async () => {
     //THE NAME OF THE SERVICE, MUST BE UNIQUE FOR EXAMPLE: MIKETHABARBERSERVICE1, WHEN CREATING THE SERVICE PLEASE.
@@ -315,6 +318,30 @@ const PressService = () => {
           </Text>
         </View>
       </ScrollView>
+
+      <View className="p-4 bg-gray-200 rounded-lg m-4 shadow-md">
+  <Text className="text-base">Enter your location to calculate the travel cost:</Text>
+  
+  {/* Location input placeholder */}
+  <TouchableOpacity className="flex-row justify-between items-center p-4 bg-white rounded-lg mt-2 mb-4">
+    <Text className="text-gray-600">Tap to set location</Text>
+    <Icon name="map-pin" type="feather" size={24} color="black" />
+  </TouchableOpacity>
+  
+  {/* Calculated travel cost */}
+  <View className="flex-row justify-between items-center p-4 bg-white rounded-lg mb-4">
+    <Text className="text-lg font-medium">Travel Cost:</Text>
+    <Text className="text-lg font-medium">£{/* Calculated PPM cost */}</Text>
+  </View>
+  
+  {/* Button to calculate cost */}
+  <Button
+    title="Calculate Cost"
+
+    className="bg-black rounded-lg"
+    titleClassName="text-white text-lg font-medium p-2"
+  />
+</View>
 
       <Button
         title={addStr}
