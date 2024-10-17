@@ -69,6 +69,8 @@ Install the project dependencies by running ```yarn install``` in the root folde
 
 Run the project with ```expo start```.
 
+or ```npx expo start```
+
 ## 3. Contributing: Pushing your code to GitHub
 
 ### Before you begin
