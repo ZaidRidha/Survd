@@ -31,6 +31,8 @@ import BusinessOnBoarding from '../screens/BusinessOnboarding/BusinessOnboarding
 import FullMapScreen from '../screens/FullMapScreen/FullMapScreen';
 import FilterScreen from '../screens/FilterScreen/FilterScreen';
 import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
+import BarberScreen from '../screens/BarberScreen/BarberScreen';
+
 import { database, authentication } from '../firebaseConfig';
 import {
   ACTIVE_COLOR,
@@ -102,6 +104,8 @@ const BottomTabNavigator = () => {
         }}
       />
 
+      
+
       <Tab.Screen
         name={SCREENS.APPOINTMENTS}
         component={TAB_SCREENS.appointments.component}
@@ -148,6 +152,12 @@ const Navigation = () => {
             headerTintColor: '#000000',
           }}
         />
+
+        <Stack.Screen
+          name={SCREENS.BARBER_SCREEN}
+          component={BarberScreen}
+        />
+
         <Stack.Screen
           name={SCREENS.PHONE}
           component={PhoneScreen}

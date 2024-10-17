@@ -19,6 +19,10 @@ const ExploreScreen = () => {
     navigation.navigate(SCREENS.FILTER_SCREEN);
   };
 
+  const navigateToBarberScreen = () => {
+    navigation.navigate(SCREENS.BARBER_SCREEN, { barberName: 'Barber' });
+  };
+
   const performSearch = async (text) => {
     try {
       setSearchQuery(text);
@@ -45,6 +49,7 @@ const ExploreScreen = () => {
       console.error('Error searching Firestore:', error);
     }
   };
+    
 
   return (
     <SafeAreaProvider>
@@ -132,14 +137,16 @@ const ExploreScreen = () => {
                 Top Categories
               </Text>
               <View className="flex flex-row items-center">
-                <Card containerStyle={styles.cardContainer}>
-                  <Card.Image
-                    style={styles.cardImage}
-                    source={require('../../assets/images/CategoryIcon.png')}
-                  />
-                  <Card.Divider />
-                  <Card.Title>Barber</Card.Title>
-                </Card>
+              <TouchableOpacity onPress={navigateToBarberScreen}>
+                  <Card containerStyle={styles.cardContainer}>
+                    <Card.Image
+                      style={styles.cardImage}
+                      source={require('../../assets/images/CategoryIcon.png')}
+                    />
+                    <Card.Divider />
+                    <Card.Title>Barber</Card.Title>
+                  </Card>
+                </TouchableOpacity>
 
                 <Card containerStyle={styles.cardContainer}>
                   <Card.Image
